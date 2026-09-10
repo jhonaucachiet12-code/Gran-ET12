@@ -69,7 +69,7 @@ CREATE TABLE Plantilla
 CREATE TABLE Puntuacion
 (
     idJugador SMALLINT NOT NULL,
-    Fecha DATE NOT NULL,
+    Fecha TINYINT NOT NULL,
     puntuacion DECIMAL(4,2) NOT NULL,
     PRIMARY KEY(idJugador, Fecha),
     CONSTRAINT FK_Puntuacion_Jugador FOREIGN KEY (idJugador)

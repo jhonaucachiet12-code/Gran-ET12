@@ -1,72 +1,89 @@
-DROP DATABASE if EXISTS bd_GranET;
+DROP DATABASE IF EXISTS bd_GranET;
 CREATE DATABASE bd_GranET;
-use bd_GranET;
+USE bd_GranET;
 
 CREATE TABLE Roles
 (
     idRoles TINYINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50)NOT NULL ,
-
+    nombre VARCHAR(50) NOT NULL
 );
+
 CREATE TABLE Usuario
 (
     idUsuario SMALLINT AUTO_INCREMENT PRIMARY KEY, 
     nombre VARCHAR(50) NOT NULL,
-    apellido VARCHAR (50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     fechaNacimiento DATE NOT NULL,
-    contraseña VARCHAR NOT NULL,
+    contraseña VARCHAR(255) NOT NULL,
     idRoles TINYINT NOT NULL,
 
     CONSTRAINT FK_Usuario_Roles FOREIGN KEY (idRoles)
-        REFERENCES Roles (idRoles),
-
+        REFERENCES Roles (idRoles)
 );
-
 
 CREATE TABLE Equipo
 (
-    idEquipo TINYINT AUTO_INCREMENT  PRIMARY KEY,
+    idEquipo TINYINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE
-    
 );
-CREATE TABLE Tipo
+
+CREATE TABLE Posicion
 (
-    idTipo TINYINT AUTO_INCREMENT PRIMARY KEY ,
+    idPosicion TINYINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(64) UNIQUE
 );
 
-INSERT INTO Tipo (nombre), VALUES ('Arquero'), ('Defensor'), ('Mediocampista'), ('Delantero');
+INSERT INTO Posicion (nombre) VALUES ('Arquero'), ('Defensor'), ('Mediocampista'), ('Delantero');
 
 CREATE TABLE Jugador
 (
     idJugador SMALLINT AUTO_INCREMENT PRIMARY KEY,
-    idTipo TINYINT AUTO_INCREMENT ,
-    idEquipo TINYINT AUTO_INCREMENT ,
+    idPosicion TINYINT NOT NULL,
+    idEquipo TINYINT NOT NULL,
     nombre VARCHAR(50) NOT NULL,
-    apellido VARCHAR (50) NOT NULL,
-    apodo VARCHAR(50)NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    apodo VARCHAR(50) NOT NULL,
     nacimiento DATE NOT NULL,
-    cotización DECIMAL(2,0) NOT NULL
-    CONSTRAINT FK_Jugador_Tipo FOREIGN KEY (idTipo)
-        REFERENCES Tipo (idTipo),
+    cotización DECIMAL(10,2) NOT NULL,
+    CONSTRAINT FK_Jugador_Posicion FOREIGN KEY (idPosicion)
+        REFERENCES Posicion (idPosicion),
     CONSTRAINT FK_Jugador_Equipo FOREIGN KEY (idEquipo)
-        REFERENCES Equipo (idEquipo),
-
+        REFERENCES Equipo (idEquipo)
 );
 
-CREATE Table Plantilla
+CREATE TABLE Plantilla
 (
-    idPlantilla TINYINT AUTO_INCREMENT PRIMARY KEY,
-    idUsuario SMALLINT AUTO_INCREMENT ,
-    idJugador SMALLINT AUTO_INCREMENT ,
-    presupuesto INT NOT NULL,
-    cantidaJugadores TINYINT NOT NULL,
+    idPlantilla INT AUTO_INCREMENT PRIMARY KEY,
+    idUsuario SMALLINT NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    presupuesto DECIMAL(10,2) NOT NULL,
+    cantidadJugadores TINYINT NOT NULL,
 
     CONSTRAINT FK_Plantilla_Usuario FOREIGN KEY (idUsuario)
         REFERENCES Usuario (idUsuario),
     CONSTRAINT FK_Plantilla_Jugador FOREIGN KEY (idJugador)
+        REFERENCES Jugador (idJugador)
+);
+
+CREATE TABLE Puntuacion
+(
+    idJugador SMALLINT NOT NULL,
+    Fecha DATE NOT NULL,
+    puntuacion DECIMAL(4,2) NOT NULL,
+    PRIMARY KEY(idJugador, Fecha),
+    CONSTRAINT FK_Puntuacion_Jugador FOREIGN KEY (idJugador)
+        REFERENCES Jugador (idJugador)
+);
+
+CREATE TABLE PlantillaJugadores
+(
+    idPlantilla INT NOT NULL,
+    idJugador SMALLINT NOT NULL,
+    titulares BOOLEAN NOT NULL,
+    PRIMARY KEY (idPlantilla, idJugador),
+    CONSTRAINT FK_PlantillaJugadores_Jugador FOREIGN KEY (idJugador)
         REFERENCES Jugador (idJugador),
-
-
+    CONSTRAINT FK_PlantillaJugadores_Plantilla FOREIGN KEY (idPlantilla)
+        REFERENCES Plantilla (idPlantilla)
 );

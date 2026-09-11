@@ -1,5 +1,5 @@
 erDiagram
-    Roles ||--o{ Usuario : "1 asigna a N"
+    Rol ||--o{ Usuario : "1 asigna a N"
     Usuario ||--o{ Plantilla : "1 posee N"
     Posicion ||--o{ Jugador : "1 clasifica a N"
     Equipo ||--o{ Jugador : "1 pertenece N"
@@ -7,8 +7,8 @@ erDiagram
     Plantilla ||--o{ PlantillaJugadores : "1 contiene N"
     Jugador ||--o{ PlantillaJugadores : "1 pertenece N"
 
-    Roles {
-        TINYINT idRoles PK
+    Rol {
+        TINYINT idRol PK
         VARCHAR nombre
     }
 
@@ -19,7 +19,7 @@ erDiagram
         VARCHAR email
         DATE fechaNacimiento
         VARCHAR contraseña
-        TINYINT idRoles FK
+        TINYINT idRol FK
     }
 
     Equipo {

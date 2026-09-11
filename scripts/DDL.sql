@@ -2,9 +2,9 @@ DROP DATABASE IF EXISTS bd_GranET;
 CREATE DATABASE bd_GranET;
 USE bd_GranET;
 
-CREATE TABLE Roles
+CREATE TABLE Rol
 (
-    idRoles TINYINT AUTO_INCREMENT PRIMARY KEY,
+    idRol TINYINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 );
 
@@ -16,10 +16,10 @@ CREATE TABLE Usuario
     email VARCHAR(100) UNIQUE NOT NULL,
     fechaNacimiento DATE NOT NULL,
     contraseña VARCHAR(255) NOT NULL,
-    idRoles TINYINT NOT NULL,
+    idRol TINYINT NOT NULL,
 
-    CONSTRAINT FK_Usuario_Roles FOREIGN KEY (idRoles)
-        REFERENCES Roles (idRoles)
+    CONSTRAINT FK_Usuario_Rol FOREIGN KEY (idRol)
+        REFERENCES Rol (idRol)
 );
 
 CREATE TABLE Equipo

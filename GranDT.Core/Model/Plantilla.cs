@@ -7,10 +7,31 @@ public class Plantilla
     public required string Nombre{get;set;}
     public decimal Presupuesto{get;set;}
     public byte CantidadJugadores{get;set;}
-    
-    public Plantilla(decimal Presupuesto )
+    public IDictionary<Jugador,short> PlantillaJugadores{get;set;} = new Dictionary<Jugador,short>();
+
+    public Plantilla()
     {
         Presupuesto = 100000000;
     }
+
+    public void AgregarJugador(Jugador jugador, short cantidad)
+    {
+        if (cantidad <= 0)
+        {
+            throw new ArgumentException("La cantidad debe ser mayor que cero.");
+        }
+
+
+        if (PlantillaJugadores.ContainsKey(jugador))
+        {
+            PlantillaJugadores[jugador] += cantidad;
+        }
+        else
+        {
+            PlantillaJugadores.Add(jugador, cantidad);
+        }
+    }
+
+    
 
 }

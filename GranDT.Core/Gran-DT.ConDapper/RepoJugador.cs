@@ -13,7 +13,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
 
     public IEnumerable<Jugador> ObtenerJugadores()
     {
-        var consulta = @"SELECT J.*, P.nombre AS NombrePosicion, R.nombre AS NombreRol
+        var consulta = @"SELECT J.*, P.nombre , R.nombre 
                         FROM Jugadores J
                         INNER JOIN Posiciones P ON J.IdPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo";
@@ -30,7 +30,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
 
     public Jugador? ObtenerJugadorPorId(short id)
     {
-        var consulta = @"SELECT J.*, P.nombre AS NombrePosicion, R.nombre AS NombreRol
+        var consulta = @"SELECT J.*, P.nombre , R.nombre 
                         FROM Jugadores J
                         INNER JOIN Posiciones P ON J.IdPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo

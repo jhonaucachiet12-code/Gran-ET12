@@ -32,18 +32,18 @@ public class RepoRol : RepoDapper, IRepoRol
     public void AgregarRol(Rol rol)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdRol", direction: ParameterDirection.Output);
-        parametros.Add("@Nombre", rol.Nombre);
+        parametros.Add("unIdRol", direction: ParameterDirection.Output);
+        parametros.Add("unNombre", rol.Nombre);
 
         _conexion.Execute("insertarRol", parametros, commandType: CommandType.StoredProcedure);
-         rol.IdRol = parametros.Get<byte>("@IdRol");
+         rol.IdRol = parametros.Get<byte>("unIdRol");
     }
 
     public void ActualizarRol(Rol rol)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdRol", rol.IdRol);
-        parametros.Add("@Nombre", rol.Nombre);
+        parametros.Add("unIdRol", rol.IdRol);
+        parametros.Add("unNombre", rol.Nombre);
 
         _conexion.Execute("actualizarRol", parametros, commandType: CommandType.StoredProcedure);
     }
@@ -51,7 +51,7 @@ public class RepoRol : RepoDapper, IRepoRol
     public void EliminarRol(byte id)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdRol", id);
+        parametros.Add("unIdRol", id);
 
         _conexion.Execute("eliminarRol", parametros, commandType: CommandType.StoredProcedure);
     }

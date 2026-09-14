@@ -2,13 +2,15 @@ namespace GranDT.Core.Model;
 
 public class Jugador
 {
-    public short idJugador {get;set;}
-    public required string nombre{get;set;}
-    public required string apellido{get;set;}
-    public required string apodo{get;set;}
-    public DateTime nacimiento{get;set;}
-    public decimal cotización{get;set;}
-    public required  Tipo tipo {get;set;}
+    public short IdJugador {get;set;}
+    public byte IdPosicion {get;set;}
+    public int IdEquipo {get;set;}
+    public required string Nombre{get;set;}
+    public required string Apellido{get;set;}
+    public required string Apodo{get;set;}
+    public DateTime Nacimiento{get;set;}
+    public decimal Cotización{get;set;}
+    public required  Posicion posicion {get;set;}
     public required Equipo equipo{get;set;}
 
 

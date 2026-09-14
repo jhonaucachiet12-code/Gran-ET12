@@ -8,9 +8,9 @@ public class Usuario
     public required string Apellido{get;set;}
     public required string Email{get;set;}
     public DateTime FechaNacimiento {get;set;}
-    public required string Contraseña{get;set;}
+    public required string Contrasena{get;set;}
     public byte IdRoles{get;set;}
     
-    public required Roles roles{get;set;}
+    public required Rol roles{get;set;}
 
 }

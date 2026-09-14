@@ -35,10 +35,10 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
     {
         var parametros = new DynamicParameters();
         parametros.Add("@IdPosicion", direction: ParameterDirection.Output);
-        parametros.Add("@Nombre", posicion.nombre);
+        parametros.Add("@Nombre", posicion.Nombre);
 
         _conexion.Execute("insertarPosicion", parametros, commandType: CommandType.StoredProcedure);
-         posicion.idPosicion = parametros.Get<byte>("@IdPosicion");
+         posicion.IdPosicion = parametros.Get<byte>("@IdPosicion");
 
 
     }
@@ -46,8 +46,8 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
     public void ActualizarPosicion(Posicion posicion)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdPosicion", posicion.idPosicion);
-        parametros.Add("@Nombre", posicion.nombre);
+        parametros.Add("@IdPosicion", posicion.IdPosicion);
+        parametros.Add("@Nombre", posicion.Nombre);
 
         _conexion.Execute("actualizarPosicion", parametros, commandType: CommandType.StoredProcedure);
     }

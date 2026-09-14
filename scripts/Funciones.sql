@@ -68,3 +68,26 @@ begin
     delete from posiciones 
     where idPosicion = unIdPosicion;
 end$$
+
+-- procedure de jugador para insertar, actualizar y eliminar registros en la base de datos de mysql
+delimiter $$
+drop procedure if exists insertarJugador$$
+create procedure insertarJugador(out unIdJugador int, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
+begin
+    insert into jugadores(nombre, apellido, apodo, nacimiento, cotización, idPosicion, idEquipo) 
+    values(unNombre, unApellido, unApodo, unNacimiento, unaCotizacion, unIdPosicion, unIdEquipo);
+    set unIdJugador = last_insert_id();
+end$$
+
+create procedure actualizarJugador(in unIdJugador short, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
+begin
+    update jugadores 
+    set nombre = unNombre, apellido = unApellido, apodo = unApodo, nacimiento = unNacimiento, cotización = unaCotizacion, idPosicion = unIdPosicion, idEquipo = unIdEquipo
+    where idJugador = unIdJugador;
+end$$
+
+create procedure eliminarJugador(in unIdJugador short)
+begin
+    delete from jugadores 
+    where idJugador = unIdJugador;
+end$$

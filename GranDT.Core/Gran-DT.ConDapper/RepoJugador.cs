@@ -32,9 +32,9 @@ public class RepoJugador :RepoDapper, IRepoJugador
     {
         var consulta = @"SELECT J.*, P.nombre , R.nombre 
                         FROM Jugadores J
-                        INNER JOIN Posiciones P ON J.IdPosicion = P.IdPosicion
+                        INNER JOIN Posiciones P ON J.idPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo
-                        WHERE J.IdJugador = @Id";
+                        WHERE J.idJugador = @Id";
         var Jugadores = _conexion.Query<Jugador, Posicion, Equipo, Jugador>(
         consulta,
         (jugador, posicion, equipo) =>

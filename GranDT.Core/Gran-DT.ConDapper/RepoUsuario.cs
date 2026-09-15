@@ -29,16 +29,29 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
         var consulta = @"SELECT J.*, R.nombre 
                         FROM Jugadores J
                         INNER JOIN Rol R ON U.idRol = R.idRol
-                        WHERE J.IdJugador = @Id";
-        var usuarios = _conexion.Query<Jugador, Posicion, Equipo, Jugador>(
+                        WHERE J.idJugador = @idUsuario";
+        var usuarios = _conexion.Query<Usuario, Rol, Usuario>(
         consulta,
-        (jugador, posicion, equipo) =>
+        (Usuario , Rol) =>
         {
-            jugador.posicion = posicion;
-            jugador.equipo = equipo;
-            return jugador;
-        }, new { Id = id }, splitOn: "IdPosicion,IdEquipo");
+            Usuario.Roles = Rol;
+            return Usuario;
+        }, new { idUsuario = IdUsuario }, splitOn: "idUsuario");
         
-        return Jugadores.FirstOrDefault();
+        return usuarios.FirstOrDefault();
+    }
+
+    public void RegistrarUsario(Usuario usuario, string PasswordHash)
+    {
+
+    }
+
+    public void EliminarUsuario(short IdUsuario)
+    {
+
+    }
+    public void ActualizarUsuario(Usuario usuario)
+    {
+        
     }
 }

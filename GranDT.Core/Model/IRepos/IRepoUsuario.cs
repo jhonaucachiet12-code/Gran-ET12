@@ -1,8 +1,11 @@
+using System.Data.SqlTypes;
+
 namespace GranDT.Core.Model.IRepos;
 
 public interface IRepoUsuario
 {
-    Task<Puntuacion?> ObtenerPorEmail(string Email);
-
+    IEnumerable<Rol> ObtenerUsuarios();
+    Task<Usuario?> ObtenerPorEmail(string Email);
     Task<bool> RegistrarUsario(Usuario usuario, string PasswordHash);
+    
 }

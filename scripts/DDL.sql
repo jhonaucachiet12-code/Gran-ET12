@@ -15,7 +15,7 @@ CREATE TABLE Usuario
     apellido VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL UNIQUE,
     fechaNacimiento DATE NOT NULL,
-    PasswordHash VARCHAR(255) NOT NULL,
+    PasswordHash VARCHAR(65) NOT NULL,
     idRol TINYINT NOT NULL,
 
     CONSTRAINT FK_Usuario_Rol FOREIGN KEY (idRol)

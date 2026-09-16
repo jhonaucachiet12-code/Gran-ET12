@@ -18,7 +18,12 @@ public class Plantilla
     {
         if (cantidad <= 0)
         {
-            throw new ArgumentException("La cantidad debe ser mayor que cero.");
+            throw new ArgumentOutOfRangeException("Cantidad no puede ser cero");
+        }
+
+        if(Presupuesto < jugador.Cotización)
+        {
+            throw new ArgumentOutOfRangeException("No tines el dinero sufisiente");
         }
 
 

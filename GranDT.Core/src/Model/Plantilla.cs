@@ -1,3 +1,6 @@
+using Org.BouncyCastle.Asn1.Esf;
+using System.Collections.Generic;
+
 namespace GranDT.Core.Model;
 
 public class Plantilla
@@ -7,19 +10,18 @@ public class Plantilla
     public required string Nombre{get;set;}
     public decimal Presupuesto{get;set;}
     public byte CantidadJugadores{get;set;}
-    public IDictionary<Jugador,short> PlantillaJugadores{get;set;} = new Dictionary<Jugador,short>();
+
+    HashSet<Jugador> PlantillaJugadoresDeSuplentes {get;set;} = new HashSet<Jugador>();
+    HashSet<Jugador> PlantillaJugadoresDeTitulares{get;set;}= new HashSet<Jugador>();
 
     public Plantilla()
     {
         Presupuesto = 100000000;
     }
 
-    public void AgregarJugador(Jugador jugador, short cantidad)
+    public void AgregarJugador(Jugador jugador)
     {
-        if (cantidad <= 0)
-        {
-            throw new ArgumentOutOfRangeException("Cantidad no puede ser cero");
-        }
+        
 
         if(Presupuesto < jugador.Cotización)
         {
@@ -27,13 +29,21 @@ public class Plantilla
         }
 
 
-        if (PlantillaJugadores.ContainsKey(jugador))
+        if (PlantillaJugadoresDeSuplentes.Contains(jugador) || PlantillaJugadoresDeTitulares.Contains(jugador))
         {
-            PlantillaJugadores[jugador] += cantidad;
+            throw new ArgumentOutOfRangeException("se peude agregar mas de un mismo jugador");
         }
         else
         {
-            PlantillaJugadores.Add(jugador, cantidad);
+            if(jugador.Titulares)
+            {
+                PlantillaJugadoresDeTitulares.Add(jugador);
+            }
+            else
+            {
+                PlantillaJugadoresDeSuplentes.Add(jugador);
+            }
+            
         }
     }
 

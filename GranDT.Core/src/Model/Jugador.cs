@@ -10,6 +10,7 @@ public class Jugador
     public required string Apodo{get;set;}
     public DateTime Nacimiento{get;set;}
     public decimal Cotización{get;set;}
+    public bool Titulares{get;set;}
     public required  Posicion posicion {get;set;}
     public required Equipo equipo{get;set;}
 

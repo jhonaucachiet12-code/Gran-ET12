@@ -87,3 +87,12 @@ CREATE TABLE PlantillaJugadores
     CONSTRAINT FK_PlantillaJugadores_Plantilla FOREIGN KEY (idPlantilla)
         REFERENCES Plantilla (idPlantilla)
 );
+
+
+-- consulta para traer la puntuacion e los jugadores de su plantilla 
+
+SELECT AVG(Puntuacion)
+from PlantillaJugadores L
+INNER join Puntuacion U on L.idJugador = U.idJugador
+WHERE L.idJugador = U.IdJugador AND L.idJugador = IdJugador
+

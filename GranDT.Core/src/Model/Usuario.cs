@@ -9,7 +9,7 @@ public class Usuario
     public required string Email{get;set;}
     public DateTime FechaNacimiento {get;set;}
     public required string PasswordHash{get;set;}
-    public byte IdRoles{get;set;}
+    public byte IdRol{get;set;}
     public required Rol Roles{get;set;}
 
 }

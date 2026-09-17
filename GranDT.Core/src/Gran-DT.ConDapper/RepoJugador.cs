@@ -28,13 +28,13 @@ public class RepoJugador :RepoDapper, IRepoJugador
         return jugadores;
     }
 
-    public Jugador? ObtenerJugadorPorId(short id)
+    public Jugador? ObtenerJugadorPorId(short IdJugador)
     {
         var consulta = @"SELECT J.*, P.nombre , R.nombre 
                         FROM Jugadores J
                         INNER JOIN Posiciones P ON J.idPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo
-                        WHERE J.idJugador = @Id";
+                        WHERE J.idJugador = @IdJugador";
         var Jugadores = _conexion.Query<Jugador, Posicion, Equipo, Jugador>(
         consulta,
         (jugador, posicion, equipo) =>
@@ -42,7 +42,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
             jugador.posicion = posicion;
             jugador.equipo = equipo;
             return jugador;
-        }, new { Id = id }, splitOn: "IdPosicion,IdEquipo");
+        }, new { IdJugador = IdJugador }, splitOn: "IdPosicion,IdEquipo");
         
         return Jugadores.FirstOrDefault();
     }
@@ -50,40 +50,40 @@ public class RepoJugador :RepoDapper, IRepoJugador
     public void AgregarJugador(Jugador jugador)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@unIdJugador", direction: ParameterDirection.Output);
-        parametros.Add("@unIdPosicion", jugador.IdPosicion);
-        parametros.Add("@unEquipo", jugador.IdEquipo);
-        parametros.Add("@unNombre", jugador.Nombre);
-        parametros.Add("@unApellido", jugador.Apellido);
-        parametros.Add("@unApodo", jugador.Apodo);
-        parametros.Add("@unNacimiento", jugador.Nacimiento);
-        parametros.Add("@unCotizacion", jugador.Cotización);
+        parametros.Add("unIdJugador", direction: ParameterDirection.Output);
+        parametros.Add("unIdPosicion", jugador.IdPosicion);
+        parametros.Add("unEquipo", jugador.IdEquipo);
+        parametros.Add("unNombre", jugador.Nombre);
+        parametros.Add("unApellido", jugador.Apellido);
+        parametros.Add("unApodo", jugador.Apodo);
+        parametros.Add("unNacimiento", jugador.Nacimiento);
+        parametros.Add("unCotizacion", jugador.Cotización);
         
 
         _conexion.Execute("insertarJugador", parametros, commandType: CommandType.StoredProcedure);
-        jugador.IdJugador = parametros.Get<short>("@IdJugador");
+        jugador.IdJugador = parametros.Get<short>("unIdJugador");
     }
 
     public void ActualizarJugador(Jugador jugador)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@unIdJugador", jugador.IdJugador);
-        parametros.Add("@unIdPosicion", jugador.IdPosicion);
-        parametros.Add("@unIdEquipo", jugador.IdEquipo);
-        parametros.Add("@unNombre", jugador.Nombre);
-        parametros.Add("@unApellido", jugador.Apellido);
-        parametros.Add("@unApodo", jugador.Apodo);
-        parametros.Add("@unNacimiento", jugador.Nacimiento);
-        parametros.Add("@unCotizacion", jugador.Cotización);
+        parametros.Add("unIdJugador", jugador.IdJugador);
+        parametros.Add("unIdPosicion", jugador.IdPosicion);
+        parametros.Add("unIdEquipo", jugador.IdEquipo);
+        parametros.Add("unNombre", jugador.Nombre);
+        parametros.Add("unApellido", jugador.Apellido);
+        parametros.Add("unApodo", jugador.Apodo);
+        parametros.Add("unNacimiento", jugador.Nacimiento);
+        parametros.Add("unCotizacion", jugador.Cotización);
         
-        _conexion.Execute("actualizarJugador", parametros, commandType: System.Data.CommandType.StoredProcedure);
+        _conexion.Execute("actualizarJugador", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public void EliminarJugador(short id)
+    public void EliminarJugador(short IdJugador)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@unIdJugador", id);
+        parametros.Add("unIdJugador", IdJugador);
 
-        _conexion.Execute("eliminarJugador", parametros, commandType: System.Data.CommandType.StoredProcedure);
+        _conexion.Execute("eliminarJugador", parametros, commandType: CommandType.StoredProcedure);
     }
 }

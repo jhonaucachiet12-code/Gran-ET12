@@ -22,11 +22,11 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
         return posiciones;
     }
 
-    public Posicion? ObtenerPosicionPorId(byte id)
+    public Posicion? ObtenerPosicionPorId(byte IdPosicion)
     {
-        var consulta = @"SELECT * FROM Posiciones WHERE IdPosicion = @Id";
+        var consulta = @"SELECT * FROM Posiciones WHERE idPosicion = @IdPosicion";
 
-        var posicion = _conexion.QuerySingleOrDefault<Posicion>(consulta, new { Id = id });
+        var posicion = _conexion.QuerySingleOrDefault<Posicion>(consulta, new { idPosicion = IdPosicion });
 
         return posicion;
     }
@@ -38,7 +38,7 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
         parametros.Add("@Nombre", posicion.Nombre);
 
         _conexion.Execute("insertarPosicion", parametros, commandType: CommandType.StoredProcedure);
-         posicion.IdPosicion = parametros.Get<byte>("@IdPosicion");
+         posicion.IdPosicion = parametros.Get<byte>("IdPosicion");
 
 
     }
@@ -52,10 +52,10 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
         _conexion.Execute("actualizarPosicion", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public void EliminarPosicion(byte id)
+    public void EliminarPosicion(byte IdPosicion)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdPosicion", id);
+        parametros.Add("@IdPosicion", IdPosicion);
 
         _conexion.Execute("eliminarPosicion", parametros, commandType: CommandType.StoredProcedure);
     }

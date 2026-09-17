@@ -4,7 +4,7 @@ public interface IRepoPuntuacion
 {
     IEnumerable<Puntuacion> ObtenerPuntuasiones();
     Puntuacion? ObtenerLaPuntucionDelJugador(short IdJugador, byte Fecha);
-    Puntuacion? ObtenerTodasLasPuntuasionesDelJugador(short IdJugador);
+    IEnumerable<Puntuacion> ObtenerTodasLasPuntuasionesDelJugador(short IdJugador);
     void AgregarPuntuacion(Puntuacion puntuacion);
     void ActualizarPuntuacion(Puntuacion puntuacion);
     void EliminarPuntuacion(short IdJugador);

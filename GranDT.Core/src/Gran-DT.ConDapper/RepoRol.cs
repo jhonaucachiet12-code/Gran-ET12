@@ -20,11 +20,11 @@ public class RepoRol : RepoDapper, IRepoRol
         return roles;
     }
 
-    public Rol? ObtenerRolPorId(byte id)
+    public Rol? ObtenerRolPorId(byte   idRol)
     {
-        var consulta = @"SELECT * FROM Roles WHERE IdRol = @Id";
+        var consulta = @"SELECT * FROM Roles WHERE idRol = @IdRol";
 
-        var rol = _conexion.QuerySingleOrDefault<Rol>(consulta, new { Id = id });
+        var rol = _conexion.QuerySingleOrDefault<Rol>(consulta, new { IdRol = idRol });
 
         return rol;
     }
@@ -48,10 +48,10 @@ public class RepoRol : RepoDapper, IRepoRol
         _conexion.Execute("actualizarRol", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public void EliminarRol(byte id)
+    public void EliminarRol(byte idRol)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("unIdRol", id);
+        parametros.Add("unIdRol", idRol);
 
         _conexion.Execute("eliminarRol", parametros, commandType: CommandType.StoredProcedure);
     }

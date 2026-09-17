@@ -3,8 +3,8 @@ namespace GranDT.Core.Model.IRepos;
 public interface IRepoRol
 {
     IEnumerable<Rol> ObtenerRoles();
-    Rol? ObtenerRolPorId(byte IdRol);
+    Rol? ObtenerRolPorId(byte idRol);
     void AgregarRol(Rol rol);
     void ActualizarRol(Rol rol);
-    void EliminarRol(byte IdRol);
+    void EliminarRol(byte idRol);
 }

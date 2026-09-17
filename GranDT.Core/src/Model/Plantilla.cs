@@ -11,8 +11,8 @@ public class Plantilla
     public decimal Presupuesto{get;set;}
     public byte CantidadJugadores{get;set;}
 
-    HashSet<Jugador> PlantillaJugadoresDeSuplentes {get;set;} = new HashSet<Jugador>();
-    HashSet<Jugador> PlantillaJugadoresDeTitulares{get;set;}= new HashSet<Jugador>();
+    HashSet<Jugador> PlantillaJugadores {get;set;} = new HashSet<Jugador>();
+    
 
     public Plantilla()
     {
@@ -29,21 +29,16 @@ public class Plantilla
         }
 
 
-        if (PlantillaJugadoresDeSuplentes.Contains(jugador) || PlantillaJugadoresDeTitulares.Contains(jugador))
+        if (PlantillaJugadores.Contains(jugador))
         {
             throw new ArgumentOutOfRangeException("se peude agregar mas de un mismo jugador");
         }
         else
         {
-            if(jugador.Titulares)
-            {
-                PlantillaJugadoresDeTitulares.Add(jugador);
-            }
-            else
-            {
-                PlantillaJugadoresDeSuplentes.Add(jugador);
-            }
             
+            PlantillaJugadores.Add(jugador);
+            Presupuesto -= jugador.Cotización;
+            CantidadJugadores++;
         }
     }
 

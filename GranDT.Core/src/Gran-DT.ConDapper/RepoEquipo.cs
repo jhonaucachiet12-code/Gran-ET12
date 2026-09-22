@@ -20,7 +20,7 @@ public class RepoEquipo : RepoDapper, IRepoEquipo
         return equipos;
     }
 
-    public Equipo? ObtenerEquipoPorId(short IdEquipo)
+    public Equipo? ObtenerEquipoPorId(byte IdEquipo)
     {
         var consulta = @"SELECT * FROM Equipo WHERE idEquipo = @IdEquipo";
 
@@ -48,7 +48,7 @@ public class RepoEquipo : RepoDapper, IRepoEquipo
         _conexion.Execute("actualizarEquipo", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public void EliminarEquipo(short IdEquipo)
+    public void EliminarEquipo(byte IdEquipo)
     {
         var parametros = new DynamicParameters();
         parametros.Add("unIdEquipo", IdEquipo);

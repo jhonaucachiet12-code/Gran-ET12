@@ -3,8 +3,8 @@ namespace GranDT.Core.Model.IRepos;
 public interface IRepoEquipo
 {
     IEnumerable<Equipo> ObtenerEquipos();
-    Equipo? ObtenerEquipoPorId(short IdEquipo);
+    Equipo? ObtenerEquipoPorId(byte IdEquipo);
     void AgregarEquipo(Equipo equipo);
     void ActualizarEquipo(Equipo equipo);
-    void EliminarEquipo(short IdEquipo);
+    void EliminarEquipo(byte IdEquipo);
 }

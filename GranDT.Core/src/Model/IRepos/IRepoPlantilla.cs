@@ -7,5 +7,7 @@ public interface IRepoPlantilla
     void AgregarPlantilla(Plantilla plantilla);
     void ActualizarPlantilla(Plantilla plantilla);
     void EliminarPlantilla(int IdPlantilla);
+
+    IEnumerable<Jugador> btenerJugadoresdelaPlantilla (int idPlantilla);
     IDictionary<Jugador, short> ObtenerJugadoresPorPlantilla(int idPlantilla);
 }

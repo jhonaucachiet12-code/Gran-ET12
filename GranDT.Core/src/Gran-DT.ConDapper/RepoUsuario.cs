@@ -48,7 +48,7 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
 
     public void RegistrarUsario(Usuario usuario, string PasswordHash)
     {
-        usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(PasswordHash);
+        
 
         var parametros = new DynamicParameters();
         parametros.Add("unIdUsuario", direction: ParameterDirection.Output);

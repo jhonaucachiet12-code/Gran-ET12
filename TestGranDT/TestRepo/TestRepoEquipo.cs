@@ -5,6 +5,7 @@ using GranDT.Core.Model;
 using GranDT.Core.Model.IRepos;
 using GranDT.Core.Gran_DT.ConDapper;
 using Xunit;
+using MySqlConnector;
 
 
 namespace TestGranDT.TestModel;
@@ -13,9 +14,14 @@ public class TestRepoEquipo
 {
     private readonly IRepoEquipo _repoEquipo;
 
-    public TestRepoEquipo(IRepoEquipo repoEquipo)
+
+    public TestRepoEquipo()
     {
-        _repoEquipo = repoEquipo ?? throw new ArgumentNullException(nameof(repoEquipo));
+        //var cadena = "Server=localhost;Database=bd_Mundial26;Uid=root;Pwd=1001;";
+
+        var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
+        var conexion = new MySqlConnection(cadena);
+        _repoEquipo = new RepoEquipo(conexion);
     }
 
     [Fact]
@@ -31,6 +37,7 @@ public class TestRepoEquipo
         Assert.Contains(equipos, e => e.IdEquipo > 0 && !string.IsNullOrWhiteSpace(e.Nombre));
         Assert.Contains(equipos, e => e.IdEquipo == 1 && e.Nombre == "Boca Juniors");
     }
+    
 
     [Fact]
     public void ObtenerEquipoPorId_DevuelveEquipoExistente()

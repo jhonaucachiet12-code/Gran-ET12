@@ -30,6 +30,28 @@ public class UsuarioService
 
     public void RegistrarUsario(Usuario usuario , string PasswordHash)
     {
+        var usuarioExistente = repoUsuario.ObtenerPorEmail(usuario.IdUsuario);
+        var usuarios = repoUsuario.ObtenerUsuarios();
+        if (usuarioExistente != null)
+        {
+            throw new InvalidOperationException("El usuario ya existe.");
+        }
+
+        if(string.IsNullOrWhiteSpace(PasswordHash))
+        {
+            throw new ArgumentException("La contraseña es obligatoria.", nameof(PasswordHash));
+        }
+
+        if(PasswordHash.Length < 6)
+        {
+            throw new ArgumentException("La contraseña debe tener al menos 6 caracteres.", nameof(PasswordHash));
+        }
+        if(usuarios.Any(u => u.Email == usuario.Email))
+        {
+            throw new ArgumentException("El email ya está en uso.", nameof(usuario));
+        }
+
+        ValidarUsuario(usuario);
 
         usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(PasswordHash);
 

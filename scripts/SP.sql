@@ -142,3 +142,31 @@ begin
     delete from plantillas 
     where idPlantilla = unIdPlantilla;
 end$$
+
+-- procedure de puntuacion para insertar, actualizar y eliminar registros en la base de datos de mysql
+delimiter $$
+drop procedure if exists insertarPuntuacion$$
+create procedure insertarPuntuacion(in unIdJugador smallint, in unaFecha tinyint, in unaPuntuacion decimal(4,2))
+begin
+    insert into puntuacion(idJugador, Fecha, puntuacion) 
+    values(unIdJugador, unaFecha, unaPuntuacion);
+end$$
+
+drop procedure if exists actualizarPuntuacion$$
+create procedure actualizarPuntuacion(in unIdJugador smallint, in unaFecha tinyint, in unaPuntuacion decimal(4,2))
+begin
+    update puntuacion 
+    set puntuacion = unaPuntuacion
+    where idJugador = unIdJugador and Fecha = unaFecha;
+end$$
+
+drop procedure if exists eliminarPuntuacion$$
+create procedure eliminarPuntuacion(in unIdJugador smallint, in unaFecha tinyint)
+begin
+    delete from puntuacion 
+    where idJugador = unIdJugador and Fecha = unaFecha;
+end$$
+ 
+-- procedure de usuario para insertar, actualizar y eliminar registros en la base de datos de mysql
+delimiter $$
+ 

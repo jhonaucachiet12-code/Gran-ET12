@@ -10,7 +10,9 @@ public interface IRepoPlantilla
     void AgregarJugadorAPlantilla(int idPlantilla, int idJugador, bool esTitular);
     void ActualizarJugadorEnPlantilla(int idPlantilla, int idJugador, bool esTitular);
     void EliminarJugadorDePlantilla(short idJugador, int idPlantilla);
-    Plantilla ObtenerJugadoresDeLaPlantilla(int idPlantilla);
+    Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla);
+
+    decimal ObtenerPuntuacionPromedioDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha);
 
 
     /*decimal ObtenerPuntuacionPromedioDeLaPlantilla(int idPlantilla);

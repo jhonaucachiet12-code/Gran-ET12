@@ -15,6 +15,7 @@ public class Plantilla
 
     public List<Jugador> JugadoresTitulares {get;set;} = new List<Jugador>();
     public List<Jugador> JugadoresSuplentes {get;set;} = new List<Jugador>();
+    public Usuario? usuario {get;set;}
 
     public decimal costoTotalDeLaPlantilla()
     {

@@ -141,3 +141,10 @@ INNER JOIN (
 ) U
     ON L.idJugador = U.idJugador
 WHERE L.idPlantilla = @idPlantilla;
+
+-- consulta para obtener la sumatoria de las puntuaciones de determinada fecha de una plantilla
+SELECT SUM(U.Puntuacion) AS sumatoria_puntuacion
+FROM PlantillaJugadores L
+iNNER JOIN puntuacion U on L.idJugador = U.idJugador
+WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha and L.titulares = true;
+   

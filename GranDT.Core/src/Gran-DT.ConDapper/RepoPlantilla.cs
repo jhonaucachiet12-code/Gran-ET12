@@ -13,14 +13,31 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
 
     public IEnumerable<Plantilla> ObtenerPlantillas()
     {
-        var consulta = @"SELECT * FROM Plantillas";
-        return _conexion.Query<Plantilla>(consulta);
+        var consulta = @"SELECT *, U.*
+                        FROM Plantillas
+                        INNER JOIN Usuarios U ON Plantillas.IdUsuario = U.IdUsuario";
+        var plantillas = _conexion.Query<Plantilla, Usuario, Plantilla>(consulta, (plantilla, usuario) =>
+        {
+            plantilla.usuario = usuario;
+            return plantilla;
+        }, 
+        splitOn: "IdUsuario");
+        return plantillas;
     }
 
     public Plantilla? ObtenerPlantillaPorId(int IdPlantilla)
     {
-        var consulta = @"SELECT * FROM Plantillas WHERE IdPlantilla = @IdPlantilla";
-        return _conexion.QueryFirstOrDefault<Plantilla>(consulta, new { IdPlantilla });
+        var consulta = @"SELECT *, U.*
+                        FROM Plantillas
+                        INNER JOIN Usuarios U ON Plantillas.IdUsuario = U.IdUsuario
+                        WHERE Plantillas.IdPlantilla = @IdPlantilla";
+        var plantillas = _conexion.Query<Plantilla, Usuario, Plantilla>(consulta, (plantilla, usuario) =>
+        {
+            plantilla.usuario = usuario;
+            return plantilla;
+        }, new { IdPlantilla = IdPlantilla }, 
+        splitOn: "IdUsuario");
+        return plantillas.FirstOrDefault();
     }
 
     public void AgregarPlantilla(Plantilla plantilla)
@@ -88,7 +105,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         _conexion.Execute("ActualizarJugadorEnPlantilla", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public Plantilla ObtenerJugadoresDeLaPlantilla(int idPlantilla)
+    public Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla)
     {
         var consulta = @"SELECT * FROM Plantillas WHERE IdPlantilla = @IdPlantilla;
         
@@ -117,5 +134,16 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
             return plantilla;
         }
     }
+
+    public decimal ObtenerPuntuacionPromedioDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha)
+    {
+        var consulta = @"SELECT AVG(U.Puntuacion) AS PuntuacionPromedio
+                        FROM PlantillaJugadores L
+                        INNER JOIN puntuacion U ON L.idJugador = U.idJugador
+                        WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha AND L.titulares = TRUE;";
+
+        return _conexion.ExecuteScalar<decimal>(consulta, new { idPlantilla, fecha });
+    }
   
 }
+//dotnet build GranDT.Core/GranDT.Core.csproj

@@ -8,7 +8,7 @@ using Xunit;
 using MySqlConnector;
 
 
-namespace TestGranDT.TestModel;
+namespace TestGranDT.TestRepo;
 
 public class TestRepoEquipo
 {

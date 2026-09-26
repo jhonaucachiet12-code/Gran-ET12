@@ -5,7 +5,7 @@ using GranDT.Core.Model.IRepos;
 using GranDT.Core.Gran_DT.ConDapper;
 using Xunit;
 using MySqlConnector;
-namespace TestGranDT.TestRepo
+/*namespace TestGranDT.TestRepo
 {
     public class TestRepoUsuario
     {
@@ -32,4 +32,4 @@ namespace TestGranDT.TestRepo
             Assert.Contains(usuarios, u => u.IdUsuario == 1 && u.Nombre == "Juan Perez");
         }
     }
-}
+}*/

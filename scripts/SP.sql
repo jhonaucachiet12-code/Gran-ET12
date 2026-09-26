@@ -1,6 +1,5 @@
 -- procedure para insertar, actualizar y eliminar registros en la base de datos de mysql 
 
-
 delimiter $$
 drop procedure if exists insertarRol$$
 create procedure insertarRol(out unIdRol int, in unNombre varchar(50))
@@ -96,7 +95,7 @@ end$$
 -- procedure de jugador para insertar, actualizar y eliminar registros en la base de datos de mysql
 delimiter $$
 drop procedure if exists insertarJugador$$
-create procedure insertarJugador(out unIdJugador int, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
+create procedure insertarJugador(out unIdJugador smallint, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
 begin
     insert into jugadores(nombre, apellido, apodo, nacimiento, cotización, idPosicion, idEquipo) 
     values(unNombre, unApellido, unApodo, unNacimiento, unaCotizacion, unIdPosicion, unIdEquipo);
@@ -104,7 +103,7 @@ begin
 end$$
 
 drop procedure if exists actualizarJugador$$
-create procedure actualizarJugador(in unIdJugador short, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
+create procedure actualizarJugador(in unIdJugador smallint, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
 begin
     update jugadores 
     set nombre = unNombre, apellido = unApellido, apodo = unApodo, nacimiento = unNacimiento, cotización = unaCotizacion, idPosicion = unIdPosicion, idEquipo = unIdEquipo
@@ -112,7 +111,7 @@ begin
 end$$
 
 drop procedure if exists eliminarJugador$$
-create procedure eliminarJugador(in unIdJugador short)
+create procedure eliminarJugador(in unIdJugador smallint)
 begin
     delete from jugadores 
     where idJugador = unIdJugador;
@@ -169,4 +168,25 @@ end$$
  
 -- procedure de usuario para insertar, actualizar y eliminar registros en la base de datos de mysql
 delimiter $$
- 
+drop procedure if exists insertarUsuario$$
+create procedure insertarUsuario(out unIdUsuario smallint, in unNombre varchar(50), in unApellido varchar(50), in unEmail varchar(50), in unPassword varchar(50), in unIdRol tinyint)
+begin
+    insert into usuarios(nombre, apellido, email, PasswordHash, idRol) 
+    values(unNombre, unApellido, unEmail, unPassword, unIdRol);
+    set unIdUsuario = last_insert_id();
+end$$ 
+
+drop procedure if exists actualizarUsuario$$
+create procedure actualizarUsuario(in unIdUsuario smallint, in unNombre varchar(50), in unApellido varchar(50), in unEmail varchar(50), in unPassword varchar(50), in unIdRol tinyint)
+begin
+    update usuarios 
+    set nombre = unNombre, apellido = unApellido, email = unEmail, PasswordHash = unPassword, idRol = unIdRol
+    where idUsuario = unIdUsuario;
+end$$
+
+drop procedure if exists eliminarUsuario$$
+create procedure eliminarUsuario(in unIdUsuario smallint)
+begin
+    delete from usuarios 
+    where idUsuario = unIdUsuario;
+end$$

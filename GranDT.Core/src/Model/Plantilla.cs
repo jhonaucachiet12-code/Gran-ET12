@@ -1,3 +1,5 @@
+
+
 using Org.BouncyCastle.Asn1.Esf;
 using System.Collections.Generic;
 
@@ -11,11 +13,56 @@ public class Plantilla
     public decimal Presupuesto{get;set;}
     public byte CantidadJugadores{get;set;}
 
-    HashSet<Jugador> PlantillaJugadores {get;set;} = new HashSet<Jugador>();
-    
+    public List<Jugador> JugadoresTitulares {get;set;} = new List<Jugador>();
+    public List<Jugador> JugadoresSuplentes {get;set;} = new List<Jugador>();
 
-    public Plantilla()
+    public decimal costoTotalDeLaPlantilla()
     {
+        decimal costoTotal = 0;
+
+        foreach (var jugador in JugadoresTitulares)
+        {
+            costoTotal += jugador.Cotización;
+        }
+
+        foreach (var jugador in JugadoresSuplentes)
+        {
+            costoTotal += jugador.Cotización;
+        }
+
+        return costoTotal;
+    }
+
+    public bool validarposiciones()
+    {
+        int cantidadArquero = 0;
+        int cantidadDefensor = 0;
+        int cantidadMediocampista = 0;
+        int cantidadDelantero = 0;
+
+        foreach (var jugador in JugadoresTitulares)
+        {
+            switch (jugador.IdPosicion)
+            {
+                case 1:
+                    cantidadArquero++;
+                    break;
+                case 2:
+                    cantidadDefensor++;
+                    break;
+                case 3:
+                    cantidadMediocampista++;
+                    break;
+                case 4:
+                    cantidadDelantero++;
+                    break;
+            }
+        }
+
+        return cantidadArquero == 1 && cantidadDefensor == 4 && cantidadMediocampista == 4 && cantidadDelantero == 2;
+    }
+    //public Plantilla()
+    /*{
         Presupuesto = 100000000;
     }
 
@@ -40,7 +87,7 @@ public class Plantilla
             Presupuesto -= jugador.Cotización;
             CantidadJugadores++;
         }
-    }
+    }*/
 
     
 

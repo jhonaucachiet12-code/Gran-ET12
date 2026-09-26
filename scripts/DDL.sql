@@ -122,6 +122,22 @@ INNER JOIN (
        AND P1.Fecha = P2.FechaMax
 ) U
     ON L.idJugador = U.idJugador
+GROUP BY L.idPlantilla;
 
 
-
+-- consulta para obtener la puntuacion de los jugadores mas recientes de su plantilla
+SELECT U.idJugador, U.Puntuacion
+FROM PlantillaJugadores L
+INNER JOIN (
+    SELECT P1.idJugador, P1.Puntuacion, P1.Fecha
+    FROM Puntuacion P1
+    INNER JOIN (
+        SELECT idJugador, MAX(Fecha) AS FechaMax
+        FROM Puntuacion
+        GROUP BY idJugador
+    ) P2
+        ON P1.idJugador = P2.idJugador
+       AND P1.Fecha = P2.FechaMax
+) U
+    ON L.idJugador = U.idJugador
+WHERE L.idPlantilla = @idPlantilla;

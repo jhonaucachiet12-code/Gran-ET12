@@ -1,5 +1,6 @@
 namespace GranDT.Core.Model;
 
+
 public class Jugador
 {
     public short IdJugador {get;set;}

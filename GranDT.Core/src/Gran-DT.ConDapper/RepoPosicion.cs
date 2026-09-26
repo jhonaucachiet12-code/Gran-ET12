@@ -15,7 +15,7 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
 
     public IEnumerable<Posicion> ObtenerPosiciones()
     {
-        var consulta = @"SELECT * FROM Posiciones";
+        var consulta = @"SELECT * FROM Posicion";
 
         var posiciones = _conexion.Query<Posicion>(consulta);
 
@@ -24,7 +24,7 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
 
     public Posicion? ObtenerPosicionPorId(byte IdPosicion)
     {
-        var consulta = @"SELECT * FROM Posiciones WHERE idPosicion = @IdPosicion";
+        var consulta = @"SELECT * FROM Posicion WHERE idPosicion = @IdPosicion";
 
         var posicion = _conexion.QuerySingleOrDefault<Posicion>(consulta, new { idPosicion = IdPosicion });
 
@@ -34,11 +34,11 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
     public void AgregarPosicion(Posicion posicion)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdPosicion", direction: ParameterDirection.Output);
-        parametros.Add("@Nombre", posicion.Nombre);
+        parametros.Add("unIdPosicion", direction: ParameterDirection.Output);
+        parametros.Add("unNombre", posicion.Nombre);
 
         _conexion.Execute("insertarPosicion", parametros, commandType: CommandType.StoredProcedure);
-         posicion.IdPosicion = parametros.Get<byte>("IdPosicion");
+         posicion.IdPosicion = parametros.Get<byte>("unIdPosicion");
 
 
     }
@@ -46,8 +46,8 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
     public void ActualizarPosicion(Posicion posicion)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdPosicion", posicion.IdPosicion);
-        parametros.Add("@Nombre", posicion.Nombre);
+        parametros.Add("unIdPosicion", posicion.IdPosicion);
+        parametros.Add("unNombre", posicion.Nombre);
 
         _conexion.Execute("actualizarPosicion", parametros, commandType: CommandType.StoredProcedure);
     }
@@ -55,7 +55,7 @@ public class RepoPosicion : RepoDapper , IRepoPosicion
     public void EliminarPosicion(byte IdPosicion)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("@IdPosicion", IdPosicion);
+        parametros.Add("unIdPosicion", IdPosicion);
 
         _conexion.Execute("eliminarPosicion", parametros, commandType: CommandType.StoredProcedure);
     }

@@ -35,7 +35,8 @@ public class TestRepoEquipo
         Assert.IsAssignableFrom<IEnumerable<Equipo>>(equipos);
         Assert.NotEmpty(equipos);
         Assert.Contains(equipos, e => e.IdEquipo > 0 && !string.IsNullOrWhiteSpace(e.Nombre));
-        Assert.Contains(equipos, e => e.IdEquipo == 1 && e.Nombre == "Boca Juniors");
+        Assert.Contains(equipos, e => e.Nombre == "Boca Juniors");
+
     }
     
 

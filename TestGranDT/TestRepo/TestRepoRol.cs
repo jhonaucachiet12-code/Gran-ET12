@@ -31,6 +31,37 @@ public class TestRepoRol
         Assert.IsAssignableFrom<IEnumerable<Rol>>(roles);
         Assert.NotEmpty(roles);
         Assert.Contains(roles, r => r.IdRol > 0 && !string.IsNullOrWhiteSpace(r.Nombre));
-        Assert.Contains(roles, r => r.Nombre == "Arquero");
+        Assert.Contains(roles, r => r.Nombre == "Usuario");
     }
+
+    [Fact]
+    public void ObtenerRolPorId_DevuelveRolExistente()
+    {
+        // Arrange
+        byte idRolExistente = 1;
+
+        // Act
+        var rol = _repoRol.ObtenerRolPorId(idRolExistente);
+
+        // Assert
+        Assert.NotNull(rol);
+        Assert.Equal(idRolExistente, rol.IdRol);
+        Assert.Equal("Usuario", rol.Nombre);
+    }
+
+    [Fact]
+    public void ObtenerRolPorId_DevuelveNullParaRolInexistente()
+    {
+        // Arrange
+        byte idRolInexistente = 90;
+
+        // Act
+        var rol = _repoRol.ObtenerRolPorId(idRolInexistente);
+
+        // Assert
+        Assert.Null(rol);
+    }
+
+    
+
 }

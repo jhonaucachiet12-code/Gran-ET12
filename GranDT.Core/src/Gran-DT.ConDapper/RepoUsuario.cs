@@ -16,7 +16,7 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
 
     public IEnumerable<Usuario> ObtenerUsuarios()
     {
-        var consulta = @"SELECT J.*, R.nombre 
+        var consulta = @"SELECT U.*, R.nombre 
                         FROM Usuario U 
                         INNER JOIN Rol R ON U.idRol = R.idRol";
 
@@ -31,17 +31,17 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
 
     public Usuario? ObtenerPorEmail(short IdUsuario)
     {
-        var consulta = @"SELECT J.*, R.nombre 
-                        FROM Jugadores J
+        var consulta = @"SELECT U.*, R.nombre 
+                        FROM Usuario U 
                         INNER JOIN Rol R ON U.idRol = R.idRol
-                        WHERE J.idJugador = @idUsuario";
+                        WHERE J.idUsuario = @IdUsuario";
         var usuarios = _conexion.Query<Usuario, Rol, Usuario>(
         consulta,
         (Usuario , Rol) =>
         {
             Usuario.Roles = Rol;
             return Usuario;
-        }, new { idUsuario = IdUsuario }, splitOn: "idUsuario");
+        }, new { IdUsuario = IdUsuario }, splitOn: "IdUsuario");
         
         return usuarios.FirstOrDefault();
     }

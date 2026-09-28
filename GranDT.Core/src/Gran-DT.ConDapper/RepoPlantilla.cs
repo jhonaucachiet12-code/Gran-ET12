@@ -135,7 +135,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         }
     }
 
-    public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha)
+    /*public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha)
     {
         var consulta = @"SELECT SUM(U.Puntuacion) AS PuntuacionPromedio
                         FROM PlantillaJugadores L
@@ -143,7 +143,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
                         WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha AND L.titulares = TRUE;";
 
         return _conexion.ExecuteScalar<decimal>(consulta, new { idPlantilla, fecha });
-    }
+    }*/
   
 }
 //dotnet build GranDT.Core/GranDT.Core.csproj

@@ -17,7 +17,7 @@ public class Plantilla
     public List<Jugador> JugadoresSuplentes {get;set;} = new List<Jugador>();
     public Usuario? usuario {get;set;}
 
-    public Plantilla();
+    public Plantilla()
     {
         Presupuesto = 9000000; 
     }

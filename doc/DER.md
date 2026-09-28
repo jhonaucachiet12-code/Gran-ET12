@@ -1,3 +1,8 @@
+# Diagrama de la base de Datos
+
+es un diagrama de la relacion de las entidades de la base de datos bd_GranET.
+
+```mermaid
 erDiagram
     Rol ||--o{ Usuario : "1 asigna a N"
     Usuario ||--o{ Plantilla : "1 posee N"

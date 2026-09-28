@@ -1,6 +1,8 @@
 # Diagrama de clases
 
-Versión simplificada sin `PlantillaJugador`, manteniendo la estructura real del proyecto: modelos, interfaces, servicios, repositorios y relaciones principales.
+
+
+Diagrama de clase del sistema Gran_ET12
 
 ```mermaid
 classDiagram
@@ -266,8 +268,10 @@ classDiagram
     Plantilla "1" --> "0..*" Jugador : incluye titulares y suplentes
     Jugador "1" --> "0..*" Puntuacion : recibe
 ```
-
-La idea es dejar el diagrama más legible y centrado en lo que sí existe en el proyecto: `Jugador`, `Plantilla`, `Equipo`, `Posicion`, `Usuario`, `Rol` y `Puntuacion`, sin la entidad intermedia `PlantillaJugador`.
+Este digrama de clase no contiene una clase o cualqueier otra cosa que refleje la entidad 
+PlantillaJugador  de la base de datos. esto debido a que lo contine la clase Plantilla 
+eso La idea es dejar el diagrama más legible y centrado en lo que sí existe en el proyecto: `Jugador`,
+ `Plantilla`, `Equipo`, `Posicion`, `Usuario`, `Rol` y `Puntuacion`, sin la entidad intermedia `PlantillaJugador`.
 
 	Equipo "1" <-- "0..*" Jugador : pertenece a
 	Posicion "1" <-- "0..*" Jugador : clasifica

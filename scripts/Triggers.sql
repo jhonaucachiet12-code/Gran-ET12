@@ -1,11 +1,9 @@
+DROP TRIGGER IF EXISTS AftInsertUsuario $$
 
-DELIMITER $$
-DROP TRIGGER if EXISTS BefInsert $$
-CREATE Trigger BefInsert before insert  on Usuario 
+CREATE TRIGGER AftInsertUsuario
+AFTER INSERT ON Usuario
 FOR EACH ROW
 BEGIN
-
-    INSERT INTO Plantilla(idPlantilla, idUsuario, nombre, presupuesto, cantidaJugadores)
-    VALUES (new.idPlantilla,new.idUsuario,new.nombre,new.presupuesto,new.cantidaJugadores );
-    
+    INSERT INTO Plantilla (idUsuario, nombre, presupuesto, cantidadJugadores)
+    VALUES (NEW.idUsuario, CONCAT('Plantilla de ', NEW.nombre), 9000000, 0);
 END $$

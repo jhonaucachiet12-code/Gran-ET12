@@ -13,7 +13,7 @@ CREATE TABLE Usuario
     idUsuario SMALLINT AUTO_INCREMENT PRIMARY KEY, 
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL UNIQUE,
+    email VARCHAR(100) UNIQUE NOT NULL,
     fechaNacimiento DATE NOT NULL,
     PasswordHash VARCHAR(65) NOT NULL,
     idRol TINYINT NOT NULL,
@@ -33,8 +33,8 @@ CREATE TABLE Posicion
     idPosicion TINYINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(64) UNIQUE
 );
+-- INSERT INTO Posicion (nombre) VALUES ('Arquero'), ('Defensor'), ('Mediocampista'), ('Delantero');
 
-INSERT INTO Posicion (nombre) VALUES ('Arquero'), ('Defensor'), ('Mediocampista'), ('Delantero');
 
 CREATE TABLE Jugador
 (
@@ -61,7 +61,7 @@ CREATE TABLE Plantilla
     cantidadJugadores TINYINT NOT NULL,
 
     CONSTRAINT FK_Plantilla_Usuario FOREIGN KEY (idUsuario)
-        REFERENCES Usuario (idUsuario),
+        REFERENCES Usuario (idUsuario)
 
 );
 
@@ -87,7 +87,7 @@ CREATE TABLE PlantillaJugadores
         REFERENCES Plantilla (idPlantilla)
 );
 
-
+/*
 --  consulta para traer el promedio de la puntuacion de los jugadores mas recientes de su plantilla 
 
 SELECT AVG(U.Puntuacion) AS promedio_puntuacion
@@ -147,4 +147,5 @@ SELECT SUM(U.Puntuacion) AS sumatoria_puntuacion
 FROM PlantillaJugadores L
 iNNER JOIN puntuacion U on L.idJugador = U.idJugador
 WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha and L.titulares = true;
+*/
    

@@ -7,12 +7,13 @@ public interface IRepoPlantilla
     void AgregarPlantilla(Plantilla plantilla);
     void ActualizarPlantilla(Plantilla plantilla);
     void EliminarPlantilla(int IdPlantilla);
+
     void AgregarJugadorAPlantilla(int idPlantilla, int idJugador, bool esTitular);
     void ActualizarJugadorEnPlantilla(int idPlantilla, int idJugador, bool esTitular);
     void EliminarJugadorDePlantilla(short idJugador, int idPlantilla);
     Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla);
 
-    decimal ObtenerPuntuacionPromedioDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha);
+    decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha);
 
 
     /*decimal ObtenerPuntuacionPromedioDeLaPlantilla(int idPlantilla);

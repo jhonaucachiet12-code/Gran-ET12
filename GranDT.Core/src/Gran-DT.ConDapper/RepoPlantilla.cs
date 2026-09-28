@@ -135,9 +135,9 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         }
     }
 
-    public decimal ObtenerPuntuacionPromedioDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha)
+    public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha)
     {
-        var consulta = @"SELECT AVG(U.Puntuacion) AS PuntuacionPromedio
+        var consulta = @"SELECT SUM(U.Puntuacion) AS PuntuacionPromedio
                         FROM PlantillaJugadores L
                         INNER JOIN puntuacion U ON L.idJugador = U.idJugador
                         WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha AND L.titulares = TRUE;";

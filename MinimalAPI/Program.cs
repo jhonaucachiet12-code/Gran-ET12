@@ -103,3 +103,9 @@ public record RegistroUsuarioRequest(
     byte IdRol,
     string PasswordHash
 );
+
+//ruta ami base de datos:
+//  "DefaultConnection": "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;"
+
+// ruta alternativa a mi base de datos:
+//  "DefaultConnection": "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;"

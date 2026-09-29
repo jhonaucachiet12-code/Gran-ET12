@@ -31,7 +31,6 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-// Endpoints de Usuario
 app.MapGet("/usuarios", (UsuarioService service) =>
 {
     var usuarios = service.ObtenerUsuarios();
@@ -40,20 +39,52 @@ app.MapGet("/usuarios", (UsuarioService service) =>
 
 app.MapGet("/usuarios/{id}", (short id, UsuarioService service) =>
 {
-    var usuario = service.ObtenerPorEmail(id); // ojo, revisar nombre/lógica del método
-    return usuario is not null ? Results.Ok(usuario) : Results.NotFound();
+    try
+    {
+        var usuario = service.ObtenerPorEmail(id);
+        return usuario is not null ? Results.Ok(usuario) : Results.NotFound();
+    }
+    catch (ArgumentOutOfRangeException ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
 });
 
-app.MapPost("/usuarios", (Usuario usuario, string passwordHash, UsuarioService service) =>
+app.MapPost("/usuarios", (RegistroUsuarioRequest request, UsuarioService service) =>
 {
-    service.RegistrarUsario(usuario, passwordHash);
-    return Results.Created($"/usuarios/{usuario.IdUsuario}", usuario);
+    try
+    {
+        var usuario = new Usuario
+        {
+            Nombre = request.Nombre,
+            Apellido = request.Apellido,
+            Email = request.Email,
+            FechaNacimiento = request.FechaNacimiento,
+            IdRol = request.IdRol,
+            PasswordHash = "temp",      // se sobreescribe dentro del service
+            Roles = new Rol { Nombre = "" } // placeholder, no se usa para el insert
+        };
+
+        service.RegistrarUsario(usuario, request.PasswordHash);
+        return Results.Created($"/usuarios/{usuario.IdUsuario}", usuario);
+    }
+    catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+    {
+        return Results.BadRequest(ex.Message);
+    }
 });
 
 app.MapPut("/usuarios", (Usuario usuario, UsuarioService service) =>
 {
-    service.ActualizarUsuario(usuario);
-    return Results.NoContent();
+    try
+    {
+        service.ActualizarUsuario(usuario);
+        return Results.NoContent();
+    }
+    catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+    {
+        return Results.BadRequest(ex.Message);
+    }
 });
 
 app.MapDelete("/usuarios/{id}", (short id, UsuarioService service) =>
@@ -63,3 +94,12 @@ app.MapDelete("/usuarios/{id}", (short id, UsuarioService service) =>
 });
 
 app.Run();
+
+public record RegistroUsuarioRequest(
+    string Nombre,
+    string Apellido,
+    string Email,
+    DateTime FechaNacimiento,
+    byte IdRol,
+    string PasswordHash
+);

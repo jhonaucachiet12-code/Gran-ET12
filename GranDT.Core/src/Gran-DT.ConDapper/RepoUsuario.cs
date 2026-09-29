@@ -32,36 +32,35 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
     public Usuario? ObtenerPorEmail(short IdUsuario)
     {
         var consulta = @"SELECT U.*, R.nombre 
-                        FROM Usuario U 
+                        FROM Usuario U
                         INNER JOIN Rol R ON U.idRol = R.idRol
-                        WHERE J.idUsuario = @IdUsuario";
+                        WHERE U.idUsuario = @idUsuario";
         var usuarios = _conexion.Query<Usuario, Rol, Usuario>(
         consulta,
-        (Usuario , Rol) =>
+        (Usuario, Rol) =>
         {
             Usuario.Roles = Rol;
             return Usuario;
-        }, new { IdUsuario = IdUsuario }, splitOn: "IdUsuario");
-        
+        }, new { idUsuario = IdUsuario }, splitOn: "idRol");
+    
         return usuarios.FirstOrDefault();
     }
 
-    public void RegistrarUsario(Usuario usuario, string PasswordHash)
-    {
-        
 
-        var parametros = new DynamicParameters();
-        parametros.Add("unIdUsuario", direction: ParameterDirection.Output);
-        parametros.Add("unNombre", usuario.Nombre);
-        parametros.Add("unApellido", usuario.Apellido);
-        parametros.Add("unEmail", usuario.Email);
-        parametros.Add("unPasswordHash", usuario.PasswordHash);
-        parametros.Add("unIdRol", usuario.IdRol);
+   public void RegistrarUsario(Usuario usuario, string PasswordHash)
+{
+    var parametros = new DynamicParameters();
+    parametros.Add("unIdUsuario", direction: ParameterDirection.Output);
+    parametros.Add("unNombre", usuario.Nombre);
+    parametros.Add("unApellido", usuario.Apellido);
+    parametros.Add("unEmail", usuario.Email);
+    parametros.Add("unFechaNacimiento", usuario.FechaNacimiento); // ← agregado
+    parametros.Add("unPasswordHash", usuario.PasswordHash);
+    parametros.Add("unIdRol", usuario.IdRol);
 
-        _conexion.Execute("insertarUsuario", parametros, commandType: CommandType.StoredProcedure);
-         usuario.IdUsuario = parametros.Get<short>("unIdUsuario");
-
-    }
+    _conexion.Execute("insertarUsuario", parametros, commandType: CommandType.StoredProcedure);
+    usuario.IdUsuario = (short)parametros.Get<ushort>("unIdUsuario");
+}
 
     public void EliminarUsuario(short IdUsuario)
     {
@@ -78,6 +77,7 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
         parametros.Add("unNombre", usuario.Nombre);
         parametros.Add("unApellido", usuario.Apellido);
         parametros.Add("unEmail", usuario.Email);
+        parametros.Add("unFechaNacimiento", usuario.FechaNacimiento); 
         parametros.Add("unPasswordHash", usuario.PasswordHash);
         parametros.Add("unIdRol", usuario.IdRol);
 

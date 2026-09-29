@@ -1,4 +1,4 @@
-Bitácora
+# Bitácora
 
 Primera semana. 
 Los primeros días analizé el relevamiento que se nos proporcionó  y empecé a crear la base de datos del 
@@ -23,4 +23,6 @@ tiene también el CRUD de la entidad de. También cree algunos  test de los repo
 
 semanas 5: 
 domingo: cree el controlador de usuario
+lunes: cree el controlador de usuario
+y prove lso enpoints y si funcionan
 

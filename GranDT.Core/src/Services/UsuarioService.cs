@@ -30,13 +30,6 @@ public class UsuarioService
 
     public void RegistrarUsario(Usuario usuario , string PasswordHash)
     {
-        var usuarioExistente = repoUsuario.ObtenerPorEmail(usuario.IdUsuario);
-        var usuarios = repoUsuario.ObtenerUsuarios();
-        if (usuarioExistente != null)
-        {
-            throw new InvalidOperationException("El usuario ya existe.");
-        }
-
         if(string.IsNullOrWhiteSpace(PasswordHash))
         {
             throw new ArgumentException("La contraseña es obligatoria.", nameof(PasswordHash));
@@ -46,12 +39,15 @@ public class UsuarioService
         {
             throw new ArgumentException("La contraseña debe tener al menos 6 caracteres.", nameof(PasswordHash));
         }
-        if(usuarios.Any(u => u.Email == usuario.Email))
+
+        ValidarUsuario(usuario);
+
+        var usuarios = repoUsuario.ObtenerUsuarios();
+        if (usuarios.Any(u => u.Email == usuario.Email))
         {
             throw new ArgumentException("El email ya está en uso.", nameof(usuario));
         }
-
-        ValidarUsuario(usuario);
+        
 
         usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(PasswordHash);
 
@@ -76,20 +72,23 @@ public class UsuarioService
             throw new Exception("El usuario no exite.");
         }
 
-        bool esigual =  BCrypt.Net.BCrypt.Verify(viejoUsuario.PasswordHash , nuevoUsuario.PasswordHash);
+        // nuevoUsuario.PasswordHash llega en texto plano desde el cliente.
+    // Verify(textoPlano, hashGuardado) chequea si es la misma contraseña de antes.
+        bool esLaMismaPassword = BCrypt.Net.BCrypt.Verify(nuevoUsuario.PasswordHash, viejoUsuario.PasswordHash);
 
-        if(esigual)
+        if (esLaMismaPassword)
         {
-            repoUsuario.ActualizarUsuario(nuevoUsuario);
+        // No cambió la contraseña: conservamos el hash existente, no lo tocamos.
+            nuevoUsuario.PasswordHash = viejoUsuario.PasswordHash;
         }
         else
         {
+        // Es una contraseña nueva: la hasheamos antes de guardar.
             nuevoUsuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(nuevoUsuario.PasswordHash);
-
-            repoUsuario.ActualizarUsuario(nuevoUsuario);
         }
         
-        
+        repoUsuario.ActualizarUsuario(nuevoUsuario);
+
     }
 
     private static void ValidarUsuario(Usuario usuario )

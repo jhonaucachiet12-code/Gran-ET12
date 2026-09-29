@@ -19,7 +19,8 @@ public class TestRepoEquipo
     {
         //var cadena = "Server=localhost;Database=bd_Mundial26;Uid=root;Pwd=1001;";
 
-        var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        //var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
         var conexion = new MySqlConnection(cadena);
         _repoEquipo = new RepoEquipo(conexion);
     }
@@ -116,6 +117,23 @@ public class TestRepoEquipo
         // Assert
         var equipoEliminado = _repoEquipo.ObtenerEquipoPorId(1);
         Assert.Null(equipoEliminado);
+    }
+
+    private static Equipo CrearRolTemporal()
+    {
+        return new Equipo
+        {
+            IdEquipo=1,
+            Nombre ="Usuario" 
+        };
+    }
+
+    private void BorrarRolTemporal(Equipo equipo)
+    {
+        if (equipo.IdEquipo > 0)
+		{
+			_repoEquipo.EliminarEquipo(equipo.IdEquipo);
+		}
     }
 
 

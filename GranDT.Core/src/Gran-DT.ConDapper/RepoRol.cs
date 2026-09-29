@@ -13,7 +13,7 @@ public class RepoRol : RepoDapper, IRepoRol
 
     public IEnumerable<Rol> ObtenerRoles()
     {
-        var consulta = @"SELECT * FROM Roles";
+        var consulta = @"SELECT * FROM Rol";
 
         var roles = _conexion.Query<Rol>(consulta);
 
@@ -22,7 +22,7 @@ public class RepoRol : RepoDapper, IRepoRol
 
     public Rol? ObtenerRolPorId(byte   idRol)
     {
-        var consulta = @"SELECT * FROM Roles WHERE idRol = @IdRol";
+        var consulta = @"SELECT * FROM Rol WHERE idRol = @IdRol";
 
         var rol = _conexion.QuerySingleOrDefault<Rol>(consulta, new { IdRol = idRol });
 

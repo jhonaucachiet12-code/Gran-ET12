@@ -15,7 +15,8 @@ public class TestRepoRol
 
     public TestRepoRol()
     {
-        var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        //var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
         var conexion = new MySqlConnection(cadena);
         _repoRol = new RepoRol(conexion);
     }
@@ -24,29 +25,45 @@ public class TestRepoRol
     public void ObtenerRoles_DevuelveListaDeRoles()
     {
         // Act
-        var roles = _repoRol.ObtenerRoles();
+        var usuarioTemoral = CrearRolTemporal();
+
+        try
+        {
+            _repoRol.AgregarRol(usuarioTemoral);
+            var roles = _repoRol.ObtenerRoles();
+            Assert.NotNull(roles);
+            Assert.IsAssignableFrom<IEnumerable<Rol>>(roles);
+            Assert.Contains(roles, r => r.Nombre == "Usuario");
+
+        }
+        finally
+        {
+            BorrarRolTemporal(usuarioTemoral);
+        }
 
         // Assert
-        Assert.NotNull(roles);
-        Assert.IsAssignableFrom<IEnumerable<Rol>>(roles);
-        Assert.NotEmpty(roles);
-        Assert.Contains(roles, r => r.IdRol > 0 && !string.IsNullOrWhiteSpace(r.Nombre));
-        Assert.Contains(roles, r => r.Nombre == "Usuario");
+
     }
 
     [Fact]
     public void ObtenerRolPorId_DevuelveRolExistente()
     {
+        var usuarioTemoral = CrearRolTemporal();
+
+        try
+        {
+            _repoRol.AgregarRol(usuarioTemoral);
+            var roles = _repoRol.ObtenerRolPorId(usuarioTemoral.IdRol);
+            Assert.NotNull(roles);
+            Assert.Equal("Usuario", roles.Nombre);
+        }
+        finally
+        {
+            BorrarRolTemporal(usuarioTemoral);
+        }
+
         // Arrange
-        byte idRolExistente = 1;
-
-        // Act
-        var rol = _repoRol.ObtenerRolPorId(idRolExistente);
-
-        // Assert
-        Assert.NotNull(rol);
-        Assert.Equal(idRolExistente, rol.IdRol);
-        Assert.Equal("Usuario", rol.Nombre);
+        
     }
 
     [Fact]
@@ -60,6 +77,49 @@ public class TestRepoRol
 
         // Assert
         Assert.Null(rol);
+    }
+
+    [Fact]
+
+    public void AcutualizarUsuario()
+    {
+        var usuarioTemoral = CrearRolTemporal();
+
+        try
+        {
+            _repoRol.AgregarRol(usuarioTemoral);
+            usuarioTemoral.Nombre = "Usuario General";
+            _repoRol.ActualizarRol(usuarioTemoral);
+
+            var roles = _repoRol.ObtenerRolPorId(usuarioTemoral.IdRol);
+            
+
+            Assert.NotNull(roles);
+            Assert.Equal(usuarioTemoral.Nombre , roles.Nombre);
+        }
+        finally
+        {
+            BorrarRolTemporal(usuarioTemoral);
+        }
+
+
+    }
+
+    private static Rol CrearRolTemporal()
+    {
+        return new Rol
+        {
+            IdRol=1,
+            Nombre ="Usuario" 
+        };
+    }
+
+    private void BorrarRolTemporal(Rol roles)
+    {
+        if (roles.IdRol > 0)
+		{
+			_repoRol.EliminarRol(roles.IdRol);
+		}
     }
 
     

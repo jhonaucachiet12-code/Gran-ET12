@@ -114,7 +114,19 @@ public class UsuarioService
         {
             throw new ArgumentException("Fecha de nacimiento imposible.", nameof(usuario));
         }
-        //Time  que haber  algo ante y des pues de un @
+        //Time  que haber  algo ante y des pues de un "@" y un "."
+
+        int posicionArroba = usuario.Email.IndexOf('@');
+        int posicionPunto = usuario.Email.LastIndexOf('.');
+
+        if (posicionArroba > 0 && posicionPunto > posicionArroba + 1 && posicionPunto < usuario.Email.Length - 1)
+        {
+            // Estructura mínima válida: texto@texto.texto
+
+            throw new ArgumentException("la estructura del email es incorecta.", nameof(usuario));
+
+
+        }
 
 	}
 

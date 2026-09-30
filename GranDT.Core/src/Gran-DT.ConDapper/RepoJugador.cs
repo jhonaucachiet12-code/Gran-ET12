@@ -13,9 +13,9 @@ public class RepoJugador :RepoDapper, IRepoJugador
 
     public IEnumerable<Jugador> ObtenerJugadores()
     {
-        var consulta = @"SELECT J.*, P.nombre , R.nombre 
-                        FROM Jugadores J
-                        INNER JOIN Posiciones P ON J.IdPosicion = P.IdPosicion
+        var consulta = @"SELECT J.*, P.nombre , E.nombre 
+                        FROM Jugador J
+                        INNER JOIN Posicion P ON J.IdPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo";
 
         var jugadores = _conexion.Query<Jugador, Posicion, Equipo, Jugador>(consulta, (jugador, posicion, equipo) =>
@@ -30,9 +30,9 @@ public class RepoJugador :RepoDapper, IRepoJugador
 
     public Jugador? ObtenerJugadorPorId(short IdJugador)
     {
-        var consulta = @"SELECT J.*, P.nombre , R.nombre 
-                        FROM Jugadores J
-                        INNER JOIN Posiciones P ON J.idPosicion = P.IdPosicion
+        var consulta = @"SELECT J.*, P.nombre , E.nombre 
+                        FROM Jugador J
+                        INNER JOIN Posicion P ON J.idPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo
                         WHERE J.idJugador = @IdJugador";
         var Jugadores = _conexion.Query<Jugador, Posicion, Equipo, Jugador>(
@@ -52,7 +52,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
         var parametros = new DynamicParameters();
         parametros.Add("unIdJugador", direction: ParameterDirection.Output);
         parametros.Add("unIdPosicion", jugador.IdPosicion);
-        parametros.Add("unEquipo", jugador.IdEquipo);
+        parametros.Add("unIdEquipo", jugador.IdEquipo);
         parametros.Add("unNombre", jugador.Nombre);
         parametros.Add("unApellido", jugador.Apellido);
         parametros.Add("unApodo", jugador.Apodo);

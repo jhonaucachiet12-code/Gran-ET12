@@ -12,7 +12,7 @@ public class Jugador
     public DateTime Nacimiento{get;set;}
     public decimal Cotización{get;set;}
     
-    public required  Posicion posicion {get;set;}
+    public required Posicion posicion {get;set;}
     public required Equipo equipo{get;set;}
 
 

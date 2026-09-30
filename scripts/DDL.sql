@@ -86,7 +86,6 @@ CREATE TABLE PlantillaJugadores
     CONSTRAINT FK_PlantillaJugadores_Plantilla FOREIGN KEY (idPlantilla)
         REFERENCES Plantilla (idPlantilla)
 );
-
 /*
 --  consulta para traer el promedio de la puntuacion de los jugadores mas recientes de su plantilla 
 

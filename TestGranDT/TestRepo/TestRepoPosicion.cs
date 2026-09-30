@@ -32,7 +32,7 @@ public class TestRepoPosicion
 
             Assert.NotNull(posiciones);
             Assert.IsAssignableFrom<IEnumerable<Posicion>>(posiciones);
-            Assert.Contains(posiciones,r => r.Nombre == "Arquero");
+            Assert.Contains(posiciones,r => r.Nombre == "Arquero2");
             Assert.Contains(posiciones, posicion => posicion.IdPosicion == posicionEsperada.IdPosicion);
 
         }
@@ -137,7 +137,7 @@ public class TestRepoPosicion
     {
         return new Posicion
         {
-            Nombre = $"Arquero"
+            Nombre = $"Arquero2"
         };
     }
 

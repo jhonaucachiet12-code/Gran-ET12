@@ -41,7 +41,7 @@ public class TestRepoEquipo
 
             Assert.NotNull(equipos1);
             Assert.IsAssignableFrom<IEnumerable<Equipo>>(equipos1);
-            Assert.Contains(equipos1,r => r.Nombre == "Boca Juniors");
+            Assert.Contains(equipos1,r => r.Nombre == "Boca Juniors2");
             Assert.Contains(equipos1, equipos => equipos.IdEquipo == equipoEsperada.IdEquipo);
 
         }
@@ -167,7 +167,7 @@ public class TestRepoEquipo
         return new Equipo
         {
             IdEquipo= 1,
-            Nombre ="Boca Juniors" 
+            Nombre ="Boca Juniors2" 
         };
     }
 

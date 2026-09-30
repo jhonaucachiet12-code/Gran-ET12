@@ -1,51 +1,82 @@
-// repositorio de puntuaciones 
+// repositorio de puntuaciones
 using GranDT.Core.Model;
 using Dapper;
 using GranDT.Core.Model.IRepos;
 using System.Data;
+
 namespace GranDT.Core.Gran_DT.ConDapper;
 
 public class RepoPuntuacion : RepoDapper, IRepoPuntuacion
 {
-    public RepoPuntuacion(IDbConnection conexion) 
-    : base(conexion){}
+    public RepoPuntuacion(IDbConnection conexion)
+        : base(conexion) { }
 
     public IEnumerable<Puntuacion> ObtenerPuntuasiones()
     {
-        var consulta = @"SELECT * FROM Puntuacion";
+        var consulta = @"SELECT P.idJugador, P.Fecha, P.puntuacion AS Puntuaciones,
+                               J.idJugador AS JugadorIdJugador, J.idPosicion, J.idEquipo,
+                               J.nombre, J.apellido, J.apodo, J.nacimiento, J.cotización
+                        FROM Puntuacion P
+                        INNER JOIN Jugador J ON P.idJugador = J.idJugador";
 
-        var puntuaciones = _conexion.Query<Puntuacion>(consulta);
-
-        return puntuaciones;
+        return _conexion.Query<Puntuacion, Jugador, Puntuacion>(
+            consulta,
+            (puntuacion, jugador) =>
+            {
+                puntuacion.jugador = jugador;
+                return puntuacion;
+            },
+            splitOn: "JugadorIdJugador");
     }
 
     public Puntuacion? ObtenerLaPuntucionDelJugador(short IdJugador, byte Fecha)
     {
-        var consulta = @"SELECT * FROM Puntuacion WHERE idJugador = @IdJugador AND fecha = @Fecha";
+        var consulta = @"SELECT P.idJugador, P.Fecha, P.puntuacion AS Puntuaciones,
+                               J.idJugador AS JugadorIdJugador, J.idPosicion, J.idEquipo,
+                               J.nombre, J.apellido, J.apodo, J.nacimiento, J.cotización
+                        FROM Puntuacion P
+                        INNER JOIN Jugador J ON P.idJugador = J.idJugador
+                        WHERE P.idJugador = @IdJugador AND P.Fecha = @Fecha";
 
-        var puntuacion = _conexion.QuerySingleOrDefault<Puntuacion>(consulta, new { IdJugador = IdJugador, Fecha = Fecha });
-
-        return puntuacion;
+        return _conexion.Query<Puntuacion, Jugador, Puntuacion>(
+            consulta,
+            (puntuacion, jugador) =>
+            {
+                puntuacion.jugador = jugador;
+                return puntuacion;
+            },
+            new { IdJugador, Fecha },
+            splitOn: "JugadorIdJugador").FirstOrDefault();
     }
 
     public IEnumerable<Puntuacion> ObtenerTodasLasPuntuasionesDelJugador(short IdJugador)
     {
-        var consulta = @"SELECT * FROM Puntuacion WHERE idJugador = @IdJugador";
+        var consulta = @"SELECT P.idJugador, P.Fecha, P.puntuacion AS Puntuaciones,
+                               J.idJugador AS JugadorIdJugador, J.idPosicion, J.idEquipo,
+                               J.nombre, J.apellido, J.apodo, J.nacimiento, J.cotización
+                        FROM Puntuacion P
+                        INNER JOIN Jugador J ON P.idJugador = J.idJugador
+                        WHERE P.idJugador = @IdJugador";
 
-        var puntuaciones = _conexion.Query<Puntuacion>(consulta, new { IdJugador = IdJugador });
-
-        return puntuaciones;
+        return _conexion.Query<Puntuacion, Jugador, Puntuacion>(
+            consulta,
+            (puntuacion, jugador) =>
+            {
+                puntuacion.jugador = jugador;
+                return puntuacion;
+            },
+            new { IdJugador },
+            splitOn: "JugadorIdJugador");
     }
 
     public void AgregarPuntuacion(Puntuacion puntuacion)
     {
         var parametros = new DynamicParameters();
-        parametros.Add("unIdJugador", direction: ParameterDirection.Output);
+        parametros.Add("unIdJugador", puntuacion.IdJugador);
         parametros.Add("unaFecha", puntuacion.Fecha);
         parametros.Add("unaPuntuacion", puntuacion.Puntuaciones);
 
         _conexion.Execute("insertarPuntuacion", parametros, commandType: CommandType.StoredProcedure);
-         puntuacion.IdJugador = parametros.Get<short>("unIdJugador");
     }
 
     public void ActualizarPuntuacion(Puntuacion puntuacion)
@@ -57,12 +88,12 @@ public class RepoPuntuacion : RepoDapper, IRepoPuntuacion
 
         _conexion.Execute("actualizarPuntuacion", parametros, commandType: CommandType.StoredProcedure);
     }
+
     public void EliminarPuntuacion(short IdJugador)
     {
-        var parametros = new DynamicParameters();
-        parametros.Add("unIdJugador", IdJugador);
-
-        _conexion.Execute("eliminarPuntuacion", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute(
+            "DELETE FROM Puntuacion WHERE idJugador = @IdJugador",
+            new { IdJugador });
     }
 }
 

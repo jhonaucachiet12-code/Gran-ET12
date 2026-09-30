@@ -19,8 +19,8 @@ public class TestRepoEquipo
     {
         //var cadena = "Server=localhost;Database=bd_Mundial26;Uid=root;Pwd=1001;";
 
-        //var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
-        var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
+        var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        //var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
         var conexion = new MySqlConnection(cadena);
         _repoEquipo = new RepoEquipo(conexion);
     }
@@ -29,14 +29,26 @@ public class TestRepoEquipo
     public void ObtenerEquipos_DevuelveListaDeEquipos()
     {
         // Act
-        var equipos = _repoEquipo.ObtenerEquipos();
 
-        // Assert
-        Assert.NotNull(equipos);
-        Assert.IsAssignableFrom<IEnumerable<Equipo>>(equipos);
-        Assert.NotEmpty(equipos);
-        Assert.Contains(equipos, e => e.IdEquipo > 0 && !string.IsNullOrWhiteSpace(e.Nombre));
-        Assert.Contains(equipos, e => e.Nombre == "Boca Juniors");
+
+        var equipoEsperada = CrearEquipoTemporal();
+
+        try
+        {
+            _repoEquipo.AgregarEquipo(equipoEsperada);
+
+            var equipos1 = _repoEquipo.ObtenerEquipos();
+
+            Assert.NotNull(equipos1);
+            Assert.IsAssignableFrom<IEnumerable<Equipo>>(equipos1);
+            Assert.Contains(equipos1,r => r.Nombre == "Boca Juniors");
+            Assert.Contains(equipos1, equipos => equipos.IdEquipo == equipoEsperada.IdEquipo);
+
+        }
+        finally
+        {
+            BorrarEquipoTemporal(equipoEsperada);
+        }
 
     }
     
@@ -44,16 +56,24 @@ public class TestRepoEquipo
     [Fact]
     public void ObtenerEquipoPorId_DevuelveEquipoExistente()
     {
-        // Arrange
-        byte idEquipoExistente = 1;
 
-        // Act
-        var equipo = _repoEquipo.ObtenerEquipoPorId(idEquipoExistente);
+        var equipoEsperada = CrearEquipoTemporal();
 
-        // Assert
-        Assert.NotNull(equipo);
-        Assert.Equal(idEquipoExistente, equipo.IdEquipo);
-        Assert.Equal("Boca Juniors", equipo.Nombre);
+        try
+        {
+            _repoEquipo.AgregarEquipo(equipoEsperada);
+
+            var equipos1 = _repoEquipo.ObtenerEquipoPorId(equipoEsperada.IdEquipo);
+
+            Assert.NotNull(equipos1);
+            Assert.Equal(equipoEsperada.IdEquipo, equipos1.IdEquipo);
+            Assert.Equal(equipoEsperada.Nombre, equipos1.Nombre);
+            
+        }
+        finally
+        {
+            BorrarEquipoTemporal(equipoEsperada);
+        }
     }
 
     [Fact]
@@ -74,61 +94,84 @@ public class TestRepoEquipo
     [Fact]
     public void AgregarEquipo_AgregaNuevoEquipo()
     {
+        
         // Arrange
-        var nuevoEquipo = new Equipo { Nombre = "Nuevo Equipo" };
+        var nuevoEquipo = new Equipo { Nombre = "Nuevo Equipo23" };
 
+        
+        try
+        {
+            _repoEquipo.AgregarEquipo(nuevoEquipo);
+            Assert.True(nuevoEquipo.IdEquipo > 0);
+            var equipoAgregado = _repoEquipo.ObtenerEquipoPorId(nuevoEquipo.IdEquipo);
+            Assert.NotNull(equipoAgregado);
+            Assert.Equal("Nuevo Equipo23", equipoAgregado.Nombre);
+        }
+        finally
+        {
+            BorrarEquipoTemporal(nuevoEquipo);
+        }
         // Act
-        _repoEquipo.AgregarEquipo(nuevoEquipo);
-
         // Assert
-        Assert.True(nuevoEquipo.IdEquipo > 0);
-        var equipoAgregado = _repoEquipo.ObtenerEquipoPorId(nuevoEquipo.IdEquipo);
-        Assert.NotNull(equipoAgregado);
-        Assert.Equal("Nuevo Equipo", equipoAgregado.Nombre);
+        
     }
 
     [Fact]
     public void ActualizarEquipo_ActualizaEquipoExistente()
     {
-        // Arrange
-        var equipoExistente = _repoEquipo.ObtenerEquipoPorId(1);
-        Assert.NotNull(equipoExistente);
-        equipoExistente.Nombre = "Equipo Actualizado";
 
-        // Act
-        _repoEquipo.ActualizarEquipo(equipoExistente);
 
-        // Assert
-        var equipoActualizado = _repoEquipo.ObtenerEquipoPorId(1);
-        Assert.NotNull(equipoActualizado);
-        Assert.Equal("Equipo Actualizado", equipoActualizado.Nombre);
+        var equipoTemporal = CrearEquipoTemporal();
+
+        try
+        {
+            _repoEquipo.AgregarEquipo(equipoTemporal);
+
+            
+
+            equipoTemporal.Nombre = $"Equipo Actualizado";
+
+            _repoEquipo.ActualizarEquipo(equipoTemporal);
+
+            var equipoActualizada = _repoEquipo.ObtenerEquipoPorId(equipoTemporal.IdEquipo);
+            Assert.NotNull(equipoActualizada);
+            Assert.Equal(equipoTemporal.Nombre, equipoActualizada.Nombre);
+        }
+        finally
+        {
+            BorrarEquipoTemporal(equipoTemporal);
+        }
     }
 
     [Fact]
     public void EliminarEquipo_EliminaEquipoExistente()
     {
-        // Arrange
-        var equipoExistente = _repoEquipo.ObtenerEquipoPorId(1);
-        Assert.NotNull(equipoExistente);
+        var equipoTemporal = CrearEquipoTemporal();
 
-        // Act
-        _repoEquipo.EliminarEquipo(1);
+        try
+        {
+            _repoEquipo.AgregarEquipo(equipoTemporal);
 
-        // Assert
-        var equipoEliminado = _repoEquipo.ObtenerEquipoPorId(1);
-        Assert.Null(equipoEliminado);
+            _repoEquipo.EliminarEquipo(equipoTemporal.IdEquipo);
+
+            Assert.Null(_repoEquipo.ObtenerEquipoPorId(equipoTemporal.IdEquipo));
+        }
+        finally
+        {
+            BorrarEquipoTemporal(equipoTemporal);
+        }
     }
 
-    private static Equipo CrearRolTemporal()
+    private static Equipo CrearEquipoTemporal()
     {
         return new Equipo
         {
-            IdEquipo=1,
-            Nombre ="Usuario" 
+            IdEquipo= 1,
+            Nombre ="Boca Juniors" 
         };
     }
 
-    private void BorrarRolTemporal(Equipo equipo)
+    private void BorrarEquipoTemporal(Equipo equipo)
     {
         if (equipo.IdEquipo > 0)
 		{

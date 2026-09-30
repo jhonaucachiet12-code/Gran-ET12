@@ -15,8 +15,8 @@ public class TestRepoRol
 
     public TestRepoRol()
     {
-        //var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
-        var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
+        var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        //var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
         var conexion = new MySqlConnection(cadena);
         _repoRol = new RepoRol(conexion);
     }
@@ -33,7 +33,7 @@ public class TestRepoRol
             var roles = _repoRol.ObtenerRoles();
             Assert.NotNull(roles);
             Assert.IsAssignableFrom<IEnumerable<Rol>>(roles);
-            Assert.Contains(roles, r => r.Nombre == "Usuario");
+            Assert.Contains(roles, r => r.Nombre == "Usuario2");
 
         }
         finally
@@ -55,7 +55,7 @@ public class TestRepoRol
             _repoRol.AgregarRol(usuarioTemoral);
             var roles = _repoRol.ObtenerRolPorId(usuarioTemoral.IdRol);
             Assert.NotNull(roles);
-            Assert.Equal("Usuario", roles.Nombre);
+            Assert.Equal("Usuario2", roles.Nombre);
         }
         finally
         {
@@ -110,7 +110,7 @@ public class TestRepoRol
         return new Rol
         {
             IdRol=1,
-            Nombre ="Usuario" 
+            Nombre ="Usuario2" 
         };
     }
 

@@ -1,198 +1,195 @@
--- procedure para insertar, actualizar y eliminar registros en la base de datos de mysql 
+-- procedures para insertar, actualizar y eliminar registros en la base de datos bd_GranET
 
-delimiter $$
-drop procedure if exists insertarRol$$
-create procedure insertarRol(out unIdRol tinyint UNSIGNED, in unNombre varchar(50))
-begin
-    insert into rol(nombreRol) 
-    values(unNombre);
-    set unIdRol = last_insert_id();
-end$$
+DELIMITER $$
 
-drop procedure if exists actualizarRol$$
-create procedure actualizarRol(in unIdRol tinyint UNSIGNED, in unNombre varchar(50))
-begin
-    update rol
-    set nombreRol = unNombre
-    where idRol = unIdRol;
-end$$
+-- ==================== ROL ====================
+DROP PROCEDURE IF EXISTS insertarRol$$
+CREATE PROCEDURE insertarRol(OUT unIdRol TINYINT UNSIGNED, IN unNombre VARCHAR(50))
+BEGIN
+    INSERT INTO Rol(nombre)
+    VALUES (unNombre);
+    SET unIdRol = LAST_INSERT_ID();
+END$$
 
-drop procedure if exists eliminarRol$$
-create procedure eliminarRol(in unIdRol tinyint UNSIGNED)
-begin
-    delete from rol
-    where idRol = unIdRol;
-end$$
+DROP PROCEDURE IF EXISTS actualizarRol$$
+CREATE PROCEDURE actualizarRol(IN unIdRol TINYINT UNSIGNED, IN unNombre VARCHAR(50))
+BEGIN
+    UPDATE Rol
+    SET nombre = unNombre
+    WHERE idRol = unIdRol;
+END$$
 
---procedure de equipo para insertar, actualizar y eliminar registros en la base de datos de mysql
-delimiter $$
-drop procedure if exists insertarEquipo$$
-create procedure insertarEquipo(out unIdEquipo tinyint UNSIGNED, in unNombre varchar(50))
-begin
-    insert into equipo(nombre) 
-    values(unNombre);
-    set unIdEquipo = last_insert_id();
-end$$
+DROP PROCEDURE IF EXISTS eliminarRol$$
+CREATE PROCEDURE eliminarRol(IN unIdRol TINYINT UNSIGNED)
+BEGIN
+    DELETE FROM Rol
+    WHERE idRol = unIdRol;
+END$$
 
-drop procedure if exists actualizarEquipo$$
-create procedure actualizarEquipo(in unIdEquipo tinyint UNSIGNED, in unNombre varchar(50))
-begin
-    update equipo 
-    set nombre = unNombre
-    where idEquipo = unIdEquipo;
-end$$
+-- ==================== EQUIPO ====================
+DROP PROCEDURE IF EXISTS insertarEquipo$$
+CREATE PROCEDURE insertarEquipo(OUT unIdEquipo TINYINT UNSIGNED, IN unNombre VARCHAR(50))
+BEGIN
+    INSERT INTO Equipo(nombre)
+    VALUES (unNombre);
+    SET unIdEquipo = LAST_INSERT_ID();
+END$$
 
-drop procedure if exists eliminarEquipo$$
-create procedure eliminarEquipo(in unIdEquipo tinyint UNSIGNED)
-begin
-    delete from equipo 
-    where idEquipo = unIdEquipo;
-end$$
+DROP PROCEDURE IF EXISTS actualizarEquipo$$
+CREATE PROCEDURE actualizarEquipo(IN unIdEquipo TINYINT UNSIGNED, IN unNombre VARCHAR(50))
+BEGIN
+    UPDATE Equipo
+    SET nombre = unNombre
+    WHERE idEquipo = unIdEquipo;
+END$$
 
---procedure de posicion para insertar, actualizar y eliminar registros en la base de datos de mysql
-delimiter $$
-drop procedure if exists insertarPosicion$$
-create procedure insertarPosicion(out unIdPosicion tinyint UNSIGNED, in unNombre varchar(50))
-begin
-    insert into posicion(nombre) 
-    values(unNombre);
-    set unIdPosicion = last_insert_id();
-end$$
+DROP PROCEDURE IF EXISTS eliminarEquipo$$
+CREATE PROCEDURE eliminarEquipo(IN unIdEquipo TINYINT UNSIGNED)
+BEGIN
+    DELETE FROM Equipo
+    WHERE idEquipo = unIdEquipo;
+END$$
 
-drop procedure if exists actualizarPosicion$$
-create procedure actualizarPosicion(in unIdPosicion tinyint UNSIGNED, in unNombre varchar(50))
-begin
-    update posicion 
-    set nombre = unNombre
-    where idPosicion = unIdPosicion;
-end$$
+-- ==================== POSICION ====================
+DROP PROCEDURE IF EXISTS insertarPosicion$$
+CREATE PROCEDURE insertarPosicion(OUT unIdPosicion TINYINT UNSIGNED, IN unNombre VARCHAR(50))
+BEGIN
+    INSERT INTO Posicion(nombre)
+    VALUES (unNombre);
+    SET unIdPosicion = LAST_INSERT_ID();
+END$$
 
-drop procedure if exists eliminarPosicion$$
-create procedure eliminarPosicion(in unIdPosicion tinyint UNSIGNED)
-begin
-    delete from posicion 
-    where idPosicion = unIdPosicion;
-end$$
+DROP PROCEDURE IF EXISTS actualizarPosicion$$
+CREATE PROCEDURE actualizarPosicion(IN unIdPosicion TINYINT UNSIGNED, IN unNombre VARCHAR(50))
+BEGIN
+    UPDATE Posicion
+    SET nombre = unNombre
+    WHERE idPosicion = unIdPosicion;
+END$$
 
--- procedure para agregar y eliminar jugadores de la plantilla
-delimiter $$
-drop procedure if exists agregarJugadorAPlantilla$$
-create procedure agregarJugadorAPlantilla(in unIdPlantilla int unsigned, in unIdJugador int unsigned, in unTitular boolean)
-begin
-    insert into jugador_plantilla(idPlantilla, idJugador, titulares) 
-    values(unIdPlantilla, unIdJugador, unTitular);
-end$$
+DROP PROCEDURE IF EXISTS eliminarPosicion$$
+CREATE PROCEDURE eliminarPosicion(IN unIdPosicion TINYINT UNSIGNED)
+BEGIN
+    DELETE FROM Posicion
+    WHERE idPosicion = unIdPosicion;
+END$$
 
-drop procedure if exists eliminarJugadorDePlantilla$$
-create procedure eliminarJugadorDePlantilla(in unIdPlantilla int unsigned, in unIdJugador int unsigned)
-begin
-    delete from jugador_plantilla 
-    where idPlantilla = unIdPlantilla and idJugador = unIdJugador;
-end$$
+-- ==================== PLANTILLAJUGADORES ====================
+DROP PROCEDURE IF EXISTS agregarJugadorAPlantilla$$
+CREATE PROCEDURE agregarJugadorAPlantilla(IN unIdPlantilla INT UNSIGNED, IN unIdJugador SMALLINT UNSIGNED, IN unTitular BOOLEAN)
+BEGIN
+    INSERT INTO PlantillaJugadores(idPlantilla, idJugador, titulares)
+    VALUES (unIdPlantilla, unIdJugador, unTitular);
+END$$
 
-drop procedure if exists actualizarTitularidadJugador$$
-create procedure actualizarTitularidadJugador(in unIdPlantilla int unsigned, in unIdJugador int unsigned, in unTitular boolean)
-begin
-    update jugador_plantilla 
-    set titulares = unTitular
-    where idPlantilla = unIdPlantilla and idJugador = unIdJugador;
-end$$
+DROP PROCEDURE IF EXISTS eliminarJugadorDePlantilla$$
+CREATE PROCEDURE eliminarJugadorDePlantilla(IN unIdPlantilla INT UNSIGNED, IN unIdJugador SMALLINT UNSIGNED)
+BEGIN
+    DELETE FROM PlantillaJugadores
+    WHERE idPlantilla = unIdPlantilla AND idJugador = unIdJugador;
+END$$
 
--- procedure de jugador para insertar, actualizar y eliminar registros en la base de datos de mysql
-delimiter $$
-drop procedure if exists insertarJugador$$
-create procedure insertarJugador(out unIdJugador smallint UNSIGNED, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
-begin
-    insert into jugadores(nombre, apellido, apodo, nacimiento, cotización, idPosicion, idEquipo) 
-    values(unNombre, unApellido, unApodo, unNacimiento, unaCotizacion, unIdPosicion, unIdEquipo);
-    set unIdJugador = last_insert_id();
-end$$
+DROP PROCEDURE IF EXISTS actualizarTitularidadJugador$$
+CREATE PROCEDURE actualizarTitularidadJugador(IN unIdPlantilla INT UNSIGNED, IN unIdJugador SMALLINT UNSIGNED, IN unTitular BOOLEAN)
+BEGIN
+    UPDATE PlantillaJugadores
+    SET titulares = unTitular
+    WHERE idPlantilla = unIdPlantilla AND idJugador = unIdJugador;
+END$$
 
-drop procedure if exists actualizarJugador$$
-create procedure actualizarJugador(in unIdJugador smallint UNSIGNED, in unNombre varchar(50), in unApellido varchar(50), in unApodo varchar(50),in unNacimiento date, in unaCotizacion decimal(10,2), in unIdPosicion tinyint, in unIdEquipo tinyint)
-begin
-    update jugadores 
-    set nombre = unNombre, apellido = unApellido, apodo = unApodo, nacimiento = unNacimiento, cotización = unaCotizacion, idPosicion = unIdPosicion, idEquipo = unIdEquipo
-    where idJugador = unIdJugador;
-end$$
+-- ==================== JUGADOR ====================
+DROP PROCEDURE IF EXISTS insertarJugador$$
+CREATE PROCEDURE insertarJugador(OUT unIdJugador SMALLINT UNSIGNED, IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unApodo VARCHAR(50), IN unNacimiento DATE, IN unaCotizacion DECIMAL(10,2), IN unIdPosicion TINYINT, IN unIdEquipo TINYINT)
+BEGIN
+    INSERT INTO Jugador(nombre, apellido, apodo, nacimiento, cotización, idPosicion, idEquipo)
+    VALUES (unNombre, unApellido, unApodo, unNacimiento, unaCotizacion, unIdPosicion, unIdEquipo);
+    SET unIdJugador = LAST_INSERT_ID();
+END$$
 
-drop procedure if exists eliminarJugador$$
-create procedure eliminarJugador(in unIdJugador smallint UNSIGNED)
-begin
-    delete from jugadores 
-    where idJugador = unIdJugador;
-end$$
+DROP PROCEDURE IF EXISTS actualizarJugador$$
+CREATE PROCEDURE actualizarJugador(IN unIdJugador SMALLINT UNSIGNED, IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unApodo VARCHAR(50), IN unNacimiento DATE, IN unaCotizacion DECIMAL(10,2), IN unIdPosicion TINYINT, IN unIdEquipo TINYINT)
+BEGIN
+    UPDATE Jugador
+    SET nombre = unNombre, apellido = unApellido, apodo = unApodo, nacimiento = unNacimiento, cotización = unaCotizacion, idPosicion = unIdPosicion, idEquipo = unIdEquipo
+    WHERE idJugador = unIdJugador;
+END$$
 
--- procedure de plantilla para insertar, actualizar y eliminar registros en la base de datos de mysql
-delimiter $$
-drop procedure if exists insertarPlantilla$$
-create procedure insertarPlantilla(out unIdPlantilla int unsigned, in unNombre varchar(50), in unPresupuesto decimal(10,2), in unaCantidadJugadores tinyint, in unIdUsuario smallint UNSIGNED)
-begin
-    insert into plantillas(nombre, presupuesto, cantidadJugadores, idUsuario) 
-    values(unNombre, unPresupuesto, unaCantidadJugadores, unIdUsuario);
-    set unIdPlantilla = last_insert_id();
-end$$
+DROP PROCEDURE IF EXISTS eliminarJugador$$
+CREATE PROCEDURE eliminarJugador(IN unIdJugador SMALLINT UNSIGNED)
+BEGIN
+    DELETE FROM Jugador
+    WHERE idJugador = unIdJugador;
+END$$
 
-drop procedure if exists actualizarPlantilla$$
-create procedure actualizarPlantilla(in unIdPlantilla int unsigned, in unNombre varchar(50), in unPresupuesto decimal(10,2), in unaCantidadJugadores tinyint, in unIdUsuario smallint UNSIGNED)
-begin
-    update plantillas 
-    set nombre = unNombre, presupuesto = unPresupuesto, cantidadJugadores = unaCantidadJugadores, idUsuario = unIdUsuario
-    where idPlantilla = unIdPlantilla;
-end$$
+-- ==================== PLANTILLA ====================
+DROP PROCEDURE IF EXISTS insertarPlantilla$$
+CREATE PROCEDURE insertarPlantilla(OUT unIdPlantilla INT UNSIGNED, IN unNombre VARCHAR(50), IN unPresupuesto DECIMAL(10,2), IN unaCantidadJugadores TINYINT, IN unIdUsuario SMALLINT UNSIGNED)
+BEGIN
+    INSERT INTO Plantilla(nombre, presupuesto, cantidadJugadores, idUsuario)
+    VALUES (unNombre, unPresupuesto, unaCantidadJugadores, unIdUsuario);
+    SET unIdPlantilla = LAST_INSERT_ID();
+END$$
 
-drop procedure if exists eliminarPlantilla$$
-create procedure eliminarPlantilla(in unIdPlantilla int unsigned)
-begin
-    delete from plantillas 
-    where idPlantilla = unIdPlantilla;
-end$$
+DROP PROCEDURE IF EXISTS actualizarPlantilla$$
+CREATE PROCEDURE actualizarPlantilla(IN unIdPlantilla INT UNSIGNED, IN unNombre VARCHAR(50), IN unPresupuesto DECIMAL(10,2), IN unaCantidadJugadores TINYINT, IN unIdUsuario SMALLINT UNSIGNED)
+BEGIN
+    UPDATE Plantilla
+    SET nombre = unNombre, presupuesto = unPresupuesto, cantidadJugadores = unaCantidadJugadores, idUsuario = unIdUsuario
+    WHERE idPlantilla = unIdPlantilla;
+END$$
 
--- procedure de puntuacion para insertar, actualizar y eliminar registros en la base de datos de mysql
-delimiter $$
-drop procedure if exists insertarPuntuacion$$
-create procedure insertarPuntuacion(in unIdJugador smallint UNSIGNED, in unaFecha tinyint, in unaPuntuacion decimal(4,2))
-begin
-    insert into puntuacion(idJugador, Fecha, puntuacion) 
-    values(unIdJugador, unaFecha, unaPuntuacion);
-end$$
+DROP PROCEDURE IF EXISTS eliminarPlantilla$$
+CREATE PROCEDURE eliminarPlantilla(IN unIdPlantilla INT UNSIGNED)
+BEGIN
+    DELETE FROM Plantilla
+    WHERE idPlantilla = unIdPlantilla;
+END$$
 
-drop procedure if exists actualizarPuntuacion$$
-create procedure actualizarPuntuacion(in unIdJugador smallint UNSIGNED, in unaFecha tinyint, in unaPuntuacion decimal(4,2))
-begin
-    update puntuacion 
-    set puntuacion = unaPuntuacion
-    where idJugador = unIdJugador and Fecha = unaFecha;
-end$$
+-- ==================== PUNTUACION ====================
+DROP PROCEDURE IF EXISTS insertarPuntuacion$$
+CREATE PROCEDURE insertarPuntuacion(IN unIdJugador SMALLINT UNSIGNED, IN unaFecha TINYINT, IN unaPuntuacion DECIMAL(4,2))
+BEGIN
+    INSERT INTO Puntuacion(idJugador, Fecha, puntuacion)
+    VALUES (unIdJugador, unaFecha, unaPuntuacion);
+END$$
 
-drop procedure if exists eliminarPuntuacion$$
-create procedure eliminarPuntuacion(in unIdJugador smallint UNSIGNED, in unaFecha tinyint)
-begin
-    delete from puntuacion 
-    where idJugador = unIdJugador and Fecha = unaFecha;
-end$$
- 
--- procedure de usuario para insertar, actualizar y eliminar registros en la base de datos de mysql
-delimiter $$
-drop procedure if exists insertarUsuario$$
-create procedure insertarUsuario(out unIdUsuario smallint UNSIGNED, in unNombre varchar(50), in unApellido varchar(50), in unEmail varchar(50), in unPassword varchar(50), in unIdRol tinyint)
-begin
-    insert into usuarios(nombre, apellido, email, PasswordHash, idRol) 
-    values(unNombre, unApellido, unEmail, unPassword, unIdRol);
-    set unIdUsuario = last_insert_id();
-end$$ 
+DROP PROCEDURE IF EXISTS actualizarPuntuacion$$
+CREATE PROCEDURE actualizarPuntuacion(IN unIdJugador SMALLINT UNSIGNED, IN unaFecha TINYINT, IN unaPuntuacion DECIMAL(4,2))
+BEGIN
+    UPDATE Puntuacion
+    SET puntuacion = unaPuntuacion
+    WHERE idJugador = unIdJugador AND Fecha = unaFecha;
+END$$
 
-drop procedure if exists actualizarUsuario$$
-create procedure actualizarUsuario(in unIdUsuario smallint UNSIGNED, in unNombre varchar(50), in unApellido varchar(50), in unEmail varchar(50), in unPassword varchar(50), in unIdRol tinyint)
-begin
-    update usuarios 
-    set nombre = unNombre, apellido = unApellido, email = unEmail, PasswordHash = unPassword, idRol = unIdRol
-    where idUsuario = unIdUsuario;
-end$$
+DROP PROCEDURE IF EXISTS eliminarPuntuacion$$
+CREATE PROCEDURE eliminarPuntuacion(IN unIdJugador SMALLINT UNSIGNED, IN unaFecha TINYINT)
+BEGIN
+    DELETE FROM Puntuacion
+    WHERE idJugador = unIdJugador AND Fecha = unaFecha;
+END$$
 
-drop procedure if exists eliminarUsuario$$
-create procedure eliminarUsuario(in unIdUsuario smallint UNSIGNED)
-begin
-    delete from usuarios 
-    where idUsuario = unIdUsuario;
-end$$
+-- ==================== USUARIO ====================
+DROP PROCEDURE IF EXISTS insertarUsuario$$
+CREATE PROCEDURE insertarUsuario(OUT unIdUsuario SMALLINT UNSIGNED, IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unEmail VARCHAR(100), IN unFechaNacimiento DATE, IN unPasswordHash VARCHAR(65), IN unIdRol TINYINT)
+BEGIN
+    INSERT INTO Usuario(nombre, apellido, email, fechaNacimiento, PasswordHash, idRol)
+    VALUES (unNombre, unApellido, unEmail, unFechaNacimiento, unPasswordHash, unIdRol);
+    SET unIdUsuario = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS actualizarUsuario$$
+CREATE PROCEDURE actualizarUsuario(IN unIdUsuario SMALLINT UNSIGNED, IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unEmail VARCHAR(100), IN unFechaNacimiento DATE, IN unPasswordHash VARCHAR(65), IN unIdRol TINYINT)
+BEGIN
+    UPDATE Usuario
+    SET nombre = unNombre, apellido = unApellido, email = unEmail, fechaNacimiento = unFechaNacimiento, PasswordHash = unPasswordHash, idRol = unIdRol
+    WHERE idUsuario = unIdUsuario;
+END$$
+
+DROP PROCEDURE IF EXISTS eliminarUsuario$$
+CREATE PROCEDURE eliminarUsuario(IN unIdUsuario SMALLINT UNSIGNED)
+BEGIN
+    DELETE FROM Usuario
+    WHERE idUsuario = unIdUsuario;
+END$$
+
+DELIMITER ;

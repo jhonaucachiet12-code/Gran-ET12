@@ -1,4 +1,3 @@
-// test de repositorio de posicion
 using System;
 using System.Collections.Generic;
 using GranDT.Core.Model;
@@ -6,6 +5,7 @@ using GranDT.Core.Model.IRepos;
 using GranDT.Core.Gran_DT.ConDapper;
 using Xunit;
 using MySqlConnector;
+
 namespace TestGranDT.TestRepo;
 
 public class TestRepoPosicion
@@ -22,90 +22,130 @@ public class TestRepoPosicion
     [Fact]
     public void ObtenerPosiciones_DevuelveListaDePosiciones()
     {
-        // Act
-        var posiciones = _repoPosicion.ObtenerPosiciones();
+        var posicionEsperada = CrearPosicionTemporal();
 
-        // Assert
-        Assert.NotNull(posiciones);
-        Assert.IsAssignableFrom<IEnumerable<Posicion>>(posiciones);
-        Assert.NotEmpty(posiciones);
-        Assert.Contains(posiciones, p => p.IdPosicion > 0 && !string.IsNullOrWhiteSpace(p.Nombre));
-        Assert.Contains(posiciones, p => p.Nombre == "Delantero");
+        try
+        {
+            _repoPosicion.AgregarPosicion(posicionEsperada);
+
+            var posiciones = _repoPosicion.ObtenerPosiciones();
+
+            Assert.NotNull(posiciones);
+            Assert.IsAssignableFrom<IEnumerable<Posicion>>(posiciones);
+            Assert.Contains(posiciones,r => r.Nombre == "Arquero");
+            Assert.Contains(posiciones, posicion => posicion.IdPosicion == posicionEsperada.IdPosicion);
+
+        }
+        finally
+        {
+            EliminarSiFueRegistrada(posicionEsperada);
+        }
     }
+
     [Fact]
     public void ObtenerPosicionPorId_DevuelvePosicionExistente()
     {
-        // Arrange
-        byte idPosicionExistente = 1;
+        var posicionEsperada = CrearPosicionTemporal();
 
-        // Act
-        var posicion = _repoPosicion.ObtenerPosicionPorId(idPosicionExistente);
+        try
+        {
+            _repoPosicion.AgregarPosicion(posicionEsperada);
 
-        // Assert
-        Assert.NotNull(posicion);
-        Assert.Equal(idPosicionExistente, posicion.IdPosicion);
-        Assert.Equal("Delantero", posicion.Nombre);
+            var posicion = _repoPosicion.ObtenerPosicionPorId(posicionEsperada.IdPosicion);
+
+            Assert.NotNull(posicion);
+            Assert.Equal(posicionEsperada.IdPosicion, posicion.IdPosicion);
+            Assert.Equal(posicionEsperada.Nombre, posicion.Nombre);
+            
+        }
+        finally
+        {
+            EliminarSiFueRegistrada(posicionEsperada);
+        }
     }
 
     [Fact]
     public void ObtenerPosicionPorId_DevuelveNullParaPosicionInexistente()
     {
-        // Arrange
-        byte idPosicionInexistente = 99;
+        var posicion = _repoPosicion.ObtenerPosicionPorId(0);
 
-        // Act
-        var posicion = _repoPosicion.ObtenerPosicionPorId(idPosicionInexistente);
-
-        // Assert
         Assert.Null(posicion);
     }
 
     [Fact]
     public void AgregarPosicion_AgregaNuevaPosicion()
     {
-        // Arrange
-        var nuevaPosicion = new Posicion { Nombre = "Arquero" };
+        var nuevaPosicion = CrearPosicionTemporal();
 
-        // Act
-        _repoPosicion.AgregarPosicion(nuevaPosicion);
+        try
+        {
+            _repoPosicion.AgregarPosicion(nuevaPosicion);
 
-        // Assert
-        Assert.True(nuevaPosicion.IdPosicion > 0);
-        var posicionAgregada = _repoPosicion.ObtenerPosicionPorId(nuevaPosicion.IdPosicion);
-        Assert.NotNull(posicionAgregada);
-        Assert.Equal("Arquero", posicionAgregada.Nombre);
+            Assert.True(nuevaPosicion.IdPosicion > 0);
+            var posicionAgregada = _repoPosicion.ObtenerPosicionPorId(nuevaPosicion.IdPosicion);
+            Assert.NotNull(posicionAgregada);
+            Assert.Equal(nuevaPosicion.Nombre, posicionAgregada.Nombre);
+        }
+        finally
+        {
+            EliminarSiFueRegistrada(nuevaPosicion);
+        }
     }
 
     [Fact]
     public void ActualizarPosicion_ActualizaPosicionExistente()
     {
-        // Arrange
-        var posicionExistente = _repoPosicion.ObtenerPosicionPorId(1);
-        Assert.NotNull(posicionExistente);
-        posicionExistente.Nombre = "Delantero Actualizado";
+        var posicion = CrearPosicionTemporal();
 
-        // Act
-        _repoPosicion.ActualizarPosicion(posicionExistente);
+        try
+        {
+            _repoPosicion.AgregarPosicion(posicion);
+            posicion.Nombre = $"Actualizada-{Guid.NewGuid():N}";
 
-        // Assert
-        var posicionActualizada = _repoPosicion.ObtenerPosicionPorId(1);
-        Assert.NotNull(posicionActualizada);
-        Assert.Equal("Delantero Actualizado", posicionActualizada.Nombre);
+            _repoPosicion.ActualizarPosicion(posicion);
+
+            var posicionActualizada = _repoPosicion.ObtenerPosicionPorId(posicion.IdPosicion);
+            Assert.NotNull(posicionActualizada);
+            Assert.Equal(posicion.Nombre, posicionActualizada.Nombre);
+        }
+        finally
+        {
+            EliminarSiFueRegistrada(posicion);
+        }
     }
 
     [Fact]
     public void EliminarPosicion_EliminaPosicionExistente()
     {
-        // Arrange
-        var posicionExistente = _repoPosicion.ObtenerPosicionPorId(1);
-        Assert.NotNull(posicionExistente);
+        var posicion = CrearPosicionTemporal();
 
-        // Act
-        _repoPosicion.EliminarPosicion(1);
+        try
+        {
+            _repoPosicion.AgregarPosicion(posicion);
 
-        // Assert
-        var posicionEliminada = _repoPosicion.ObtenerPosicionPorId(1);
-        Assert.Null(posicionEliminada);
+            _repoPosicion.EliminarPosicion(posicion.IdPosicion);
+
+            Assert.Null(_repoPosicion.ObtenerPosicionPorId(posicion.IdPosicion));
+        }
+        finally
+        {
+            EliminarSiFueRegistrada(posicion);
+        }
     }
 
-}   
+    private static Posicion CrearPosicionTemporal()
+    {
+        return new Posicion
+        {
+            Nombre = $"Arquero"
+        };
+    }
+
+    private void EliminarSiFueRegistrada(Posicion posicion)
+    {
+        if (posicion.IdPosicion > 0)
+        {
+            _repoPosicion.EliminarPosicion(posicion.IdPosicion);
+        }
+    }
+}

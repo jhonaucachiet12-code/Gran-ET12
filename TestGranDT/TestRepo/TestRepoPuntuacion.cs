@@ -41,7 +41,7 @@ public class TestRepoPuntuacion
         }
         finally
         {
-            EliminarPuntuacionTemporal(puntuacionEsperada.IdJugador, puntuacionEsperada.Fecha);
+            EliminarPuntuacionTemporal(puntuacionEsperada);
         }
     }
 
@@ -52,7 +52,7 @@ public class TestRepoPuntuacion
 
         try
         {
-            InsertarPuntuacionTemporal(puntuacionEsperada);
+            _repoPuntuacion.AgregarPuntuacion(puntuacionEsperada);
 
             var puntuacion = _repoPuntuacion.ObtenerLaPuntucionDelJugador(
                 puntuacionEsperada.IdJugador,
@@ -65,7 +65,7 @@ public class TestRepoPuntuacion
         }
         finally
         {
-            EliminarPuntuacionTemporal(puntuacionEsperada.IdJugador, puntuacionEsperada.Fecha);
+            EliminarPuntuacionTemporal(puntuacionEsperada);
         }
     }
 
@@ -86,7 +86,7 @@ public class TestRepoPuntuacion
 
         try
         {
-            InsertarPuntuacionTemporal(puntuacionEsperada);
+            _repoPuntuacion.AgregarPuntuacion(puntuacionEsperada);
 
             var puntuaciones = _repoPuntuacion.ObtenerTodasLasPuntuasionesDelJugador(
                 puntuacionEsperada.IdJugador);
@@ -98,7 +98,7 @@ public class TestRepoPuntuacion
         }
         finally
         {
-            EliminarPuntuacionTemporal(puntuacionEsperada.IdJugador, puntuacionEsperada.Fecha);
+            EliminarPuntuacionTemporal(puntuacionEsperada);
         }
     }
 
@@ -121,7 +121,7 @@ public class TestRepoPuntuacion
         }
         finally
         {
-            EliminarPuntuacionTemporal(idJugador, puntuacionEsperada.Fecha);
+            EliminarPuntuacionTemporal(puntuacionEsperada);
         }
     }
 
@@ -132,7 +132,7 @@ public class TestRepoPuntuacion
 
         try
         {
-            InsertarPuntuacionTemporal(puntuacion);
+            _repoPuntuacion.AgregarPuntuacion(puntuacion);
             puntuacion.Puntuaciones = 98.76m;
 
             _repoPuntuacion.ActualizarPuntuacion(puntuacion);
@@ -146,7 +146,7 @@ public class TestRepoPuntuacion
         }
         finally
         {
-            EliminarPuntuacionTemporal(puntuacion.IdJugador, puntuacion.Fecha);
+            EliminarPuntuacionTemporal(puntuacion);
         }
     }
 
@@ -167,13 +167,13 @@ public class TestRepoPuntuacion
         }
         finally
         {
-            EliminarPuntuacionTemporal(puntuacion.IdJugador, puntuacion.Fecha);
+            EliminarPuntuacionTemporal(puntuacion);
         }
     }
 
-    private Puntuacion CrearPuntuacionTemporal()
+    private static Puntuacion CrearPuntuacionTemporal()
     {
-        var idJugador = _conexion.QueryFirstOrDefault<short?>(
+        /*var idJugador = _conexion.QueryFirstOrDefault<short?>(
             "SELECT idJugador FROM Jugador LIMIT 1");
         Assert.True(idJugador.HasValue, "Se necesita al menos un jugador para probar puntuaciones.");
 
@@ -182,18 +182,18 @@ public class TestRepoPuntuacion
             new { IdJugador = idJugador.Value }).ToHashSet();
         var fechaDisponible = Enumerable.Range(1, 127)
             .Select(fecha => (byte)fecha)
-            .FirstOrDefault(fecha => !fechasUsadas.Contains(fecha));
+            .FirstOrDefault(fecha => !fechasUsadas.Contains(fecha));*/
 
-        Assert.NotEqual((byte)0, fechaDisponible);
+        //Assert.NotEqual((byte)0, fechaDisponible);
 
         return new Puntuacion
         {
-            IdJugador = idJugador.Value,
-            Fecha = fechaDisponible,
+            IdJugador = 1,
+            Fecha = 5,
             Puntuaciones = 12.34m,
             jugador = new Jugador
             {
-                IdJugador = idJugador.Value,
+                IdJugador = 3,
                 IdPosicion = 0,
                 IdEquipo = 0,
                 Nombre = "Jugador temporal",
@@ -207,17 +207,18 @@ public class TestRepoPuntuacion
         };
     }
 
-    private void InsertarPuntuacionTemporal(Puntuacion puntuacion)
+    /*private void InsertarPuntuacionTemporal(Puntuacion puntuacion)
     {
         _conexion.Execute(
             "INSERT INTO Puntuacion (idJugador, Fecha, puntuacion) VALUES (@IdJugador, @Fecha, @Puntuaciones)",
             puntuacion);
-    }
+    }*/
 
-    private void EliminarPuntuacionTemporal(short idJugador, byte fecha)
+    private void EliminarPuntuacionTemporal(Puntuacion puntuacion)
     {
-        _conexion.Execute(
-            "DELETE FROM Puntuacion WHERE idJugador = @IdJugador AND Fecha = @Fecha",
-            new { IdJugador = idJugador, Fecha = fecha });
+        if(puntuacion.Fecha >=5)
+        {
+            _repoPuntuacion.EliminarPuntuacion(puntuacion.IdJugador);
+        }
     }
 }

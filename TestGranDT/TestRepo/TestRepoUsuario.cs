@@ -53,6 +53,7 @@ public class TestRepoUsuario
 
 			Assert.NotNull(usuario);
 			Assert.Equal(usuarioEsperado.IdUsuario, usuario.IdUsuario);
+			Assert.Equal(usuarioEsperado.Nombre, usuario.Nombre);
 			Assert.Equal(usuarioEsperado.Email, usuario.Email);
 			Assert.Equal(usuarioEsperado.IdRol, usuario.Roles.IdRol);
 			

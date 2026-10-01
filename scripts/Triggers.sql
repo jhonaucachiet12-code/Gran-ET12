@@ -7,7 +7,7 @@ AFTER INSERT ON Usuario
 FOR EACH ROW
 BEGIN
     INSERT INTO Plantilla (idUsuario, nombre, presupuesto, cantidadJugadores)
-    VALUES (NEW.idUsuario, CONCAT('Plantilla de ', NEW.nombre), 9000000, 0);
+    VALUES (NEW.idUsuario, CONCAT('Plantilla de ', NEW.nombre), 90000000, 0);
 END $$
 DELIMITER ;
 -- Restar el costo del futbolitas del presupuesto de la plantilla

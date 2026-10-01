@@ -8,17 +8,24 @@ using GranDT.Core.Model.IRepos;
 using MySqlConnector;
 using Dapper;
 using System.Data;
+using MinimalAPI.Services;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddControllers(); // ← agregar esto
+
 builder.Services.AddScoped<IDbConnection>(sp =>
     new MySqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
 builder.Services.AddScoped<UsuarioService>();
+
+
+builder.Services.AddScoped<IRepoEquipo, RepoEquipo>();
+builder.Services.AddScoped<EquipoService>();
 
 
 builder.Services.AddOpenApi();
@@ -30,6 +37,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+app.MapControllers();
 
 app.MapGet("/usuarios", (UsuarioService service) =>
 {

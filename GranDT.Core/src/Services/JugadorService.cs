@@ -37,6 +37,12 @@ public class JugadorService
         ValidarId(jugador.IdJugador);
         repoJugador.ActualizarJugador(jugador);
     }
+
+    public void EliminarJugador(short id)
+    {
+        ValidarId(id);
+        repoJugador.EliminarJugador(id);
+    }
     private static void ValidarJugador(Jugador jugador)
     {
         ArgumentNullException.ThrowIfNull(jugador);

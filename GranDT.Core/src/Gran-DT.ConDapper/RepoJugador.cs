@@ -30,11 +30,14 @@ public class RepoJugador :RepoDapper, IRepoJugador
 
     public Jugador? ObtenerJugadorPorId(short IdJugador)
     {
-        var consulta = @"SELECT J.*, P.nombre , E.nombre 
-                        FROM Jugador J
-                        INNER JOIN Posicion P ON J.idPosicion = P.IdPosicion
-                        INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo
-                        WHERE J.idJugador = @IdJugador";
+        var consulta = @"SELECT 
+                        J.*, 
+                        P.IdPosicion, P.nombre AS NombrePosicion, 
+                        E.idEquipo, E.nombre AS NombreEquipo 
+                    FROM Jugador J
+                    INNER JOIN Posicion P ON J.idPosicion = P.IdPosicion
+                    INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo
+                    WHERE J.idJugador = @IdJugador";
         var Jugadores = _conexion.Query<Jugador, Posicion, Equipo, Jugador>(
         consulta,
         (jugador, posicion, equipo) =>
@@ -42,7 +45,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
             jugador.posicion = posicion;
             jugador.equipo = equipo;
             return jugador;
-        }, new { IdJugador = IdJugador }, splitOn: "IdPosicion,IdEquipo");
+        }, new { idJugador = IdJugador }, splitOn: "IdPosicion,IdEquipo");
         
         return Jugadores.FirstOrDefault();
     }

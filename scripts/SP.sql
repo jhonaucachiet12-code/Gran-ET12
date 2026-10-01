@@ -99,7 +99,7 @@ END$$
 
 -- ==================== JUGADOR ====================
 DROP PROCEDURE IF EXISTS insertarJugador$$
-CREATE PROCEDURE insertarJugador(OUT unIdJugador SMALLINT UNSIGNED, IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unApodo VARCHAR(50), IN unNacimiento DATE, IN unCotizacion DECIMAL(10,2), IN unIdPosicion TINYINT, IN unIdEquipo TINYINT)
+CREATE PROCEDURE insertarJugador(OUT unIdJugador SMALLINT , IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unApodo VARCHAR(50), IN unNacimiento DATE, IN unCotizacion DECIMAL(10,2), IN unIdPosicion TINYINT, IN unIdEquipo TINYINT)
 BEGIN
     INSERT INTO Jugador(nombre, apellido, apodo, nacimiento, cotización, idPosicion, idEquipo)
     VALUES (unNombre, unApellido, unApodo, unNacimiento, unCotizacion, unIdPosicion, unIdEquipo);
@@ -107,7 +107,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS actualizarJugador$$
-CREATE PROCEDURE actualizarJugador(IN unIdJugador SMALLINT UNSIGNED, IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unApodo VARCHAR(50), IN unNacimiento DATE, IN unCotizacion DECIMAL(10,2), IN unIdPosicion TINYINT, IN unIdEquipo TINYINT)
+CREATE PROCEDURE actualizarJugador(IN unIdJugador SMALLINT , IN unNombre VARCHAR(50), IN unApellido VARCHAR(50), IN unApodo VARCHAR(50), IN unNacimiento DATE, IN unCotizacion DECIMAL(10,2), IN unIdPosicion TINYINT, IN unIdEquipo TINYINT)
 BEGIN
     UPDATE Jugador
     SET nombre = unNombre, apellido = unApellido, apodo = unApodo, nacimiento = unNacimiento, cotización = unCotizacion, idPosicion = unIdPosicion, idEquipo = unIdEquipo
@@ -115,7 +115,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS eliminarJugador$$
-CREATE PROCEDURE eliminarJugador(IN unIdJugador SMALLINT UNSIGNED)
+CREATE PROCEDURE eliminarJugador(IN unIdJugador SMALLINT )
 BEGIN
     DELETE FROM Jugador
     WHERE idJugador = unIdJugador;

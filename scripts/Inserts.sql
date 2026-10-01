@@ -1,4 +1,4 @@
--- 2. Equipos (Las posiciones ya se insertaron solas en el script de creación)
+
 INSERT INTO Equipo (idEquipo, nombre) VALUES (3, 'Real Madrid'), (2, 'Barcelona'),(1,"Boca Juniors") ;
 
 
@@ -19,7 +19,7 @@ INSERT INTO Jugador (idJugador, idPosicion, idEquipo, nombre, apellido, apodo, n
 
 -- 4. Plantilla (Creamos la plantilla con idPlantilla = 5)
 INSERT INTO Plantilla (idPlantilla, idUsuario, nombre, presupuesto, cantidadJugadores) 
-VALUES (5, 1, 'Mi Equipo Ideal', 200.00, 3);
+VALUES (5, 1, 'Mi Equipo Ideal', 90000000.00, 3);
 
 -- 5. Relación PlantillaJugadores (Asignamos los 3 jugadores a la plantilla 5)
 INSERT INTO PlantillaJugadores (idPlantilla, idJugador, titulares) VALUES 

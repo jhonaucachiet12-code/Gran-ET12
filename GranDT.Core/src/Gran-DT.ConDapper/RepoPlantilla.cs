@@ -13,9 +13,9 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
 
     public IEnumerable<Plantilla> ObtenerPlantillas()
     {
-        var consulta = @"SELECT *, U.*
-                        FROM Plantillas
-                        INNER JOIN Usuarios U ON Plantillas.IdUsuario = U.IdUsuario";
+        var consulta = @"SELECT P.*, U.*
+                        FROM Plantilla P 
+                        INNER JOIN Usuario U ON P.IdUsuario = U.IdUsuario";
         var plantillas = _conexion.Query<Plantilla, Usuario, Plantilla>(consulta, (plantilla, usuario) =>
         {
             plantilla.usuario = usuario;
@@ -27,10 +27,10 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
 
     public Plantilla? ObtenerPlantillaPorId(int IdPlantilla)
     {
-        var consulta = @"SELECT *, U.*
-                        FROM Plantillas
-                        INNER JOIN Usuarios U ON Plantillas.IdUsuario = U.IdUsuario
-                        WHERE Plantillas.IdPlantilla = @IdPlantilla";
+        var consulta = @"SELECT P.*, U.*
+                        FROM Plantilla P
+                        INNER JOIN Usuario U ON P.IdUsuario = U.IdUsuario
+                        WHERE P.IdPlantilla = @IdPlantilla";
         var plantillas = _conexion.Query<Plantilla, Usuario, Plantilla>(consulta, (plantilla, usuario) =>
         {
             plantilla.usuario = usuario;
@@ -47,11 +47,11 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         parametros.Add("unIdUsuario", plantilla.IdUsuario);
         parametros.Add("unNombre", plantilla.Nombre);
         parametros.Add("unPresupuesto", plantilla.Presupuesto);
-        parametros.Add("unCantidadJugadores", plantilla.CantidadJugadores);
+        parametros.Add("unaCantidadJugadores", plantilla.CantidadJugadores);
 
-        _conexion.Execute("AgregarPlantilla", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute("insertarPlantilla", parametros, commandType: CommandType.StoredProcedure);
 
-        plantilla.IdPlantilla = parametros.Get<int>("unIdPlantilla");
+        plantilla.IdPlantilla = (int)parametros.Get<uint>("unIdPlantilla");
         
     }
 
@@ -62,9 +62,9 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         parametros.Add("unIdUsuario", plantilla.IdUsuario);
         parametros.Add("unNombre", plantilla.Nombre);
         parametros.Add("unPresupuesto", plantilla.Presupuesto);
-        parametros.Add("unCantidadJugadores", plantilla.CantidadJugadores);
+        parametros.Add("unaCantidadJugadores", plantilla.CantidadJugadores);
 
-        _conexion.Execute("ActualizarPlantilla", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute("actualizarPlantilla", parametros, commandType: CommandType.StoredProcedure);
     }
 
     public void EliminarPlantilla(int IdPlantilla)
@@ -72,7 +72,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         var parametros = new DynamicParameters();
         parametros.Add("unIdPlantilla", IdPlantilla);
 
-        _conexion.Execute("EliminarPlantilla", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute("eliminarPlantilla", parametros, commandType: CommandType.StoredProcedure);
     }
 
     public void AgregarJugadorAPlantilla(int idPlantilla, int idJugador, bool esTitular)
@@ -82,7 +82,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         parametros.Add("unIdJugador", idJugador);
         parametros.Add("esTitular", esTitular);
 
-        _conexion.Execute("AgregarJugadorAPlantilla", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute("agregarJugadorAPlantilla", parametros, commandType: CommandType.StoredProcedure);
     }
 
     public void EliminarJugadorDePlantilla(short idJugador, int idPlantilla)
@@ -91,7 +91,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         parametros.Add("unIdPlantilla", idPlantilla);
         parametros.Add("unIdJugador", idJugador);
 
-        _conexion.Execute("EliminarJugadorDePlantilla", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute("eliminarJugadorDePlantilla", parametros, commandType: CommandType.StoredProcedure);
     }
     
 
@@ -102,7 +102,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         parametros.Add("unIdJugador", idJugador);
         parametros.Add("esTitular", esTitular);
 
-        _conexion.Execute("ActualizarJugadorEnPlantilla", parametros, commandType: CommandType.StoredProcedure);
+        _conexion.Execute("actualizarTitularidadJugador", parametros, commandType: CommandType.StoredProcedure);
     }
 
     public Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla)
@@ -135,7 +135,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         }
     }
 
-    /*public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha)
+    public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha)
     {
         var consulta = @"SELECT SUM(U.Puntuacion) AS PuntuacionPromedio
                         FROM PlantillaJugadores L
@@ -143,7 +143,18 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
                         WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha AND L.titulares = TRUE;";
 
         return _conexion.ExecuteScalar<decimal>(consulta, new { idPlantilla, fecha });
-    }*/
+    }
+
+    public decimal ObtenerElValorTotalDeLaPlantilla(int idPlantilla)
+    {
+        var consulta =@"SELECT 
+                        SUM(j.cotización) AS valorTotalPlantilla
+                        FROM Plantilla p
+                        INNER JOIN PlantillaJugadores pj ON pj.idPlantilla = p.idPlantilla
+                        INNER JOIN Jugador j ON j.idJugador = pj.idJugador
+                        WHERE p.idPlantilla = @idPlantilla  ;";
+        return _conexion.ExecuteScalar<decimal>(consulta,new{idPlantilla});
+    }
   
 }
 //dotnet build GranDT.Core/GranDT.Core.csproj

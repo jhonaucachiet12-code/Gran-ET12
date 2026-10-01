@@ -36,6 +36,13 @@ public class PosicionService
         ValidarPosicion(posicion);
         ValidarId(posicion.IdPosicion);
         repoPosicion.ActualizarPosicion(posicion);
+        
+    }
+
+    public void EliminarPosicion(byte id)
+    {
+        ValidarId(id);
+        repoPosicion.EliminarPosicion(id);
     }
     private static void ValidarPosicion(Posicion posicion)
     {

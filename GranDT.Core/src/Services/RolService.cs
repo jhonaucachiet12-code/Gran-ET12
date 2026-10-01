@@ -36,6 +36,13 @@ public class RolService
         ValidarId(rol.IdRol);
         repoRol.ActualizarRol(rol);
     }
+
+    public void EliminarRol(byte id)
+    {
+        ValidarId(id);
+        repoRol.EliminarRol(id);
+        
+    }
     private static void ValidarRol(Rol rol)
     {
         ArgumentNullException.ThrowIfNull(rol);

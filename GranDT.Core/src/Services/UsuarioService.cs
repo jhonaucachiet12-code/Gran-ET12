@@ -57,6 +57,10 @@ public class UsuarioService
 
     public void EliminarUsuario(short IdUsuario)
     {
+        if(IdUsuario <0)
+        {
+            throw new Exception("No puedes eliminar un jugador que no existe");
+        }
         repoUsuario.EliminarUsuario(IdUsuario);
     }
 

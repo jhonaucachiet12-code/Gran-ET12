@@ -14,7 +14,9 @@ public interface IRepoPlantilla
     void EliminarJugadorDePlantilla(short idJugador, int idPlantilla);
     Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla);
 
-    //decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha);
+    decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha);
+
+    decimal ObtenerElValorTotalDeLaPlantilla(int idPlantilla);
 
 
     /*decimal ObtenerPuntuacionPromedioDeLaPlantilla(int idPlantilla);

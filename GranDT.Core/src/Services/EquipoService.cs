@@ -20,12 +20,19 @@ public sealed class EquipoService
 	public Equipo? ObtenerEquipoPorId(byte idEquipo)
 	{
 		ValidarId(idEquipo);
+		
 		return _repoEquipo.ObtenerEquipoPorId(idEquipo);
 	}
 
 	public void AgregarEquipo(Equipo equipo)
 	{
 		ValidarEquipo(equipo);
+		var equiposExistente = _repoEquipo.ObtenerEquipos();
+
+		if(equiposExistente.Any(E => E.Nombre == equipo.Nombre))
+		{
+			throw new ArgumentException("El equipo ya exite", nameof(equipo));
+		}
 		_repoEquipo.AgregarEquipo(equipo);
 	}
 

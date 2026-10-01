@@ -11,7 +11,9 @@ public class TestRepoPlantilla
 
 	public TestRepoPlantilla()
 	{
-		var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+
+		//var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+		var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
 		var conexion = new MySqlConnection(cadena);
 		_repoPlantilla = new RepoPlantilla(conexion);
 	}

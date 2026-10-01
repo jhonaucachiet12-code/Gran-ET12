@@ -28,6 +28,11 @@ public class PosicionService
     {
 
         ValidarPosicion(posicion);
+        var posicionExistentes = repoPosicion.ObtenerPosiciones();
+        if(posicionExistentes.Any(P => P.Nombre == posicion.Nombre))
+		{
+			throw new ArgumentException("la posicion ya exite", nameof(posicion));
+		}
         repoPosicion.AgregarPosicion(posicion);
     }
 

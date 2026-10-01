@@ -19,14 +19,18 @@ builder.Services.AddControllers(); // ← agregar esto
 
 builder.Services.AddScoped<IDbConnection>(sp =>
     new MySqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+// enpont de Usuario
 builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
 builder.Services.AddScoped<UsuarioService>();
 
-
+// enpont de equipo
 builder.Services.AddScoped<IRepoEquipo, RepoEquipo>();
 builder.Services.AddScoped<EquipoService>();
 
+// enpont de rol
+builder.Services.AddScoped<IRepoRol,RepoRol>();
+builder.Services.AddScoped<RolService>();
+builder.Services.AddScoped<RepoRol>();
 
 builder.Services.AddOpenApi();
 

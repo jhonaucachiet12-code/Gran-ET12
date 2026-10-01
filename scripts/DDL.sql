@@ -86,65 +86,29 @@ CREATE TABLE PlantillaJugadores
     CONSTRAINT FK_PlantillaJugadores_Plantilla FOREIGN KEY (idPlantilla)
         REFERENCES Plantilla (idPlantilla)
 );
-/*
---  consulta para traer el promedio de la puntuacion de los jugadores mas recientes de su plantilla 
 
-SELECT AVG(U.Puntuacion) AS promedio_puntuacion
-FROM PlantillaJugadores L
-INNER JOIN (
-    SELECT P1.idJugador, P1.Puntuacion, P1.Fecha
-    FROM Puntuacion P1
-    INNER JOIN (
-        SELECT idJugador, MAX(Fecha) AS FechaMax
-        FROM Puntuacion
-        GROUP BY idJugador
-    ) P2
-        ON P1.idJugador = P2.idJugador
-       AND P1.Fecha = P2.FechaMax
-) U
-    ON L.idJugador = U.idJugador
-WHERE L.idPlantilla = @idPlantilla;
+-- SOURCE 00 DDL.sql
+-- SOURCE 01 SP.sql
+-- SOURCE 02 INSERTS.sql
 
+-- dotnet run Gran
+/*mysql -u 5to_agbd -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 37
+Server version: 8.0.46-0ubuntu0.22.04.4 (Ubuntu)
 
---  consulta para traer el promedio de la puntuacion de los jugadores mas recientes de todas las pantillas 
-SELECT AVG(U.Puntuacion) AS promedio_puntuacion
-FROM PlantillaJugadores L
-INNER JOIN (
-    SELECT P1.idJugador, P1.Puntuacion, P1.Fecha
-    FROM Puntuacion P1
-    INNER JOIN (
-        SELECT idJugador, MAX(Fecha) AS FechaMax
-        FROM Puntuacion
-        GROUP BY idJugador
-    ) P2
-        ON P1.idJugador = P2.idJugador
-       AND P1.Fecha = P2.FechaMax
-) U
-    ON L.idJugador = U.idJugador
-GROUP BY L.idPlantilla;
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
 
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
 
--- consulta para obtener la puntuacion de los jugadores mas recientes de su plantilla
-SELECT U.idJugador, U.Puntuacion
-FROM PlantillaJugadores L
-INNER JOIN (
-    SELECT P1.idJugador, P1.Puntuacion, P1.Fecha
-    FROM Puntuacion P1
-    INNER JOIN (
-        SELECT idJugador, MAX(Fecha) AS FechaMax
-        FROM Puntuacion
-        GROUP BY idJugador
-    ) P2
-        ON P1.idJugador = P2.idJugador
-       AND P1.Fecha = P2.FechaMax
-) U
-    ON L.idJugador = U.idJugador
-WHERE L.idPlantilla = @idPlantilla;
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
--- consulta para obtener la sumatoria de las puntuaciones de determinada fecha de una plantilla
-SELECT SUM(U.Puntuacion) AS sumatoria_puntuacion
-FROM PlantillaJugadores L
-iNNER JOIN puntuacion U on L.idJugador = U.idJugador
-WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha and L.titulares = true;
-*/
+mysql> source install.sql
+ERROR: 
+Failed to open file 'install.sql', error: 2
+mysql> ^C
+mysql> */
    

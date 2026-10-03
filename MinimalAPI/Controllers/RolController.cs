@@ -10,25 +10,26 @@ namespace MinimalAPI.Controllers;
 [Route("api/[controller]")]
 public class RolController : ControllerBase
 {
-    private readonly RepoRol  _repoRol;
+    private readonly RolService  _RepoService;
 
-    public RolController(RepoRol repoRol)
+    public RolController(RolService repoService)
     {
-        _repoRol = repoRol;
+        _RepoService = repoService;
     }
+    
 
     [HttpGet]
 
     public ActionResult<IEnumerable<Rol>> ObtenerRoles()
     {
-        var roles = _repoRol.ObtenerRoles();
+        var roles = _RepoService.ObtenerRoles();
         return Ok(roles);
     }
 
     [HttpGet("{id}")]
     public ActionResult<Rol> ObtenerRolPorId(byte id)
     {
-        var rol = _repoRol.ObtenerRolPorId(id);
+        var rol = _RepoService.ObtenerRolPorId(id);
         if (rol == null)
         {
             return NotFound();
@@ -37,25 +38,32 @@ public class RolController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult AgregarRol(Rol rol)
+    public ActionResult AgregarRol(RegistroRolRequest request)
     {
-       
-            _repoRol.AgregarRol(rol);
+       try
+        {
+            var rol = new Rol
+            {
+                Nombre = request.Nombre
+            };
+            _RepoService.AgregarRol(rol);
             return CreatedAtAction(nameof(ObtenerRolPorId), new { id = rol.IdRol }, rol);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        
         
     }
 
-    [HttpPut("{id}")]
-    public ActionResult ActualizarRol(byte id, Rol rol)
+    [HttpPut]
+    public ActionResult ActualizarRol( Rol rol)
     {
-        if (id != rol.IdRol)
-        {
-            return BadRequest();
-        }
 
         try
         {
-            _repoRol.ActualizarRol(rol);
+            _RepoService.ActualizarRol(rol);
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -69,7 +77,7 @@ public class RolController : ControllerBase
     {
         try
         {
-            _repoRol.EliminarRol(id);
+            _RepoService.EliminarRol(id);
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -78,6 +86,8 @@ public class RolController : ControllerBase
         }
     }
 
-
-    
 }
+
+public record RegistroRolRequest(
+    string Nombre
+);

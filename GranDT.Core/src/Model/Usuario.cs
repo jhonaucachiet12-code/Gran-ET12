@@ -10,6 +10,6 @@ public class Usuario
     public DateTime FechaNacimiento {get;set;}
     public required string PasswordHash{get;set;}
     public byte IdRol{get;set;}
-    public required Rol Roles{get;set;}
+    public  Rol? Roles{get;set;}
 
 }

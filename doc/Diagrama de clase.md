@@ -273,13 +273,5 @@ PlantillaJugador  de la base de datos. esto debido a que lo contine la clase Pla
 eso La idea es dejar el diagrama más legible y centrado en lo que sí existe en el proyecto: `Jugador`,
  `Plantilla`, `Equipo`, `Posicion`, `Usuario`, `Rol` y `Puntuacion`, sin la entidad intermedia `PlantillaJugador`.
 
-	Equipo "1" <-- "0..*" Jugador : pertenece a
-	Posicion "1" <-- "0..*" Jugador : clasifica
-	Rol "1" <-- "0..*" Usuario : asignado a
-	Usuario "1" <-- "0..*" Plantilla : propietario
-	Plantilla "1" <-- "0..*" PlantillaJugador : contiene
-	Jugador "1" <-- "0..*" PlantillaJugador : incluido en
-	Jugador "1" <-- "0..*" Puntuacion : recibe
-```
 
-Las relaciones de `PlantillaJugador` representan la asociación muchos-a-muchos entre `Plantilla` y `Jugador`; cada registro además indica si el jugador es titular. En el código actual esa gestión está concentrada en `IRepoPlantilla` y `RepoPlantilla`, por lo que las capas propias de `PlantillaJugador` aparecen como pendientes. `PuntuacionService` y `PuntuacionController` también quedan pendientes, aunque su repositorio y su interfaz ya existen.
+

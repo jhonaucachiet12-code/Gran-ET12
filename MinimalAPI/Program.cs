@@ -32,6 +32,12 @@ builder.Services.AddScoped<IRepoRol,RepoRol>();
 builder.Services.AddScoped<RolService>();
 builder.Services.AddScoped<RepoRol>();
 
+builder.Services.AddScoped<IRepoPosicion, RepoPosicion>();
+builder.Services.AddScoped<PosicionService>();
+
+builder.Services.AddScoped<IRepoJugador, RepoJugador>();
+builder.Services.AddScoped<JugadorService>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -43,78 +49,11 @@ if (app.Environment.IsDevelopment())
 }
 app.MapControllers();
 
-app.MapGet("/usuarios", (UsuarioService service) =>
-{
-    var usuarios = service.ObtenerUsuarios();
-    return Results.Ok(usuarios);
-});
 
-app.MapGet("/usuarios/{id}", (short id, UsuarioService service) =>
-{
-    try
-    {
-        var usuario = service.ObtenerPorEmail(id);
-        return usuario is not null ? Results.Ok(usuario) : Results.NotFound();
-    }
-    catch (ArgumentOutOfRangeException ex)
-    {
-        return Results.BadRequest(ex.Message);
-    }
-});
-
-app.MapPost("/usuarios", (RegistroUsuarioRequest request, UsuarioService service) =>
-{
-    try
-    {
-        var usuario = new Usuario
-        {
-            Nombre = request.Nombre,
-            Apellido = request.Apellido,
-            Email = request.Email,
-            FechaNacimiento = request.FechaNacimiento,
-            IdRol = request.IdRol,
-            PasswordHash = "temp",      // se sobreescribe dentro del service
-            Roles = new Rol { Nombre = "" } // placeholder, no se usa para el insert
-        };
-
-        service.RegistrarUsario(usuario, request.PasswordHash);
-        return Results.Created($"/usuarios/{usuario.IdUsuario}", usuario);
-    }
-    catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
-    {
-        return Results.BadRequest(ex.Message);
-    }
-});
-
-app.MapPut("/usuarios", (Usuario usuario, UsuarioService service) =>
-{
-    try
-    {
-        service.ActualizarUsuario(usuario);
-        return Results.NoContent();
-    }
-    catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
-    {
-        return Results.BadRequest(ex.Message);
-    }
-});
-
-app.MapDelete("/usuarios/{id}", (short id, UsuarioService service) =>
-{
-    service.EliminarUsuario(id);
-    return Results.NoContent();
-});
 
 app.Run();
 
-public record RegistroUsuarioRequest(
-    string Nombre,
-    string Apellido,
-    string Email,
-    DateTime FechaNacimiento,
-    byte IdRol,
-    string PasswordHash
-);
+
 
 //ruta ami base de datos:
 //  "DefaultConnection": "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;"

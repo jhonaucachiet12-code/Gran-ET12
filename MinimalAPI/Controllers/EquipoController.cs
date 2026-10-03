@@ -31,10 +31,14 @@ public class EquipoController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult RegistrarEquipo(Equipo equipo)
+    public ActionResult RegistrarEquipo(RegistroEquipoRequest request)
     {
         try
         {
+            var equipo = new Equipo
+            {
+                Nombre = request.Nombre
+            };
             _equipoService.AgregarEquipo(equipo);
             return CreatedAtAction(nameof(ObtenerPorId), new { id = equipo.IdEquipo }, equipo);
         }
@@ -44,20 +48,15 @@ public class EquipoController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
-    public ActionResult ActualizarEquipo(byte id, Equipo equipo)
+    [HttpPut]
+    public ActionResult ActualizarEquipo( Equipo equipo)
     {
-        if (id != equipo.IdEquipo)
-        {
-            return BadRequest();
-        }
-
         try
         {
             _equipoService.ActualizarEquipo(equipo);
             return NoContent();
         }
-        catch (ArgumentException ex)
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
         {
             return BadRequest(ex.Message);
         }
@@ -77,3 +76,7 @@ public class EquipoController : ControllerBase
         }
     }
 }
+
+public record RegistroEquipoRequest(
+    string Nombre
+);

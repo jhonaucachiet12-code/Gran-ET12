@@ -32,8 +32,8 @@ public class RepoJugador :RepoDapper, IRepoJugador
     {
         var consulta = @"SELECT 
                         J.*, 
-                        P.IdPosicion, P.nombre AS NombrePosicion, 
-                        E.idEquipo, E.nombre AS NombreEquipo 
+                        P.IdPosicion, P.nombre , 
+                        E.idEquipo, E.nombre  
                     FROM Jugador J
                     INNER JOIN Posicion P ON J.idPosicion = P.IdPosicion
                     INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo

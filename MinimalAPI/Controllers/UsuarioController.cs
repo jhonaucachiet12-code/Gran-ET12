@@ -35,19 +35,34 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult RegistrarUsario(Usuario usuario, string PasswordHash)
+    public ActionResult RegistrarUsuario(RegistroUsuarioRequest request)
     {
-        _usuarioService.RegistrarUsario(usuario, PasswordHash);
-        return CreatedAtAction(nameof(ObtenerPorEmail), new { id = usuario.IdUsuario }, usuario);
+        try
+        {
+            var usuario = new Usuario
+            {
+                Nombre = request.Nombre,
+                Apellido = request.Apellido,
+                Email = request.Email,
+                FechaNacimiento = request.FechaNacimiento,
+                IdRol = request.IdRol,
+                PasswordHash = "temp",
+                Roles = new Rol { Nombre = "" }
+            };
+
+            _usuarioService.RegistrarUsario(usuario, request.PasswordHash);
+            return CreatedAtAction(nameof(ObtenerPorEmail), new { id = usuario.IdUsuario }, usuario);
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
-    [HttpPut("{id}")]
-    public ActionResult ActualizarUsuario(short id, Usuario usuario)
+    [HttpPut]
+    public ActionResult ActualizarUsuario( Usuario usuario)
     {
-        if (id != usuario.IdUsuario)
-        {
-            return BadRequest();
-        }
+       
 
         _usuarioService.ActualizarUsuario(usuario);
         return NoContent();
@@ -60,3 +75,11 @@ public class UsuarioController : ControllerBase
         return NoContent();
     }
 }
+public record RegistroUsuarioRequest(
+    string Nombre,
+    string Apellido,
+    string Email,
+    DateTime FechaNacimiento,
+    byte IdRol,
+    string PasswordHash
+);

@@ -86,29 +86,39 @@ public class PlantillaController : ControllerBase
 
         //---------------------PlantillaJugador--------------------
 
-    [HttpPost]
-    public ActionResult AgregarJugadorAPlantilla(Plantilla plantilla, Jugador jugador,int idPlantilla, short idJugador, bool esTitular)
+   [HttpPost("agregar-jugador")]
+public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaRequest request)
+{
+    try
+    {
+        // Llamas al servicio pasando únicamente el objeto request (o sus propiedades)
+        _plantillaService.AgregarJugadorAPlantilla(request.IdPlantilla, request.IdJugador, request.EsTitular);
+        
+        return CreatedAtAction(nameof(ObtenerPlantillaPorId), new { id = request.IdPlantilla }, null);
+    }
+    catch (ArgumentException ex)
+    {
+        return BadRequest(ex.Message);
+    }
+    catch (InvalidOperationException ex)
+    {
+        return BadRequest(ex.Message);
+    }
+}
+
+    [HttpPut("actualizar-jugador")]
+    public ActionResult ActualizarJugadorEnPlantilla([FromBody] AgregarJugadorPlantillaRequest request)
     {
         try
         {
-             _plantillaService.AgregarJugadorAPlantilla(plantilla, jugador, idPlantilla, idJugador, esTitular);
-            return CreatedAtAction(nameof(_plantillaService.ObtenerPlantillaPorId), new { id = idPlantilla }, null);
+            _plantillaService.ActualizarJugadorEnPlantilla(request.IdPlantilla, request.IdJugador, request.EsTitular);
+            return NoContent();
         }
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
         }
-    }
-
-    [HttpPut]
-    public ActionResult ActualizarJugadorEnPlantilla(Plantilla plantilla, Jugador jugador,int idPlantilla, short idJugador, bool esTitular)
-    {
-        try
-        {
-            _plantillaService.ActualizarJugadorEnPlantilla(plantilla, jugador, idPlantilla, idJugador, esTitular);
-            return NoContent();
-        }
-        catch (ArgumentException ex)
+        catch (InvalidOperationException ex)
         {
             return BadRequest(ex.Message);
         }

@@ -175,22 +175,11 @@ public class TestRepoPuntuacion
 
     private static Puntuacion CrearPuntuacionTemporal()
     {
-        /*var idJugador = _conexion.QueryFirstOrDefault<short?>(
-            "SELECT idJugador FROM Jugador LIMIT 1");
-        Assert.True(idJugador.HasValue, "Se necesita al menos un jugador para probar puntuaciones.");
 
-        var fechasUsadas = _conexion.Query<byte>(
-            "SELECT Fecha FROM Puntuacion WHERE idJugador = @IdJugador",
-            new { IdJugador = idJugador.Value }).ToHashSet();
-        var fechaDisponible = Enumerable.Range(1, 127)
-            .Select(fecha => (byte)fecha)
-            .FirstOrDefault(fecha => !fechasUsadas.Contains(fecha));*/
-
-        //Assert.NotEqual((byte)0, fechaDisponible);
 
         return new Puntuacion
         {
-            IdJugador = 1,
+            IdJugador = 3,
             Fecha = 5,
             Puntuaciones = 12.34m,
             jugador = new Jugador
@@ -209,12 +198,6 @@ public class TestRepoPuntuacion
         };
     }
 
-    /*private void InsertarPuntuacionTemporal(Puntuacion puntuacion)
-    {
-        _conexion.Execute(
-            "INSERT INTO Puntuacion (idJugador, Fecha, puntuacion) VALUES (@IdJugador, @Fecha, @Puntuaciones)",
-            puntuacion);
-    }*/
 
     private void EliminarPuntuacionTemporal(Puntuacion puntuacion)
     {

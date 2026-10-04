@@ -75,7 +75,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         _conexion.Execute("eliminarPlantilla", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public void AgregarJugadorAPlantilla(int idPlantilla, int idJugador, bool esTitular)
+    public void AgregarJugadorAPlantilla(int idPlantilla, short idJugador, bool esTitular)
     {
         var parametros = new DynamicParameters();
         parametros.Add("unIdPlantilla", idPlantilla);
@@ -95,7 +95,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
     }
     
 
-    public void ActualizarJugadorEnPlantilla(int idPlantilla, int idJugador, bool esTitular)
+    public void ActualizarJugadorEnPlantilla(int idPlantilla, short idJugador, bool esTitular)
     {
         var parametros = new DynamicParameters();
         parametros.Add("unIdPlantilla", idPlantilla);
@@ -138,7 +138,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
     public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha)
     {
         var consulta = @"SELECT SUM(U.Puntuacion) AS PuntuacionPromedio
-                        FROM PlantillaJugador L
+                        FROM PlantillaJugadores L
                         INNER JOIN puntuacion U ON L.idJugador = U.idJugador
                         WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha AND L.titulares = TRUE;";
 
@@ -150,7 +150,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         var consulta =@"SELECT 
                         SUM(j.cotización) AS valorTotalPlantilla
                         FROM Plantilla p
-                        INNER JOIN PlantillaJugador pj ON pj.idPlantilla = p.idPlantilla
+                        INNER JOIN PlantillaJugadores pj ON pj.idPlantilla = p.idPlantilla
                         INNER JOIN Jugador j ON j.idJugador = pj.idJugador
                         WHERE p.idPlantilla = @idPlantilla  ;";
         return _conexion.ExecuteScalar<decimal>(consulta,new{idPlantilla});

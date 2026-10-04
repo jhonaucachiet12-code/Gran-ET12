@@ -47,7 +47,7 @@ public class PlantillaService
 
 
 
-        public void AgregarJugadorAPlantilla(Plantilla plantilla, Jugador jugador,int idPlantilla, int idJugador, bool esTitular)
+        public void AgregarJugadorAPlantilla(Plantilla plantilla, Jugador jugador,int idPlantilla, short idJugador, bool esTitular)
         {
             ArgumentNullException.ThrowIfNull(plantilla);
             ArgumentNullException.ThrowIfNull(jugador);
@@ -126,7 +126,7 @@ public class PlantillaService
             repoPlantilla.EliminarJugadorDePlantilla(idJugador,idPlantilla);
         }
 
-        public void ActualizarJugadorEnPlantilla(Plantilla plantilla, Jugador jugador,int idPlantilla, int idJugador, bool esTitular)
+        public void ActualizarJugadorEnPlantilla(Plantilla plantilla, Jugador jugador,int idPlantilla, short idJugador, bool esTitular)
         {
 
             if(esTitular)

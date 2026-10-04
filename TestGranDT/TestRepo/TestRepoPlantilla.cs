@@ -237,29 +237,21 @@ public class TestRepoPlantilla
 	[Fact]
 	public void ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla_devuelveSumaCorrecta()
 	{
-		var plantilla = CrearPlantillaTemporal();
-		var idJugador1 = 1; // ID de jugador válido
-		var idJugador2 = 2; // ID de jugador válido
-		var esTitular = true;
-		try
-		{
-			_repoPlantilla.AgregarPlantilla(plantilla);
-			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador1, esTitular);
-			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador2, esTitular);
-
-			var sumaPuntuaciones = _repoPlantilla.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(5,2);
-
-			Assert.True(sumaPuntuaciones >= 0); // Asegurarse de que la suma sea un valor válido
+		var sumaPuntuaciones = _repoPlantilla.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(5,2);
+		Assert.True(sumaPuntuaciones >= 0);
+		Assert.True(sumaPuntuaciones == 17);
+		Assert.True(sumaPuntuaciones <= 100); 
 			
-		}
-		finally
-		{
-			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador1, plantilla.IdPlantilla);
-			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador2, plantilla.IdPlantilla);
-			// Limpiar la plantilla creada
-			EliminarSiFueRegistrada(plantilla);
-		}
-		
+	}
+
+
+	[Fact]
+	public void ObtenerElValorTotalDeLaPlantilla_devuelveValorCorrecto()
+	{
+		var valorTotal = _repoPlantilla.ObtenerElValorTotalDeLaPlantilla(5);
+		Assert.True(valorTotal >= 0);
+		Assert.True(valorTotal == 150);
+		Assert.True(valorTotal <= 10000000); 
 	}
 
 

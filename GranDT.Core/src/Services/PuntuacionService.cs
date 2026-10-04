@@ -93,7 +93,7 @@ public class PuntuacionService
 
     private static void ValidarFecha(byte fecha)
     {
-        if (fecha > 50)
+        if (fecha > 50 && fecha < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(fecha), "La fecha debe estar entre 0 y 50.");
         }

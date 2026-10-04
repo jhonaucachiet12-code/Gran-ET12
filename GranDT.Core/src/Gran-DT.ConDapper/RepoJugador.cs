@@ -13,7 +13,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
 
     public IEnumerable<Jugador> ObtenerJugadores()
     {
-        var consulta = @"SELECT J.*, P.nombre , E.nombre 
+        var consulta = @"SELECT J.* , P.IdPosicion, P.nombre , E.idEquipo, E.nombre 
                         FROM Jugador J
                         INNER JOIN Posicion P ON J.IdPosicion = P.IdPosicion
                         INNER JOIN Equipo E ON E.idEquipo = J.IdEquipo";
@@ -23,7 +23,7 @@ public class RepoJugador :RepoDapper, IRepoJugador
             jugador.posicion = posicion;
             jugador.equipo = equipo;
             return jugador;
-        }, splitOn: "IdPosicion,IdEquipo");
+        }, splitOn: "idPosicion,idEquipo");
 
         return jugadores;
     }

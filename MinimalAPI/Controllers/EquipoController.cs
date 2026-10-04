@@ -27,7 +27,11 @@ public class EquipoController : ControllerBase
     public ActionResult<Equipo> ObtenerPorId(byte id)
     {
         var equipo = _equipoService.ObtenerEquipoPorId(id);
-        return equipo is not null ? Ok(equipo) : NotFound();
+        if(equipo == null)
+        {
+            return NotFound();
+        }
+        return  Ok(equipo);
     }
 
     [HttpPost]

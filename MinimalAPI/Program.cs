@@ -38,6 +38,9 @@ builder.Services.AddScoped<PosicionService>();
 builder.Services.AddScoped<IRepoJugador, RepoJugador>();
 builder.Services.AddScoped<JugadorService>();
 
+builder.Services.AddScoped<IRepoPuntuacion, RepoPuntuacion>();
+builder.Services.AddScoped<PuntuacionService>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

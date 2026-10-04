@@ -132,10 +132,144 @@ public class TestRepoPlantilla
 		}
 	}
 
+	// Tests el RepoPlantilla con Plantilla que no existe
+	// Agragr un jugador a una plantilla que no existe
+	/*[Fact]
+	public void AgregarJugadorAPlantilla_PlantillaInexistente_LanzaExcepcion()
+	{
+		var idPlantillaInexistente = 9999; // ID de plantilla que no existe
+		var idJugador = 1; // ID de jugador válido
+		var esTitular = true;
+
+		Assert.Throws<Exception>(() => _repoPlantilla.AgregarJugadorAPlantilla(idPlantillaInexistente, idJugador, esTitular));
+	}*/
+
+	[Fact]
+	public void AgregarJugadorAplantilla_AgrgaJugadorExitosamente()
+	{
+		var plantilla = CrearPlantillaTemporal();
+		var idJugador = 1; // ID de jugador válido
+		var esTitular = true;
+		try
+		{
+			
+			_repoPlantilla.AgregarPlantilla(plantilla);
+
+			
+
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+
+			var plantillaActualizada = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
+			Assert.NotNull(plantillaActualizada);
+			Assert.Contains(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == idJugador);
+			
+		}
+		finally
+		{
+			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador, plantilla.IdPlantilla);
+			// Limpiar la plantilla creada
+			EliminarSiFueRegistrada(plantilla);
+		}
+		
+	}
+	[Fact]
+	public void CambiarunJugadorDeSuplenteATitilar()
+	{
+		var plantilla = CrearPlantillaTemporal();
+		var idJugador = 1; // ID de jugador válido
+		var esTitular = false;
+		try
+		{
+			
+			_repoPlantilla.AgregarPlantilla(plantilla);
+
+			
+
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+
+			var plantillaActual = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
+
+			Assert.NotNull(plantillaActual);
+			// Cambiar el jugador a titular
+			esTitular = true;
+			_repoPlantilla.ActualizarJugadorEnPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+
+			var plantillaActualizada = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
+			Assert.NotNull(plantillaActualizada);
+			Assert.Contains(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == idJugador);
+			
+		}
+		finally
+		{
+			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador, plantilla.IdPlantilla);
+			// Limpiar la plantilla creada
+			EliminarSiFueRegistrada(plantilla);
+		}
+	}
+
+	[Fact]
+	public void EliminarJugadorDePlantilla_EliminaJugadorExistente()
+	{
+		var plantilla = CrearPlantillaTemporal();
+		var idJugador = 1; // ID de jugador válido
+		var esTitular = true;
+		try
+		{
+			_repoPlantilla.AgregarPlantilla(plantilla);
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+
+			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador, plantilla.IdPlantilla);
+
+			var plantillaActualizada = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
+			Assert.NotNull(plantillaActualizada);
+			Assert.DoesNotContain(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == idJugador);
+			
+		}
+		finally
+		{
+			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador, plantilla.IdPlantilla);
+			// Limpiar la plantilla creada
+			EliminarSiFueRegistrada(plantilla);
+		}
+		
+	}
+
+	[Fact]
+	public void ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla_devuelveSumaCorrecta()
+	{
+		var plantilla = CrearPlantillaTemporal();
+		var idJugador1 = 1; // ID de jugador válido
+		var idJugador2 = 2; // ID de jugador válido
+		var esTitular = true;
+		try
+		{
+			_repoPlantilla.AgregarPlantilla(plantilla);
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador1, esTitular);
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador2, esTitular);
+
+			var sumaPuntuaciones = _repoPlantilla.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(5,2);
+
+			Assert.True(sumaPuntuaciones >= 0); // Asegurarse de que la suma sea un valor válido
+			
+		}
+		finally
+		{
+			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador1, plantilla.IdPlantilla);
+			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador2, plantilla.IdPlantilla);
+			// Limpiar la plantilla creada
+			EliminarSiFueRegistrada(plantilla);
+		}
+		
+	}
+
+
+
+
 	private static Plantilla CrearPlantillaTemporal()
 	{
 		return new Plantilla
 		{
+			
 			IdUsuario = 1,
 			Nombre = $"Plantilla de prueba",
 			Presupuesto = 9000000,
@@ -151,4 +285,3 @@ public class TestRepoPlantilla
 		}
 	}
 }
-

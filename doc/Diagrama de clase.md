@@ -65,22 +65,30 @@ classDiagram
     }
 
     class EquipoController {
-        +ObtenerEquipos
+        +ObtenerEquipos() IEnumerable~Equipo~
+        +ObtenerEquipoPorId(byte id) Equipo
+        +AgregarEquipo(RegistroEquipoRequest request)
+        +ActualizarEquipo(Equipo equipo)
+        +EliminarEquipo(byte id)
         
     }
 
     class JugadorController {
-        
+        +ObtenerJugadores() IEnumerable~Jugador~
+        +ObtenerJugadorPorId(short id) Jugador
+        +AgregarJugador(RegistroJugadorRequest request)
+        +ActualizarJugador(Jugador jugador)
+        +EliminarJugador(short id)
     }
 
     class PlantillaController {
         +ObtenerPlantillas() IEnumerable~Plantilla~
         +ObtenerPlantillaPorId(byte id) Plantilla
-        +AgregarPlantilla(RegistroPlantillaRequest)
-        +ActualizarPlantilla(Plantilla)
+        +AgregarPlantilla(RegistroPlantillaRequest request)
+        +ActualizarPlantilla(Plantilla plantilla)
         +EliminarPlantilla(byte id)
-        +AgregarJugadorAPlantilla(AgregarJugadorPlantillaRequest)
-        +ActualizarJugadorEnPlantilla(AgregarJugadorPlantillaRequest)
+        +AgregarJugadorAPlantilla(AgregarJugadorPlantillaRequest request)
+        +ActualizarJugadorEnPlantilla(AgregarJugadorPlantillaRequest request)
         +EliminarJugadorDePlantilla(short idJugador, int idPlantilla)
         +ObtenerJugadoresDeLaPlantilla(int idPlantilla) Plantilla
         +ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha) decimal
@@ -88,21 +96,34 @@ classDiagram
     }
 
     class PosicionController {
-        
+        +ObtenerPosiciones() IEnumerable~Posicion~
+        +ObtenerPosicionPorId(byte id) Posicion
+        +AgregarPosicion(RegistroPosicionRequest request)
+        +ActualizarPosicion(Posicion posicion)
+        +EliminarPosicion(byte id)
     }
 
     class PuntuacionController {
-        
+        +ObtenerPuntuasiones() IEnumerable~Puntuacion~
+        +ObtenerLaPuntucionDelJugador(short idJugador, byte fecha) Puntuacion
+        +ObtenerTodasLasPuntuasionesDelJugador(short idJugador) IEnumerable~Puntuacion~
+        +AgregarPuntuacion(RegistroPuntuacionesRequest request)
+        +ActualizarPuntuacion(Puntuacion puntuacion)
+        +EliminarPuntuacion(short idJugador)
     }
 
     class RolController {
-        
+        +ObtenerRoles() 
+        +ObtenerRolPorId(byte id) 
+        +AgregarRol(RegistroRolRequest request)
+        +ActualizarRol(Rol rol)
+        +EliminarRol(byte id)
     }
 
     class UsuarioController {
         +ObtenerUsuarios()
         +ObtenerPorEmail(short id)
-        +RegistrarUsario(Usuario usuario, string PasswordHash)
+        +RegistrarUsario(RegistroUsuarioRequest request)
         +ActualizarUsuario(short id, Usuario usuario)
         +EliminarUsuario(short id)
     }
@@ -144,7 +165,12 @@ classDiagram
     }
 
     class PuntuacionService {
-        
+        +ObtenerPuntuasiones() IEnumerable~Puntuacion~
+        +ObtenerLaPuntucionDelJugador(short idJugador, byte fecha) Puntuacion
+        +ObtenerTodasLasPuntuasionesDelJugador(short idJugador) IEnumerable~Puntuacion~
+        +AgregarPuntuacion(Puntuacion puntuacion)
+        +ActualizarPuntuacion(Puntuacion puntuacion)
+        +EliminarPuntuacion(short idJugador)
     }
 
     class RolService {

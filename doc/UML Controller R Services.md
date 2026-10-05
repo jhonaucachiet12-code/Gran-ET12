@@ -3,7 +3,6 @@
 Digrama de clase del del sistema Gran_ET12, con solo las relaciones entre Las Controllers y los services
 
 
-```mermaid
 classDiagram
     direction LR
     class EquipoController {
@@ -12,7 +11,6 @@ classDiagram
         +AgregarEquipo(RegistroEquipoRequest request)
         +ActualizarEquipo(Equipo equipo)
         +EliminarEquipo(byte id)
-        
     }
 
     class JugadorController {
@@ -81,7 +79,7 @@ classDiagram
     class JugadorService {
         +ObtenerJugadores() IEnumerable~Jugador~
         +ObtenerJugadorPorId(short id) Jugador
-        +AgregarJugador(Jugador jugador)
+        +AgregarJugador(Jugador jugadp)
         +ActualizarJugador(Jugador jugador)
     }
 
@@ -141,52 +139,42 @@ classDiagram
         +bool EsTitular
     }
 
-    class RegistroEquipoRequest{
-        <<Record>>
-        + string Nombre
+    class RegistroEquipoRequest {
+        +string Nombre
     }
 
-    class RegistroRolRequest
-    {
-        <<Record>>
-        + string Nombre
+    class RegistroRolRequest {
+        +string Nombre
     }
 
-    class RegistroPuntuacionesRequest
-    {
-        <<Record>>
-        + string Nombre
+    class RegistroPosicionRequest {
+        +string Nombre
     }
 
-    class RegistroPuntuacionesRequest
-    {
-        <<Record>>
-        + string Nombre
+    class RegistroPuntuacionesRequest {
+        +short IdJugador
+        +byte Fecha 
+        +decimal Puntuaciones
     }
 
-    class RegistroPuntuacionesRequest
-    {
-        <<Record>>
-        short IdJugador
-        byte Fecha 
-        decimal Puntuaciones
+    class RegistroJugadorRequest { 
+        +byte IdPosicion
+        +byte IdEquipo
+        +string Nombre
+        +string Apellido
+        +string Apodo
+        +DateTime Nacimiento
+        +decimal Cotización
     }
 
-    class RegistroJugadorRequest
-    { 
-        <<Record>>
-        byte IdPosicion
-        byte IdEquipo
-        string Nombre
-        string Apellido
-        string Apodo
-        DateTime Nacimiento
-        decimal Cotización
+    class RegistroUsuarioRequest {
+        +string Nombre
+        +string Apellido
+        +string Email
+        +DateTime FechaNacimiento
+        +byte IdRol
+        +string PasswordHash
     }
-
-
-    
-
 
     EquipoController --> EquipoService
     JugadorController --> JugadorService
@@ -197,5 +185,9 @@ classDiagram
     PuntuacionController --> PuntuacionService
     RolController --> RolService
     UsuarioController --> UsuarioService
-
-```
+    UsuarioController ..> RegistroUsuarioRequest
+    EquipoController ..> RegistroEquipoRequest
+    JugadorController ..> RegistroJugadorRequest
+    PosicionController ..> RegistroPosicionRequest
+    RolController ..> RegistroRolRequest
+    PuntuacionController ..> RegistroPuntuacionesRequest

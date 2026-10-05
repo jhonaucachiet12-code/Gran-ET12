@@ -75,14 +75,7 @@ public class UsuarioController : ControllerBase
         return NoContent();
     }
 }
-/*public record RegistroUsuarioRequest(
-    string Nombre,
-    string Apellido,
-    string Email,
-    DateTime FechaNacimiento,
-    byte IdRol,
-    string PasswordHash
-);*/
+
 
 public class RegistroUsuarioRequest()
 {

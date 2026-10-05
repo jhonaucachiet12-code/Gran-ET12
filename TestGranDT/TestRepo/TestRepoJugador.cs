@@ -15,8 +15,8 @@ public class TestRepoJugador
 
 	public TestRepoJugador()
 	{
-		var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
-		//var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
+		//var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+		var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
 		var conexion = new MySqlConnection(cadena);
 		_repoJugador = new RepoJugador(conexion);
 		_repoEquipo = new RepoEquipo(conexion);
@@ -142,9 +142,7 @@ public class TestRepoJugador
 
 	private Jugador CrearJugadorTemporal()
 	{
-		/*var identificador = Guid.NewGuid().ToString("N");
-		var equipo = new Equipo { Nombre = $"equipo de MRD" };
-		var posicion = new Posicion { Nombre = $"Esquina" };*/
+
 
 		
 
@@ -169,15 +167,7 @@ public class TestRepoJugador
 			_repoJugador.EliminarJugador(jugador.IdJugador);
 		}
 
-		/*if (jugador.IdEquipo > 0)
-		{
-			_repoEquipo.EliminarEquipo((byte)jugador.IdEquipo);
-		}
-
-		if (jugador.IdPosicion > 0)
-		{
-			_repoPosicion.EliminarPosicion(jugador.IdPosicion);
-		}*/
+		
 	}
 }
 

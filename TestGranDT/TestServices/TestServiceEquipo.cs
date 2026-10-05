@@ -10,13 +10,13 @@ public class MockRepoEquipo : IRepoEquipo
     // Datos en memoria, simulando la "base de datos"
     public List<Equipo> Equipos { get; set; } = new();
 
-    // Flags para verificar si un método fue llamado (espías simples)
+    // Flags para verificar si un método fue llamado 
     public bool SeLlamoObtenerEquipos { get; private set; }
     public bool SeLlamoAgregarEquipo { get; private set; }
     public bool SeLlamoActualizarEquipo { get; private set; }
     public bool SeLlamoEliminarEquipo { get; private set; }
 
-    // Guarda el último equipo pasado a cada método, útil para asserts
+    // Guarda el último equipo pasado a cada método
     public Equipo? UltimoEquipoAgregado { get; private set; }
     public Equipo? UltimoEquipoActualizado { get; private set; }
     public byte? UltimoIdEliminado { get; private set; }

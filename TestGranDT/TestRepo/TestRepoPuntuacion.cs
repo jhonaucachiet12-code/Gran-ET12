@@ -18,8 +18,8 @@ public class TestRepoPuntuacion
     public TestRepoPuntuacion()
     {
 
-        var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
-        //var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
+        //var cadena = "Server=localhost;Database=bd_GranET;Uid=root;Pwd=1001;";
+        var cadena = "Server=localhost;Database=bd_GranET;Uid=5to_agbd;Pwd=Trigg3rs!;";
         _conexion = new MySqlConnection(cadena);
         _repoPuntuacion = new RepoPuntuacion(_conexion);
     }

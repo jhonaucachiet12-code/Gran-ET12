@@ -106,9 +106,9 @@ public class UsuarioServiceTests
         Assert.True(mockRepo.SeLlamoObtenerUsuarios);
     }
 
-    // ObtenerPorEmail (en realidad busca por Id, ver nota al final) 
+    // ObtenerPorid
     [Fact]
-    public void ObtenerPorEmail_IdValido_DevuelveUsuario()
+    public void ObtenerPorid_IdValido_DevuelveUsuario()
     {
         var mockRepo = new MockRepoUsuario();
         mockRepo.Usuarios.Add(CrearUsuarioValido(1));

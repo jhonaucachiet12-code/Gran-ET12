@@ -5,10 +5,9 @@ using GranDT.Core.Model;
 using GranDT.Core.src.Services;
 using GranDT.Core.Gran_DT.ConDapper;
 using GranDT.Core.Model.IRepos;
-using MySqlConnector;
-using Dapper;
 using System.Data;
 using MinimalAPI.Services;
+using MySqlConnector;
 
 
 

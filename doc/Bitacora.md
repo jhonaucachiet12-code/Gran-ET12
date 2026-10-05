@@ -24,5 +24,12 @@ tiene también el CRUD de la entidad de. También cree algunos  test de los repo
 semanas 5: 
 domingo: cree el controlador de usuario
 lunes: cree el controlador de usuario
-y prove lso enpoints y si funcionan
+y prove lso enpoints .funcionan
+martes: cree algunos test de Repodapper
+miercoles: corregi errores y cree al algunos controladores
+jueeves:no hize mucho
+viernes cree mas controladores , prove que funcienaran corectamentes y testie lo que me faltaba del repo de  plantilla
+sabado : cree todos los controladore junto a sus enponits y probe que funcianaran
+domingo: teste algunos services 
+
 

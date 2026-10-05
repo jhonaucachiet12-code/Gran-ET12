@@ -2,7 +2,7 @@
 
 Digrama de clase del del sistema Gran_ET12, con solo las relaciones entre Las Controllers y los services
 
-
+```mermaid
 classDiagram
     direction LR
     class EquipoController {

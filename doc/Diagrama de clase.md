@@ -65,6 +65,7 @@ classDiagram
     }
 
     class EquipoController {
+        +ObtenerEquipos
         
     }
 

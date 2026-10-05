@@ -2,6 +2,7 @@
 
 ```mermaid
 classDiagram
+    direction LR
     class Equipo {
         +byte IdEquipo
         +string Nombre

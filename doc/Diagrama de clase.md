@@ -62,32 +62,40 @@ classDiagram
         +List~Jugador~ JugadoresTitulares
         +List~Jugador~ JugadoresSuplentes
         +Usuario usuario
-        +decimal costoTotalDeLaPlantilla()
-        +bool validarposiciones()
     }
 
     class EquipoController {
-        <<pendiente>>
+        
     }
 
     class JugadorController {
-        <<pendiente>>
+        
     }
 
     class PlantillaController {
-        <<pendiente>>
+        +ObtenerPlantillas() IEnumerable~Plantilla~
+        +ObtenerPlantillaPorId(byte id) Plantilla
+        +AgregarPlantilla(RegistroPlantillaRequest)
+        +ActualizarPlantilla(Plantilla)
+        +EliminarPlantilla(byte id)
+        +AgregarJugadorAPlantilla(AgregarJugadorPlantillaRequest)
+        +ActualizarJugadorEnPlantilla(AgregarJugadorPlantillaRequest)
+        +EliminarJugadorDePlantilla(short idJugador, int idPlantilla)
+        +ObtenerJugadoresDeLaPlantilla(int idPlantilla) Plantilla
+        +ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha) decimal
+        +ObtenerElValorTotalDeLaPlantilla(int idPlantilla) decimal
     }
 
     class PosicionController {
-        <<pendiente>>
+        
     }
 
     class PuntuacionController {
-        <<pendiente>>
+        
     }
 
     class RolController {
-        <<pendiente>>
+        
     }
 
     class UsuarioController {
@@ -118,6 +126,13 @@ classDiagram
         +ObtenerPlantillaPorId(int id) Plantilla
         +AgregarPlantilla(Plantilla plantilla)
         +ActualizarPlantilla(Plantilla plantilla)
+        +EliminarPlantilla(int id)
+        +AgregarJugadorAPlantilla(int idPlantilla, short idJugador, bool esTitular)
+        +ActualizarJugadorEnPlantilla(int idPlantilla, short idJugador, bool esTitular)
+        +EliminarJugadorDePlantilla(short idJugador, int idPlantilla)
+        +ObtenerJugadoresDeLaPlantilla(int idPlantilla) Plantilla
+        +ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha) decimal
+        +ObtenerElValorTotalDeLaPlantilla(int idPlantilla) decimal
     }
 
     class PosicionService {
@@ -128,7 +143,7 @@ classDiagram
     }
 
     class PuntuacionService {
-        <<pendiente>>
+        
     }
 
     class RolService {
@@ -171,11 +186,12 @@ classDiagram
         +AgregarPlantilla(Plantilla plantilla)
         +ActualizarPlantilla(Plantilla plantilla)
         +EliminarPlantilla(int id)
-        +AgregarJugadorAPlantilla(int idPlantilla, int idJugador, bool esTitular)
-        +ActualizarJugadorEnPlantilla(int idPlantilla, int idJugador, bool esTitular)
+        +AgregarJugadorAPlantilla(int idPlantilla, short idJugador, bool esTitular)
+        +ActualizarJugadorEnPlantilla(int idPlantilla, short idJugador, bool esTitular)
         +EliminarJugadorDePlantilla(short idJugador, int idPlantilla)
         +ObtenerJugadoresDeLaPlantilla(int idPlantilla) Plantilla
-        +ObtenerPuntuacionPromedioDeLosTitularesDeLaPlantilla(int idPlantilla, DateTime fecha) decimal
+        +ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha) decimal
+        +ObtenerElValorTotalDeLaPlantilla(int idPlantilla) decimal
     }
 
     class IRepoPosicion {
@@ -229,9 +245,22 @@ classDiagram
     class RepoRol
     class RepoUsuario
 
+    class RegistroPlantillaRequest {
+        +int IdUsuario
+        +string Nombre
+    }
+
+    class AgregarJugadorPlantillaRequest {
+        +int IdPlantilla
+        +short IdJugador
+        +bool EsTitular
+    }
+
     EquipoController --> EquipoService
     JugadorController --> JugadorService
     PlantillaController --> PlantillaService
+    PlantillaController ..> RegistroPlantillaRequest
+    PlantillaController ..> AgregarJugadorPlantillaRequest
     PosicionController --> PosicionService
     PuntuacionController --> PuntuacionService
     RolController --> RolService
@@ -265,13 +294,6 @@ classDiagram
     Posicion "1" <-- "0..*" Jugador : clasifica
     Rol "1" <-- "0..*" Usuario : asignado a
     Usuario "1" <-- "0..*" Plantilla : propietario
-    Plantilla "1" --> "0..*" Jugador : incluye titulares y suplentes
+    Plantilla "1" --> "0..*" Jugador : titulares y suplentes
     Jugador "1" --> "0..*" Puntuacion : recibe
 ```
-Este digrama de clase no contiene una clase o cualqueier otra cosa que refleje la entidad 
-PlantillaJugador  de la base de datos. esto debido a que lo contine la clase Plantilla 
-eso La idea es dejar el diagrama más legible y centrado en lo que sí existe en el proyecto: `Jugador`,
- `Plantilla`, `Equipo`, `Posicion`, `Usuario`, `Rol` y `Puntuacion`, sin la entidad intermedia `PlantillaJugador`.
-
-
-

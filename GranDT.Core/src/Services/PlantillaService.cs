@@ -47,8 +47,8 @@ public class PlantillaService
 
 
 
-        public void AgregarJugadorAPlantilla(int idPlantilla, short idJugador, bool esTitular)
-{
+    public void AgregarJugadorAPlantilla(int idPlantilla, short idJugador, bool esTitular)
+    {
     ValidarId(idPlantilla);
     ValidarId(idJugador);
 
@@ -73,7 +73,9 @@ public class PlantillaService
 
     // Ejecutar en base de datos
     repoPlantilla.AgregarJugadorAPlantilla(idPlantilla, idJugador, esTitular);
-}
+    }
+
+    
 
         public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha)
     {

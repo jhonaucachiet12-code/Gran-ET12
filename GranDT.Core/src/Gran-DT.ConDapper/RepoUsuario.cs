@@ -29,7 +29,7 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
         return usuarios;
     }
 
-    public Usuario? ObtenerPorEmail(short IdUsuario)
+    public Usuario? ObtenerPorid(short IdUsuario)
     {
         var consulta = @"SELECT U.*, R.nombre 
                         FROM Usuario U

@@ -43,7 +43,7 @@ public class PlantillaController : ControllerBase
             {
                 IdUsuario = (short)request.IdUsuario,
                 Nombre = request.Nombre,
-                Presupuesto = request.Presupuesto,
+                
                 
             };
             
@@ -166,7 +166,7 @@ public class RegistroPlantillaRequest
 {
     public int IdUsuario { get; set; }
     public required string Nombre { get; set; }
-    public decimal Presupuesto { get; set; }
+    
 }
 
 public class AgregarJugadorPlantillaRequest

@@ -25,8 +25,11 @@ public class UsuarioService
     {
         ValidarId(IdUsuario);
 
-        return repoUsuario.ObtenerPorEmail( IdUsuario);
+        return repoUsuario.ObtenerPorid( IdUsuario);
     }
+
+
+
 
     public void RegistrarUsario(Usuario usuario , string PasswordHash)
     {
@@ -57,9 +60,9 @@ public class UsuarioService
 
     public void EliminarUsuario(short IdUsuario)
     {
-        if(IdUsuario <0)
+        if(IdUsuario <=0)
         {
-            throw new Exception("No puedes eliminar un jugador que no existe");
+            throw new ArgumentOutOfRangeException("No puedes eliminar un jugador que no existe");
         }
         repoUsuario.EliminarUsuario(IdUsuario);
     }
@@ -68,7 +71,7 @@ public class UsuarioService
     {
         ValidarUsuario(nuevoUsuario);
 
-        var viejoUsuario = repoUsuario.ObtenerPorEmail(nuevoUsuario.IdUsuario);
+        var viejoUsuario = repoUsuario.ObtenerPorid(nuevoUsuario.IdUsuario);
         
         if (viejoUsuario == null)
         {
@@ -123,7 +126,7 @@ public class UsuarioService
         int posicionArroba = usuario.Email.IndexOf('@');
         int posicionPunto = usuario.Email.LastIndexOf('.');
 
-        if (posicionArroba > 0 && posicionPunto > posicionArroba + 1 && posicionPunto < usuario.Email.Length - 1)
+        if (!(posicionArroba > 0 && posicionPunto > posicionArroba + 1 && posicionPunto < usuario.Email.Length - 1))
         {
             // Estructura mínima válida: texto@texto.texto
 

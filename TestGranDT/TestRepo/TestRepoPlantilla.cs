@@ -132,18 +132,6 @@ public class TestRepoPlantilla
 		}
 	}
 
-	// Tests el RepoPlantilla con Plantilla que no existe
-	// Agragr un jugador a una plantilla que no existe
-	/*[Fact]
-	public void AgregarJugadorAPlantilla_PlantillaInexistente_LanzaExcepcion()
-	{
-		var idPlantillaInexistente = 9999; // ID de plantilla que no existe
-		var idJugador = 1; // ID de jugador válido
-		var esTitular = true;
-
-		Assert.Throws<Exception>(() => _repoPlantilla.AgregarJugadorAPlantilla(idPlantillaInexistente, idJugador, esTitular));
-	}*/
-
 	[Fact]
 	public void AgregarJugadorAplantilla_AgrgaJugadorExitosamente()
 	{
@@ -157,7 +145,7 @@ public class TestRepoPlantilla
 
 			
 
-			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, (short)idJugador, esTitular);
 
 			var plantillaActualizada = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
 			Assert.NotNull(plantillaActualizada);
@@ -185,18 +173,18 @@ public class TestRepoPlantilla
 
 			
 
-			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, (short)idJugador, esTitular);
 
 			var plantillaActual = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
 
 			Assert.NotNull(plantillaActual);
 			// Cambiar el jugador a titular
 			esTitular = true;
-			_repoPlantilla.ActualizarJugadorEnPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+			_repoPlantilla.ActualizarJugadorEnPlantilla(plantilla.IdPlantilla, (short)idJugador, esTitular);
 
 			var plantillaActualizada = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
 			Assert.NotNull(plantillaActualizada);
-			Assert.Contains(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == idJugador);
+			Assert.Contains(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == (short)idJugador);
 			
 		}
 		finally
@@ -216,13 +204,13 @@ public class TestRepoPlantilla
 		try
 		{
 			_repoPlantilla.AgregarPlantilla(plantilla);
-			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, idJugador, esTitular);
+			_repoPlantilla.AgregarJugadorAPlantilla(plantilla.IdPlantilla, (short)idJugador, esTitular);
 
 			_repoPlantilla.EliminarJugadorDePlantilla((short)idJugador, plantilla.IdPlantilla);
 
 			var plantillaActualizada = _repoPlantilla.ObtenerJugadoresDeLaPlantilla(plantilla.IdPlantilla);
 			Assert.NotNull(plantillaActualizada);
-			Assert.DoesNotContain(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == idJugador);
+			Assert.DoesNotContain(plantillaActualizada.JugadoresTitulares, j => j.IdJugador == (short)idJugador);
 			
 		}
 		finally

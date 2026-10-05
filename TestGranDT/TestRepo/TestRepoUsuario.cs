@@ -42,7 +42,7 @@ public class TestRepoUsuario
 	}
 
 	[Fact]
-	public void ObtenerPorEmail_DevuelveUsuarioExistente()
+	public void ObtenerPorid_DevuelveUsuarioExistente()
 	{
 		var usuarioEsperado = CrearUsuarioTemporal();
 
@@ -50,7 +50,7 @@ public class TestRepoUsuario
 		{
 			_repoUsuario.RegistrarUsario(usuarioEsperado, usuarioEsperado.PasswordHash);
 
-			var usuario = _repoUsuario.ObtenerPorEmail(usuarioEsperado.IdUsuario);
+			var usuario = _repoUsuario.ObtenerPorid(usuarioEsperado.IdUsuario);
 
 			Assert.NotNull(usuario);
 			Assert.Equal(usuarioEsperado.IdUsuario, usuario.IdUsuario);
@@ -68,7 +68,7 @@ public class TestRepoUsuario
 	[Fact]
 	public void ObtenerPorEmail_DevuelveNullParaUsuarioInexistente()
 	{
-		var usuario = _repoUsuario.ObtenerPorEmail(0);
+		var usuario = _repoUsuario.ObtenerPorid(0);
 
 		Assert.Null(usuario);
 	}
@@ -89,7 +89,7 @@ public class TestRepoUsuario
 
 			_repoUsuario.ActualizarUsuario(usuario);
 
-			var usuarioActualizado = _repoUsuario.ObtenerPorEmail(usuario.IdUsuario);
+			var usuarioActualizado = _repoUsuario.ObtenerPorid(usuario.IdUsuario);
 
 			Assert.NotNull(usuarioActualizado);
 			Assert.Equal(usuario.Nombre, usuarioActualizado.Nombre);
@@ -115,7 +115,7 @@ public class TestRepoUsuario
 
 			_repoUsuario.EliminarUsuario(usuario.IdUsuario);
 
-			Assert.Null(_repoUsuario.ObtenerPorEmail(usuario.IdUsuario));
+			Assert.Null(_repoUsuario.ObtenerPorid(usuario.IdUsuario));
 		}
 		finally
 		{

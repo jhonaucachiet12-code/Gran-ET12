@@ -1,7 +1,8 @@
-namespace MinimalAPI.Services;
 
 using GranDT.Core.Model;
 using GranDT.Core.Model.IRepos;
+namespace MinimalAPI.Services;
+
 
 public sealed class EquipoService
 {

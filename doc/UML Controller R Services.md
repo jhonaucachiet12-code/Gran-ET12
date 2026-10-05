@@ -130,6 +130,57 @@ classDiagram
         +EliminarUsuario(short id)
     }
 
+    class RegistroPlantillaRequest {
+        +int IdUsuario
+        +string Nombre
+    }
+
+    class AgregarJugadorPlantillaRequest {
+        +int IdPlantilla
+        +short IdJugador
+        +bool EsTitular
+    }
+
+    record RegistroEquipoRequest{
+        string Nombre
+    }
+
+    record RegistroRolRequest
+    {
+        string Nombre
+    }
+
+    record RegistroPuntuacionesRequest
+    {
+        string Nombre
+    }
+
+    record RegistroPuntuacionesRequest
+    {
+        string Nombre
+    }
+
+    record RegistroPuntuacionesRequest
+    {
+        short IdJugador
+        byte Fecha 
+        decimal Puntuaciones
+    }
+
+    record RegistroJugadorRequest
+    {
+        byte IdPosicion
+        byte IdEquipo
+        string Nombre
+        string Apellido
+        string Apodo
+        DateTime Nacimiento
+        decimal Cotización
+    }
+
+
+    
+
 
     EquipoController --> EquipoService
     JugadorController --> JugadorService

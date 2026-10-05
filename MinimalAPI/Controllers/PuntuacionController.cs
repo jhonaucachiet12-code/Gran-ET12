@@ -98,9 +98,11 @@ public class PuntuacionController : ControllerBase
 
 }
 
-public record RegistroPuntuacionesRequest
-(
-    short IdJugador,
-    byte Fecha ,
-    decimal Puntuaciones
-);
+
+
+public record RegistroPuntuacionesRequest()
+{
+    public short IdJugador {get;set;}
+    public byte Fecha{get;set;}
+    public decimal Puntuaciones{get;set;}
+}

@@ -81,6 +81,9 @@ public class EquipoController : ControllerBase
     }
 }
 
-public record RegistroEquipoRequest(
-    string Nombre
-);
+
+
+public class RegistroEquipoRequest()
+{
+    public required string Nombre {get;set;}
+}

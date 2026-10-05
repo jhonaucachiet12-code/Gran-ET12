@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using GranDT.Core.Gran_DT.ConDapper;
 using GranDT.Core.Model;
 using GranDT.Core.src.Services;
@@ -88,6 +89,8 @@ public class RolController : ControllerBase
 
 }
 
-public record RegistroRolRequest(
-    string Nombre
-);
+public class RegistroRolRequest()
+{
+    public required string Nombre {get;set;}
+}
+    

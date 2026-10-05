@@ -85,14 +85,18 @@ public class JugadorController : ControllerBase
         }
     }
 }
-public record RegistroJugadorRequest(
-    byte IdPosicion,
-    byte IdEquipo,
-    string Nombre,
-    string Apellido,
-    string Apodo,
-    DateTime Nacimiento,
-    decimal Cotización
-);
+
+
+public class RegistroJugadorRequest()
+{
+    public byte IdPosicion {get;set;}
+    public byte IdEquipo {get;set;}
+    public required string Nombre {get;set;}
+    public required string Apellido {get;set;}
+    public required string Apodo {get;set;}
+    public DateTime Nacimiento {get;set;}
+    public decimal Cotización {get;set;}
+
+}
 
 

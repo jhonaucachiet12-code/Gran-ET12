@@ -141,34 +141,40 @@ classDiagram
         +bool EsTitular
     }
 
-    record RegistroEquipoRequest{
-        string Nombre
+    class RegistroEquipoRequest{
+        <<Record>>
+        + string Nombre
     }
 
-    record RegistroRolRequest
+    class RegistroRolRequest
     {
-        string Nombre
+        <<Record>>
+        + string Nombre
     }
 
-    record RegistroPuntuacionesRequest
+    class RegistroPuntuacionesRequest
     {
-        string Nombre
+        <<Record>>
+        + string Nombre
     }
 
-    record RegistroPuntuacionesRequest
+    class RegistroPuntuacionesRequest
     {
-        string Nombre
+        <<Record>>
+        + string Nombre
     }
 
-    record RegistroPuntuacionesRequest
+    class RegistroPuntuacionesRequest
     {
+        <<Record>>
         short IdJugador
         byte Fecha 
         decimal Puntuaciones
     }
 
-    record RegistroJugadorRequest
-    {
+    class RegistroJugadorRequest
+    { 
+        <<Record>>
         byte IdPosicion
         byte IdEquipo
         string Nombre

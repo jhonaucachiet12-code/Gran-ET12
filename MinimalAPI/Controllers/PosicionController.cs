@@ -82,6 +82,9 @@ public class PosicionController : ControllerBase
     }
 }
 
-public record RegistroPosicionRequest(
-    string Nombre
-);
+
+
+public class RegistroPosicionRequest()
+{
+    public required string Nombre{get;set;}
+}

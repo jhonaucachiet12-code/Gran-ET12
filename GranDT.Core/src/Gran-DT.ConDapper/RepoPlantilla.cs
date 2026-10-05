@@ -139,7 +139,7 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
     {
         var consulta = @"SELECT SUM(U.Puntuacion) AS PuntuacionPromedio
                         FROM PlantillaJugadores L
-                        INNER JOIN puntuacion U ON L.idJugador = U.idJugador
+                        INNER JOIN Puntuacion U ON L.idJugador = U.idJugador
                         WHERE L.idPlantilla = @idPlantilla AND U.Fecha = @fecha AND L.titulares = TRUE;";
 
         return _conexion.ExecuteScalar<decimal>(consulta, new { idPlantilla, fecha });

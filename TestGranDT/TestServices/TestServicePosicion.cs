@@ -187,4 +187,30 @@ public class TestServicePosicion
         Assert.True(mockRepo.SeLlamoActualizarPosiciones);
         Assert.Contains("ti", resultado?.Nombre);
     }
+
+
+    //EliminarJugador
+
+    [Fact]
+    public void eliminarJugadorDePlantilla_Valido()
+    {
+        var mockRepo = new MockRepoPosicion();
+        var service = new PosicionService(mockRepo);
+        mockRepo.posiciones.Add(CrearPosicionValida(1 , "Arquero"));
+
+        service.EliminarPosicion(1);
+
+        Assert.True(mockRepo.SeLlamoEliminarPosiciones);
+    }
+
+    [Fact]
+
+    public void EliminarJugadorDePlantilla_invalido_idCero()
+    {
+        var mockRepo = new MockRepoPosicion();
+        var service = new PosicionService(mockRepo);
+        
+        Assert.Throws<ArgumentOutOfRangeException>(() => service.EliminarPosicion(0));
+        Assert.False(mockRepo.SeLlamoEliminarPosiciones);
+    }
 }

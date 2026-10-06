@@ -72,7 +72,7 @@ public class PlantillaService
 
     if(plantilla.JugadoresTitulares.Count >= 11 && esTitular == true)
     {
-        throw new InvalidOperationException("La plantilla ya tiene el máximo de titulares.");
+        throw new ArgumentException("La plantilla ya tiene el máximo de titulares.");
     }
 
     ValidarCupoTitular(idJugador, idPlantilla);
@@ -88,7 +88,7 @@ public class PlantillaService
         ValidarId(idPlantilla);
         if(fecha <= 0 || fecha > 50)
         {
-            throw new ArgumentOutOfRangeException(nameof(idPlantilla), "El identificador debe ser mayor que cero.");
+            throw new ArgumentOutOfRangeException("El identificador debe ser mayor que cero.", nameof(fecha));
         }
         return repoPlantilla.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(idPlantilla,fecha);
     }
@@ -126,6 +126,10 @@ public class PlantillaService
             
             // Si el jugador ya está en la plantilla pero quieres cambiarlo a titular, 
             // asegúrate de tener la lógica de validación de cupos aquí si la requieres.
+            if(plantilla.JugadoresTitulares.Count >= 11 && esTitular == true)
+            {
+                throw new ArgumentException("La plantilla ya tiene el máximo de titulares.");
+            }
         }
 
         

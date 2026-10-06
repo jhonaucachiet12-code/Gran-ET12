@@ -91,6 +91,9 @@ public class MockRepoPlantilla : IRepoPlantilla
     public decimal ObtenerElValorTotalDeLaPlantilla(int idPlantilla) => 0;
 }
 
+
+
+
 public class MockRepoJugador2 : IRepoJugador
 {
     public List<Jugador> Jugadores { get; set; } = new();
@@ -104,6 +107,10 @@ public class MockRepoJugador2 : IRepoJugador
     public void ActualizarJugador(Jugador jugador) { }
     public void EliminarJugador(short idJugador) { }
 }
+
+
+
+
 
 
 public class PlantillaServiceTests
@@ -128,6 +135,7 @@ public class PlantillaServiceTests
         Presupuesto = 9000000,
         JugadoresTitulares = new List<Jugador>(),
         JugadoresSuplentes = new List<Jugador>()
+        
     };
 
 
@@ -195,22 +203,56 @@ public class PlantillaServiceTests
         var mockJugador = new MockRepoJugador();
 
         var plantilla = CrearPlantillaVacia(1);
-        // Llenamos con 20 jugadores (ids 100 en adelante para no chocar con el que intentamos agregar)
-        for (short i = 100; i < 120; i++)
-        {
-            plantilla.JugadoresTitulares.Add(CrearJugador(i, 2)); // defensor, variado
-        }
         mockPlantilla.Plantillas.Add(plantilla);
 
-        var jugadorNuevo = CrearJugador(1, 3);
-        mockJugador.Jugadores.Add(jugadorNuevo);
+        mockJugador.Jugadores.Add(CrearJugador(1, idPosicion: 1));
+
+        mockJugador.Jugadores.Add(CrearJugador(2, idPosicion: 2)); // defensor
+        mockJugador.Jugadores.Add(CrearJugador(3, idPosicion: 2));
+        mockJugador.Jugadores.Add(CrearJugador(4, idPosicion: 2));
+        mockJugador.Jugadores.Add(CrearJugador(5, idPosicion: 2));
+
+        mockJugador.Jugadores.Add(CrearJugador(6, idPosicion: 3));
+        mockJugador.Jugadores.Add(CrearJugador(7, idPosicion: 3));
+        mockJugador.Jugadores.Add(CrearJugador(8, idPosicion: 3));
+        mockJugador.Jugadores.Add(CrearJugador(9, idPosicion: 3));
+
+        mockJugador.Jugadores.Add(CrearJugador(10, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(11, idPosicion: 4));
+
+        mockJugador.Jugadores.Add(CrearJugador(12, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(13, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(14, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(15, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(16, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(17, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(18, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(19, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(20, idPosicion: 4));
 
         var service = new PlantillaService(mockPlantilla, mockJugador);
 
-        Assert.Throws<InvalidOperationException>(() =>
-            service.AgregarJugadorAPlantilla(1, 1, false));
+        // Llenamos con 20 jugadores (ids 100 en adelante para no chocar con el que intentamos agregar)
+        for (short i = 1; i <= 11; i++)
+        {
+            service.AgregarJugadorAPlantilla(idPlantilla: 1, idJugador: i, esTitular: true); // defensor, variado
+        }
 
-        Assert.False(mockPlantilla.SeLlamoAgregarJugadorAPlantilla);
+        for(short i = 12 ; i <= 20;i++)
+        {
+            service.AgregarJugadorAPlantilla(idPlantilla: 1, idJugador: i, esTitular: false);
+        }
+        mockPlantilla.Plantillas.Add(plantilla);
+
+        var jugadorNuevo = CrearJugador(21, 3);
+        mockJugador.Jugadores.Add(jugadorNuevo);
+
+        
+
+        Assert.Throws<InvalidOperationException>(() =>
+            service.AgregarJugadorAPlantilla(1, 21, false));
+
+        
     }
 
     // --- ValidarCupoTitular: cupo de posición lleno ---
@@ -285,8 +327,6 @@ public class PlantillaServiceTests
         mockJugador.Jugadores.Add(CrearJugador(11, idPosicion: 4));
 
 
-        
-
         var nuevoJugador = CrearJugador(12, idPosicion: 3); // mediocampista
         mockJugador.Jugadores.Add(nuevoJugador);
 
@@ -299,9 +339,92 @@ public class PlantillaServiceTests
         }
 
         
-        Assert.Throws<InvalidOperationException>(() => service.AgregarJugadorAPlantilla(1, 12, esTitular: true));
+        Assert.Throws<ArgumentException>(() => service.AgregarJugadorAPlantilla(1, 12, esTitular: true));
 
         
+    }
+
+
+    //actualizar jugador de la platilla plantilla
+    [Fact]
+    public void ActualizarJugadorEnPlantilla_valido()
+    {
+        var mockPlantilla = new MockRepoPlantilla();
+        var mockJugador = new MockRepoJugador();
+        var jugador = CrearJugador(1, idPosicion: 1);
+        var service = new PlantillaService(mockPlantilla, mockJugador);
+
+        mockPlantilla.Plantillas.Add(CrearPlantillaVacia(1));
+
+        mockJugador.Jugadores.Add(jugador); // arquero
+
+        
+
+        service.AgregarJugadorAPlantilla(idPlantilla: 1, idJugador: 1, esTitular: true);
+
+        Assert.True(mockPlantilla.SeLlamoAgregarJugadorAPlantilla);
+
+        
+
+        service.ActualizarJugadorEnPlantilla(idJugador:1, idPlantilla: 1, esTitular :false);
+
+        Assert.True(mockPlantilla.SeLlamoActualizarJugadorEnPlantilla);
+
+        Assert.NotNull(mockPlantilla.UltimoActualizado);
+
+        // 3. Ahora puedes evaluar el valor de forma segura
+        Assert.False(mockPlantilla.UltimoActualizado.Value.esTitular);
+
+    }
+
+    // jugadores titulares llena
+    [Fact]
+    public void ActualizarJugadorEnPlantilla_invalido_titilareslleno()
+    {
+        
+
+        var mockPlantilla = new MockRepoPlantilla();
+        var mockJugador = new MockRepoJugador();
+        var jugador = CrearJugador(20, idPosicion: 4);
+        var service = new PlantillaService(mockPlantilla, mockJugador);
+
+        mockPlantilla.Plantillas.Add(CrearPlantillaVacia(1));
+
+        mockJugador.Jugadores.Add(CrearJugador(1, idPosicion: 1)); // arquero
+
+        mockJugador.Jugadores.Add(CrearJugador(2, idPosicion: 2)); // defensor
+        mockJugador.Jugadores.Add(CrearJugador(3, idPosicion: 2));
+        mockJugador.Jugadores.Add(CrearJugador(4, idPosicion: 2));
+        mockJugador.Jugadores.Add(CrearJugador(5, idPosicion: 2));
+
+        mockJugador.Jugadores.Add(CrearJugador(6, idPosicion: 3));
+        mockJugador.Jugadores.Add(CrearJugador(7, idPosicion: 3));
+        mockJugador.Jugadores.Add(CrearJugador(8, idPosicion: 3));
+        mockJugador.Jugadores.Add(CrearJugador(9, idPosicion: 3));
+
+        mockJugador.Jugadores.Add(CrearJugador(10, idPosicion: 4));
+        mockJugador.Jugadores.Add(CrearJugador(11, idPosicion: 4));
+
+        for (short i = 1; i <= 11; i++)
+        {
+            service.AgregarJugadorAPlantilla(idPlantilla: 1, idJugador: i, esTitular: true);
+        }
+        
+
+        mockJugador.Jugadores.Add(jugador); 
+
+        service.AgregarJugadorAPlantilla(idPlantilla: 1, idJugador: 20, esTitular: false);
+
+        
+
+        Assert.True(mockPlantilla.SeLlamoAgregarJugadorAPlantilla);
+
+
+        Assert.Throws<ArgumentException>(() => service.ActualizarJugadorEnPlantilla(1, 20, esTitular: true));
+
+        Assert.False(mockPlantilla.SeLlamoActualizarJugadorEnPlantilla);
+
+        Assert.False(mockPlantilla.UltimoAgregado.Value.esTitular);
     }
 
 }

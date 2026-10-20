@@ -57,7 +57,8 @@ public class JugadorController : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
+    
     public ActionResult ActualizarJugador(Jugador jugador)
     {
         try

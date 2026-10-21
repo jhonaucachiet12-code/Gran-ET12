@@ -258,8 +258,27 @@ Codigo http de salida: 400
 se espera: el codigo de error 404
 
 Datos de entrada: 
+Id = 9999
+{
+    "idPosicion": 4,
+    "idEquipo": 1,
+    "nombre": "Karim",
+    "apellido": "Benzema",
+    "apodo": "KB9",
+    "nacimiento": "1987-12-19T00:00:00",
+    "cotización": 50.00
+}
 
 Datos de salida: 
+
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+  "title": "Not Found",
+  "status": 404,
+  "traceId": "00-182ac791903b681ac4a705239fd12378-b25c4e316f807bf1-00"
+}
+
+Codigo http de salida: 404
 
 NOTA: DTO para actualizar jugador 
 

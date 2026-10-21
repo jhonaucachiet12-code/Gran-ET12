@@ -59,10 +59,29 @@ public class JugadorController : ControllerBase
 
     [HttpPut("{id}")]
     
-    public ActionResult ActualizarJugador(Jugador jugador)
+    public ActionResult ActualizarJugador(short id, RegistroJugadorRequest request)
     {
+        
+
         try
         {
+            var jugador = new Jugador
+            {
+                IdJugador = id,
+                IdEquipo = request.IdEquipo,
+                IdPosicion = request.IdPosicion,
+                Nombre = request.Nombre,
+                Apellido = request.Apellido,
+                Apodo = request.Apodo,
+                Nacimiento = request.Nacimiento,
+                Cotización = request.Cotización
+            };
+
+            if(_jugadorService.ObtenerJugadorPorId(jugador.IdJugador) is null)
+            {
+                return NotFound();
+            }
+            
             _jugadorService.ActualizarJugador(jugador);
             return NoContent();
         }

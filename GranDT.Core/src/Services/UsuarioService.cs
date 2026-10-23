@@ -45,10 +45,15 @@ public class UsuarioService
 
         ValidarUsuario(usuario);
 
+        // tine que mandar el error 409 si el email ya esta en uso
+
+        
+       
         var usuarios = repoUsuario.ObtenerUsuarios();
         if (usuarios.Any(u => u.Email == usuario.Email))
         {
-            throw new ArgumentException("El email ya está en uso.", nameof(usuario));
+            
+            throw new InvalidOperationException("El email ya está en uso.");
         }
         
 

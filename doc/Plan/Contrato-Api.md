@@ -282,20 +282,81 @@ Codigo http de salida: 404
 
 NOTA: DTO para actualizar jugador 
 
-# 4.
+# 5.
 
 POST /api/usuarios → 201,
 
 se espera: usuario creado sin exponer su contraseña;
 
 Datos de entrada: 
+{
+  "nombre": "david",
+  "apellido": "jira",
+  "email": "ff@d.22",
+  "fechaNacimiento": "1990-01-01T00:00:00",
+  "idRol": 1,
+  "passwordHash": "123456789"
+}
 
 Datos de salida: 
+{
+  "idUsuario": 45,
+  "nombre": "david",
+  "apellido": "jira",
+  "email": "ff@d.22",
+  "fechaNacimiento": "1990-01-01T00:00:00",
+  "passwordHash": "$2a$11$yLCZ9NP2lVKg65iS932Yi.EE0NJ1/IMvEj2pwzKjdNdCeFj.c7t/.",
+  "idRol": 1,
+  "roles": {
+    "idRol": 0,
+    "nombre": ""
+  }
+}
+
+Codigo http de salida: 201
 
 
-Codigo http de salida: 
 
-# 4.
+se espera: el codigo 400
+
+Datos de entrada: 
+
+{
+  "nombre": "",
+  "apellido": "jira",
+  "email": "ff@d.224",
+  "fechaNacimiento": "1990-01-01T00:00:00",
+  "idRol": 1,
+  "passwordHash": "123456789"
+}
+
+Datos de salida: 
+El nombre del usuario es obligatorio. (Parameter 'usuario')
+
+Codigo http de salida: 400
+
+
+
+se espera: el codigo 409
+
+
+Datos de entrada: 
+{
+  "nombre": "david",
+  "apellido": "jira",
+  "email": "ff@d.22",
+  "fechaNacimiento": "1990-01-01T00:00:00",
+  "idRol": 1,
+  "passwordHash": "123456789"
+}
+
+Datos de salida:
+
+El email ya está en uso.
+
+Codigo http de salida: 409
+
+# 6.
 
 GET /api/equipos → 200, 
 se espera: 
@@ -307,7 +368,7 @@ Datos de salida:
 
 Codigo http de salida: 
 
-# 4.
+# 7.
 
 GET /api/equipos → 200, 
 se espera: 
@@ -319,7 +380,7 @@ Datos de salida:
 
 Codigo http de salida: 
 
-# 4.
+# 8.
 
 GET /api/equipos → 200, 
 se espera: 
@@ -331,7 +392,7 @@ Datos de salida:
 
 Codigo http de salida: 
 
-# 4.
+# 9.
 
 GET /api/equipos → 200, 
 se espera: 
@@ -343,7 +404,7 @@ Datos de salida:
 
 Codigo http de salida: 
 
-# 4.
+# 10.
 
 GET /api/equipos → 200, 
 se espera: 
@@ -355,7 +416,7 @@ Datos de salida:
 
 Codigo http de salida: 
 
-# 4.
+# 11.
 
 GET /api/equipos → 200, 
 se espera: 
@@ -368,4 +429,6 @@ Datos de salida:
 Codigo http de salida: 
 
 
+
+# nota: preguntar si los errores diferentes a el 400 se tiene que poner en el controlador o el service , como el 404 o 409
 

@@ -53,9 +53,13 @@ public class UsuarioController : ControllerBase
             _usuarioService.RegistrarUsario(usuario, request.PasswordHash);
             return CreatedAtAction(nameof(ObtenerPorEmail), new { id = usuario.IdUsuario }, usuario);
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message);
+            return Conflict(ex.Message);      // 409: el email ya existe
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);    // 400: datos inválidos
         }
     }
 

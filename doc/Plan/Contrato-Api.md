@@ -359,14 +359,82 @@ Codigo http de salida: 409
 # 6.
 
 GET /api/equipos → 200, 
-se espera: 
+se espera: codigo 200
 
 Datos de entrada: 
 
+id = 3
+{
+  "fecha": 4,
+  "puntuaciones": 9
+}
+
 Datos de salida: 
 
+{
+  "idJugador": 3,
+  "fecha": 4,
+  "puntuaciones": 9,
+  "jugador": null
+}
+ 
+Codigo http de salida:
 
-Codigo http de salida: 
+
+
+GET /api/equipos → 200, 
+se espera: codigo 400
+
+Datos de entrada: 
+
+id= 3
+{
+  "fecha": 8,
+  "puntuaciones": 100
+}
+
+Datos de salida: 
+
+Puntuaciones (Parameter 'La puntuación debe estar entre 0,00 y 10,00.')
+
+Codigo http de salida: 400
+
+
+
+
+
+GET /api/equipos → 200, 
+se espera: codigo 404
+
+Datos de entrada: 
+
+Id = 999
+{
+  "fecha": 1,
+  "puntuaciones": 1
+}
+
+Datos de salida: 
+
+No existe un jugador con ese identificador.
+
+Codigo http de salida: 404
+
+
+GET /api/equipos → 200, 
+se espera: codigo 409
+
+Datos de entrada: 
+{
+  "idJugador": 2,
+  "fecha": 3,
+  "puntuaciones": 1
+}
+Datos de salida: 
+
+Ya existe una puntuación para ese jugador y esa fecha.
+
+Codigo http de salida: 409
 
 # 7.
 

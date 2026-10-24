@@ -47,24 +47,35 @@ public class PuntuacionController : ControllerBase
         return Ok(puntuaciones);
     }
 
-    [HttpPost]
-    public ActionResult AgregarPuntuacion (RegistroPuntuacionesRequest request)
+    [HttpPost("{id}")]
+    public ActionResult AgregarPuntuacion (short id, RegistroPuntuacionesRequest request)
     {
         try
         {
             var puntuacion = new Puntuacion
             {
-                IdJugador = request.IdJugador,
+                IdJugador = id,
                 Fecha = request.Fecha,
                 Puntuaciones = request.Puntuaciones
             };
             _puntuacionService.AgregarPuntuacion(puntuacion);
             return CreatedAtAction(nameof(ObtenerTodasLasPuntuasionesDelJugador), new { id = puntuacion.IdJugador }, puntuacion);
         }
-        catch (ArgumentException ex)
+        catch (ArgumentException ex  )
         {
 
             return BadRequest(ex.Message);
+        }
+
+
+        
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 
@@ -100,9 +111,9 @@ public class PuntuacionController : ControllerBase
 
 
 
-public record RegistroPuntuacionesRequest()
+public class RegistroPuntuacionesRequest()
 {
-    public short IdJugador {get;set;}
+    
     public byte Fecha{get;set;}
     public decimal Puntuaciones{get;set;}
 }

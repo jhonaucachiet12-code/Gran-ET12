@@ -8,11 +8,14 @@ public class PlantillaService
 {
         private readonly IRepoPlantilla repoPlantilla;
         private readonly IRepoJugador repoJugador;
+
+        private readonly  IRepoUsuario repoUsuario;
     
-        public PlantillaService(IRepoPlantilla repoPlantilla , IRepoJugador repoJugador)
+        public PlantillaService(IRepoPlantilla repoPlantilla , IRepoJugador repoJugador, IRepoUsuario repoUsuario)
         {
             this.repoPlantilla = repoPlantilla ?? throw new ArgumentNullException(nameof(repoPlantilla));
             this.repoJugador = repoJugador ?? throw new ArgumentNullException(nameof(repoJugador));
+            this.repoUsuario = repoUsuario ?? throw new ArgumentNullException(nameof(repoUsuario));
         }
     
         public IEnumerable<Plantilla> ObtenerPlantillas()
@@ -25,6 +28,18 @@ public class PlantillaService
             ValidarId(IdPlantilla);
     
             return repoPlantilla.ObtenerPlantillaPorId(IdPlantilla);
+        }
+
+        public IEnumerable<Plantilla> ObtenerPlantillasDelUsuario(short idUsuario)
+        {
+            ValidarId(idUsuario);
+
+            if(repoUsuario.ObtenerPorid(idUsuario) is null)
+            {
+                throw new KeyNotFoundException("No existe un usuario con ese identificador.");
+            }
+
+            return repoPlantilla.ObtenerPlantillasDelUsuario(idUsuario);
         }
     
         public void AgregarPlantilla(Plantilla plantilla)
@@ -88,7 +103,7 @@ public class PlantillaService
         ValidarId(idPlantilla);
         if(fecha <= 0 || fecha > 50)
         {
-            throw new ArgumentOutOfRangeException("El identificador debe ser mayor que cero.", nameof(fecha));
+            throw new ArgumentException("El identificador debe ser mayor que cero.", nameof(fecha));
         }
         return repoPlantilla.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(idPlantilla,fecha);
     }
@@ -148,9 +163,9 @@ public class PlantillaService
     
         private static void ValidarId(int id)
         {
-            if (id <= 0)
+            if (id < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(id), "El identificador debe ser mayor que cero.");
+                throw new ArgumentException(nameof(id), "El identificador debe ser mayor que cero.");
             }
         }
     
@@ -203,3 +218,7 @@ public class PlantillaService
         }
   
 }
+
+
+// NOTA:faltan corregir los services y los controles , 
+// en especifico los lo que valida que existan los objetos a los que dependen (puntiacion y plantilla)

@@ -40,6 +40,22 @@ public class RepoPlantilla : RepoDapper, IRepoPlantilla
         return plantillas.FirstOrDefault();
     }
 
+    public IEnumerable<Plantilla> ObtenerPlantillasDelUsuario(short idUsuario)
+    {
+        var consulta = @"SELECT P.*, U.*
+                        FROM Plantilla P
+                        INNER JOIN Usuario U ON P.IdUsuario = U.IdUsuario
+                        WHERE P.IdUsuario = @idUsuario";
+        var plantillas = _conexion.Query<Plantilla, Usuario, Plantilla>(consulta, (plantilla, usuario) =>
+        {
+            plantilla.usuario = usuario;
+            return plantilla;
+        }, new { idUsuario = idUsuario }, 
+        splitOn: "IdUsuario");
+        return plantillas;
+    }
+
+    
     public void AgregarPlantilla(Plantilla plantilla)
     {
         var parametros = new DynamicParameters();

@@ -4,9 +4,13 @@ public interface IRepoPlantilla
 {
     IEnumerable<Plantilla> ObtenerPlantillas();
     Plantilla? ObtenerPlantillaPorId(int IdPlantilla);
+
+    IEnumerable<Plantilla> ObtenerPlantillasDelUsuario(short idUsuario);
     void AgregarPlantilla(Plantilla plantilla);
     void ActualizarPlantilla(Plantilla plantilla);
     void EliminarPlantilla(int IdPlantilla);
+
+    
 
 // crud de jugardorplantilla
     void AgregarJugadorAPlantilla(int idPlantilla, short idJugador, bool esTitular);

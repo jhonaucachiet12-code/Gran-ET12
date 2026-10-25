@@ -438,15 +438,88 @@ Codigo http de salida: 409
 
 # 7.
 
-GET /api/equipos → 200, 
+GET /api/usuarios/{id}/plantillas 
 se espera: 
 
 Datos de entrada: 
+Id = 1
+Datos de salida:
 
+[
+  {
+    "idPlantilla": 5,
+    "idUsuario": 1,
+    "nombre": "Mi Equipo Ideal",
+    "presupuesto": 200.00,
+    "cantidadJugadores": 0,
+    "jugadoresTitulares": [],
+    "jugadoresSuplentes": [],
+    "usuario": {
+      "idUsuario": 1,
+      "nombre": "Carlos",
+      "apellido": "Gómez",
+      "email": "carlos@email.com",
+      "fechaNacimiento": "1995-05-12T00:00:00",
+      "passwordHash": "hash_ejemplo",
+      "idRol": 2,
+      "roles": null
+    }
+  },
+  {
+    "idPlantilla": 22,
+    "idUsuario": 1,
+    "nombre": "MRD",
+    "presupuesto": 1.00,
+    "cantidadJugadores": 0,
+    "jugadoresTitulares": [],
+    "jugadoresSuplentes": [],
+    "usuario": {
+      "idUsuario": 1,
+      "nombre": "Carlos",
+      "apellido": "Gómez",
+      "email": "carlos@email.com",
+      "fechaNacimiento": "1995-05-12T00:00:00",
+      "passwordHash": "hash_ejemplo",
+      "idRol": 2,
+      "roles": null
+    }
+  },
+  {
+    "idPlantilla": 47,
+    "idUsuario": 1,
+    "nombre": "da",
+    "presupuesto": 9000000.00,
+    "cantidadJugadores": 0,
+    "jugadoresTitulares": [],
+    "jugadoresSuplentes": [],
+    "usuario": {
+      "idUsuario": 1,
+      "nombre": "Carlos",
+      "apellido": "Gómez",
+      "email": "carlos@email.com",
+      "fechaNacimiento": "1995-05-12T00:00:00",
+      "passwordHash": "hash_ejemplo",
+      "idRol": 2,
+      "roles": null
+    }
+  }
+]
+
+Codigo http de salida: 200
+
+
+
+
+
+GET /api/usuarios/{id}/plantillas 
+se espera: 
+
+Datos de entrada: 
+id = 2
 Datos de salida: 
+No existe un usuario con ese identificador.
 
-
-Codigo http de salida: 
+Codigo http de salida: 404
 
 # 8.
 

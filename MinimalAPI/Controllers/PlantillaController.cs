@@ -34,6 +34,24 @@ public class PlantillaController : ControllerBase
         return plantilla is not null ? Ok(plantilla) : NotFound();
     }
 
+    [HttpGet("{id}/usuario")]
+    public ActionResult<IEnumerable<Plantilla>> ObtenerPlantillasDelUsuario(short id)
+    {
+        try
+        {
+            var plantillas = _plantillaService.ObtenerPlantillasDelUsuario(id);
+            return Ok(plantillas);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
     [HttpPost]
     public ActionResult AgregarPlantilla(RegistroPlantillaRequest request)
     {

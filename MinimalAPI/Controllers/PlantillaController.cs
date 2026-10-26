@@ -52,14 +52,14 @@ public class PlantillaController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public ActionResult AgregarPlantilla(RegistroPlantillaRequest request)
+    [HttpPost("{idUsuario}")]
+    public ActionResult AgregarPlantilla(short idUsuario, RegistroPlantillaRequest request)
     {
         try
         {
             var plantilla = new Plantilla
             {
-                IdUsuario = (short)request.IdUsuario,
+                IdUsuario = idUsuario,
                 Nombre = request.Nombre,
                 
                 
@@ -71,6 +71,10 @@ public class PlantillaController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 
@@ -182,7 +186,6 @@ public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaR
 
 public class RegistroPlantillaRequest
 {
-    public int IdUsuario { get; set; }
     public required string Nombre { get; set; }
     
 }

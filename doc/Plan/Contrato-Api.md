@@ -523,19 +523,83 @@ Codigo http de salida: 404
 
 # 8.
 
-GET /api/equipos → 200, 
-se espera: 
+POST /api/usuarios/{id}/plantillas 
+se espera: el codigo 201
 
 Datos de entrada: 
+idUsuario = 1
+
+{
+  "nombre": "equipo2"
+}
 
 Datos de salida: 
 
 
-Codigo http de salida: 
+{
+  "idPlantilla": 88,
+  "idUsuario": 1,
+  "nombre": "equipo2",
+  "presupuesto": 9000000,
+  "cantidadJugadores": 0,
+  "jugadoresTitulares": [],
+  "jugadoresSuplentes": [],
+  "usuario": null
+}
+
+Codigo http de salida: 201
+
+
+
+
+
+
+
+
+
+POST /api/usuarios/{id}/plantillas 
+se espera: el codigo 400
+
+Datos de entrada: 
+
+idUsuario = 1
+{
+  "nombre": ""
+}
+
+Datos de salida: 
+
+El nombre de la plantilla es obligatorio. (Parameter 'plantilla')
+
+Codigo http de salida: 400
+
+
+
+
+
+
+
+
+
+POST /api/usuarios/{id}/plantillas 
+se espera: el codigo 404
+
+Datos de entrada: 
+
+idUsuario = 5
+{
+  "nombre": "aaa"
+}
+
+Datos de salida: 
+
+No existe un usuario con ese identificador.
+
+Codigo http de salida: 404
 
 # 9.
 
-GET /api/equipos → 200, 
+POST /api/plantillas/{id}/jugadores 
 se espera: 
 
 Datos de entrada: 
@@ -547,7 +611,7 @@ Codigo http de salida:
 
 # 10.
 
-GET /api/equipos → 200, 
+PUT /api/plantillas/{id}/jugadores/{futbolistaId} 
 se espera: 
 
 Datos de entrada: 

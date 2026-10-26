@@ -45,6 +45,12 @@ public class PlantillaService
         public void AgregarPlantilla(Plantilla plantilla)
         {
             ValidarPlantilla(plantilla);
+
+            if(repoUsuario.ObtenerPorid(plantilla.IdUsuario) is null)
+            {
+                throw new KeyNotFoundException("No existe un usuario con ese identificador.");
+            }
+
             repoPlantilla.AgregarPlantilla(plantilla);
         }
     
@@ -131,6 +137,14 @@ public class PlantillaService
     {
         ValidarId(idPlantilla);
         ValidarId(idJugador);
+
+        if(repoJugador.ObtenerJugadorPorId(idJugador) is null)
+        {
+            throw new ArgumentException("El jugador no existe.");
+        }
+
+
+        
 
         
         if (esTitular)

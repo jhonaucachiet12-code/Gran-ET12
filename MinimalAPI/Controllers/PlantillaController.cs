@@ -78,17 +78,37 @@ public class PlantillaController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public ActionResult ActualizarPlantilla(Plantilla plantilla)
+    [HttpPut("{id},{idusuario}")]
+    public ActionResult ActualizarPlantilla(int id,short idusuario, RegistroPlantillaRequest request)
     {
         try
         {
+            var plantilla = new Plantilla
+            {
+
+                IdPlantilla = id,
+                IdUsuario =idusuario,
+                Nombre = request.Nombre,
+                
+                
+            };
+            
             _plantillaService.ActualizarPlantilla(plantilla);
             return NoContent();
         }
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);      // 409: el nombre ya existe
         }
     }
 

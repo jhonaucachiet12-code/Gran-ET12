@@ -600,14 +600,100 @@ Codigo http de salida: 404
 # 9.
 
 POST /api/plantillas/{id}/jugadores 
-se espera: 
+se espera: codigo 200
+
+Datos de entrada: 
+id = 5
+idUsuario = 1
+{
+  "nombre": "a"
+}
+Datos de salida: 
+nada 
+
+
+{
+    "idPlantilla": 5,
+    "idUsuario": 1,
+    "nombre": "a",
+    "presupuesto": 9000000.00,
+    "cantidadJugadores": 0,
+    "jugadoresTitulares": [],
+    "jugadoresSuplentes": [],
+    "usuario": {
+      "idUsuario": 1,
+      "nombre": "Carlos",
+      "apellido": "Gómez",
+      "email": "carlos@email.com",
+      "fechaNacimiento": "1995-05-12T00:00:00",
+      "passwordHash": "hash_ejemplo",
+      "idRol": 2,
+      "roles": null
+    }
+  },
+
+Codigo http de salida: 204
+
+
+
+
+
+
+
+POST /api/plantillas/{id}/jugadores 
+se espera: codigo 400
+
+Datos de entrada: 
+id = 5
+idUsuario = 1
+{
+  "nombre": ""
+}
+Datos de salida: 
+
+El nombre de la plantilla es obligatorio. (Parameter 'plantilla')
+
+Codigo http de salida: 400
+
+
+
+
+
+POST /api/plantillas/{id}/jugadores 
+se espera: codigo 404
 
 Datos de entrada: 
 
+id = 5
+idUsuario = 2
+{
+  "nombre": ""
+}
+
 Datos de salida: 
 
+No existe un usuario con ese identificador.
 
-Codigo http de salida: 
+Codigo http de salida: 404
+
+
+
+
+
+POST /api/plantillas/{id}/jugadores 
+se espera: codigo 409
+
+Datos de entrada: 
+id = 22
+idUsuario = 1
+{
+  "nombre": "a"
+}
+Datos de salida: 
+
+El nombre ya está en uso.
+
+Codigo http de salida: 409
 
 # 10.
 

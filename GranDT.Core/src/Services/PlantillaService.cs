@@ -1,6 +1,7 @@
 // service de plantilla
 using GranDT.Core.Model;
 using GranDT.Core.Model.IRepos;
+using Org.BouncyCastle.Asn1.Misc;
 
 namespace GranDT.Core.src.Services;
 
@@ -58,6 +59,24 @@ public class PlantillaService
         {
             ValidarPlantilla(plantilla);
             ValidarId(plantilla.IdPlantilla);
+            if(repoPlantilla.ObtenerPlantillaPorId(plantilla.IdPlantilla) is null)
+            {
+                throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+            }
+
+            var plantillas = repoPlantilla.ObtenerPlantillasDelUsuario(plantilla.IdUsuario);
+
+            if (plantillas.Any(u => u.Nombre == plantilla.Nombre))
+            {
+            
+                throw new InvalidOperationException("El nombre ya está en uso.");
+            }
+
+            if(repoUsuario.ObtenerPorid(plantilla.IdUsuario) is null)
+            {
+                throw new KeyNotFoundException("No existe un usuario con ese identificador.");
+            }
+            
             repoPlantilla.ActualizarPlantilla(plantilla);
         }
 
@@ -144,7 +163,10 @@ public class PlantillaService
         }
 
 
-        
+        if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
+        {
+            throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+        }
 
         
         if (esTitular)

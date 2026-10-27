@@ -162,7 +162,12 @@ public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaR
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message);
+            return Conflict(ex.Message);
+        }
+        
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 

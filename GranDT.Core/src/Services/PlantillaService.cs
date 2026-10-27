@@ -27,6 +27,11 @@ public class PlantillaService
         public Plantilla? ObtenerPlantillaPorId(int IdPlantilla)
         {
             ValidarId(IdPlantilla);
+
+            if(repoPlantilla.ObtenerPlantillaPorId(IdPlantilla) is null)
+            {
+                throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+            }
     
             return repoPlantilla.ObtenerPlantillaPorId(IdPlantilla);
         }
@@ -40,6 +45,7 @@ public class PlantillaService
                 throw new KeyNotFoundException("No existe un usuario con ese identificador.");
             }
 
+
             return repoPlantilla.ObtenerPlantillasDelUsuario(idUsuario);
         }
     
@@ -50,6 +56,14 @@ public class PlantillaService
             if(repoUsuario.ObtenerPorid(plantilla.IdUsuario) is null)
             {
                 throw new KeyNotFoundException("No existe un usuario con ese identificador.");
+            }
+
+            var plantillas = repoPlantilla.ObtenerPlantillasDelUsuario(plantilla.IdUsuario);
+
+            if (plantillas.Any(u => u.Nombre == plantilla.Nombre))
+            {
+            
+                throw new InvalidOperationException("El nombre ya está en uso.");
             }
 
             repoPlantilla.AgregarPlantilla(plantilla);
@@ -83,6 +97,12 @@ public class PlantillaService
         public void EliminarPlantilla(int IdPlantilla)
         {
             ValidarId(IdPlantilla);
+
+            if(repoPlantilla.ObtenerPlantillaPorId(IdPlantilla) is null)
+            {
+                throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+            }
+
             repoPlantilla.EliminarPlantilla(IdPlantilla);
         
         }
@@ -94,7 +114,11 @@ public class PlantillaService
     ValidarId(idPlantilla);
     ValidarId(idJugador);
 
-    
+    if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
+    {
+        throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+    }
+
     var plantilla = repoPlantilla.ObtenerJugadoresDeLaPlantilla(idPlantilla) 
                     ?? throw new ArgumentException("La plantilla no existe.");
 
@@ -126,9 +150,15 @@ public class PlantillaService
         public decimal ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha)
     {
         ValidarId(idPlantilla);
+
         if(fecha <= 0 || fecha > 50)
         {
-            throw new ArgumentException("El identificador debe ser mayor que cero.", nameof(fecha));
+            throw new ArgumentException("la fecha debe de estar entre 1 y 50 ", nameof(fecha));
+        }
+
+        if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
+        {
+            throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
         }
         return repoPlantilla.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(idPlantilla,fecha);
     }
@@ -138,6 +168,10 @@ public class PlantillaService
     public decimal ObtenerElValorTotalDeLaPlantilla(int idPlantilla)
     {
         ValidarId(idPlantilla);
+        if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
+        {
+            throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+        }
         return repoPlantilla.ObtenerElValorTotalDeLaPlantilla(idPlantilla);
     }
 
@@ -147,6 +181,16 @@ public class PlantillaService
         {
             ValidarId(idJugador );
             ValidarId(idPlantilla);
+
+            if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
+            {
+                throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+            }
+            if(repoJugador.ObtenerJugadorPorId(idJugador) is null)
+            {
+                throw new KeyNotFoundException("El jugador no existe.");
+            }
+
             repoPlantilla.EliminarJugadorDePlantilla(idJugador,idPlantilla);
         }
 
@@ -159,7 +203,7 @@ public class PlantillaService
 
         if(repoJugador.ObtenerJugadorPorId(idJugador) is null)
         {
-            throw new ArgumentException("El jugador no existe.");
+            throw new KeyNotFoundException("El jugador no existe.");
         }
 
 
@@ -169,11 +213,20 @@ public class PlantillaService
         }
 
         
+
+        //la cague en algo
+        
         if (esTitular)
         {
             var plantilla = repoPlantilla.ObtenerJugadoresDeLaPlantilla(idPlantilla) 
                             ?? throw new ArgumentException("La plantilla no existe.");
             ValidarCupoTitular(idJugador, idPlantilla);
+
+            if (!plantilla.JugadoresTitulares.Any(j => j.IdJugador == idJugador) ||
+                !plantilla.JugadoresSuplentes.Any(j => j.IdJugador == idJugador))
+            {
+                throw new KeyNotFoundException("El jugador no pertenece a esta plantilla.");
+            }
             
             // Si el jugador ya está en la plantilla pero quieres cambiarlo a titular, 
             // asegúrate de tener la lógica de validación de cupos aquí si la requieres.
@@ -194,6 +247,10 @@ public class PlantillaService
         public Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla)
         {
             ValidarId(idPlantilla);
+            if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
+            {
+                throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
+            }
             return repoPlantilla.ObtenerJugadoresDeLaPlantilla(idPlantilla);
         }
     
@@ -201,7 +258,7 @@ public class PlantillaService
         {
             if (id < 0)
             {
-                throw new ArgumentException(nameof(id), "El identificador debe ser mayor que cero.");
+                throw new ArgumentException(message:"El identificador debe ser mayor que cero.", nameof(id));
             }
         }
     
@@ -211,17 +268,17 @@ public class PlantillaService
     
             if (string.IsNullOrWhiteSpace(plantilla.Nombre))
             {
-                throw new ArgumentException("El nombre de la plantilla es obligatorio.", nameof(plantilla));
+                throw new ArgumentException("El nombre de la plantilla es obligatorio.", nameof(plantilla.Nombre));
             }
             
             if (plantilla.Presupuesto < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(plantilla.Presupuesto), "El presupuesto no puede ser negativo.");
+                throw new ArgumentException( "El presupuesto no puede ser negativo.", nameof(plantilla.Presupuesto));
             }
             
             if (plantilla.IdUsuario <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(plantilla.IdUsuario), "El identificador del usuario debe ser mayor que cero.");
+                throw new ArgumentException( "El identificador del usuario debe ser mayor que cero.",nameof(plantilla.Presupuesto));
             }
         }
 

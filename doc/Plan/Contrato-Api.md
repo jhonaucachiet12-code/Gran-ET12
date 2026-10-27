@@ -698,26 +698,115 @@ Codigo http de salida: 409
 # 10.
 
 PUT /api/plantillas/{id}/jugadores/{futbolistaId} 
-se espera: 
+se espera: el codigo 200
 
 Datos de entrada: 
 
+IdPlantilla = 5
+idfutbolista = 3
+{
+  "esTitular": true
+}
+
 Datos de salida: 
 
+Nada 
 
-Codigo http de salida: 
+{
+  "idPlantilla": 5,
+  "idUsuario": 1,
+  "nombre": "Mi Equipo Ideal",
+  "presupuesto": 90000000.00,
+  "cantidadJugadores": 3,
+  "jugadoresTitulares": [
+    {
+      "idJugador": 1,
+      "idPosicion": 4,
+      "idEquipo": 1,
+      "nombre": "Karim",
+      "apellido": "Benzema",
+      "apodo": "KB9",
+      "nacimiento": "1987-12-19T00:00:00",
+      "cotización": 50.00,
+      "posicion": null,
+      "equipo": null
+    },
+    {
+      "idJugador": 2,
+      "idPosicion": 4,
+      "idEquipo": 2,
+      "nombre": "Robert",
+      "apellido": "Lewandowski",
+      "apodo": "Lewy",
+      "nacimiento": "1988-08-21T00:00:00",
+      "cotización": 60.00,
+      "posicion": null,
+      "equipo": null
+    },
+    {
+      "idJugador": 3,
+      "idPosicion": 3,
+      "idEquipo": 1,
+      "nombre": "Luka",
+      "apellido": "Modric",
+      "apodo": "Lukita",
+      "nacimiento": "1985-09-09T00:00:00",
+      "cotización": 40.00,
+      "posicion": null,
+      "equipo": null
+    }
+  ],
+  "jugadoresSuplentes": [],
+  "usuario": null
+}
 
-# 11.
+Codigo http de salida: 204
 
-GET /api/equipos → 200, 
-se espera: 
+
+
+
+
+PUT /api/plantillas/{id}/jugadores/{futbolistaId} 
+se espera: el codigo 400
 
 Datos de entrada: 
 
+IdPlantilla = 5
+idfutbolista = -3
+{
+  "esTitular": false
+}
+
 Datos de salida: 
 
+id (Parameter 'El identificador debe ser mayor que cero.')
 
-Codigo http de salida: 
+Codigo http de salida: 400
+
+
+
+
+PUT /api/plantillas/{id}/jugadores/{futbolistaId} 
+se espera: el codigo 404
+
+Datos de entrada: 
+
+IdPlantilla = 10
+idfutbolista = 3
+
+{
+  "esTitular": false
+}
+
+Datos de salida: 
+
+No existe la plantilla con ese identificador.
+
+Codigo http de salida: 404
+
+
+
+ 
 
 
 

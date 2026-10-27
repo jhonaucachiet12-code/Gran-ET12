@@ -28,10 +28,22 @@ public class PlantillaController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Plantilla> ObtenerPlantillaPorId(byte id)
+    public ActionResult<Plantilla> ObtenerPlantillaPorId(int id)
     {
-        var plantilla = _plantillaService.ObtenerPlantillaPorId(id);
-        return plantilla is not null ? Ok(plantilla) : NotFound();
+        try
+        {
+            var plantilla = _plantillaService.ObtenerPlantillaPorId(id);
+            return plantilla is not null ? Ok(plantilla) : NotFound();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     [HttpGet("{id}/usuario")]
@@ -76,9 +88,13 @@ public class PlantillaController : ControllerBase
         {
             return NotFound(ex.Message);
         }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);      // 409: el nombre ya existe
+        }
     }
 
-    [HttpPut("{id},{idusuario}")]
+    [HttpPut("{id}/{idusuario}")]
     public ActionResult ActualizarPlantilla(int id,short idusuario, RegistroPlantillaRequest request)
     {
         try
@@ -98,12 +114,12 @@ public class PlantillaController : ControllerBase
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(ex.Message); //400
         }
 
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex.Message);
+            return NotFound(ex.Message); //404
         }
 
         catch (InvalidOperationException ex)
@@ -113,7 +129,7 @@ public class PlantillaController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult EliminarPlantilla(byte id)
+    public ActionResult EliminarPlantilla(int id)
     {
         try
         {
@@ -124,19 +140,23 @@ public class PlantillaController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
         //---------------------PlantillaJugador--------------------
 
-   [HttpPost("agregar-jugador")]
-public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaRequest request)
+   [HttpPost("{idPlantilla}/agregar-jugador/{idjugador}")]
+public ActionResult AgregarJugadorAPlantilla(int idPlantilla,short idjugador,[FromBody] AgregarJugadorPlantillaRequest request)
 {
     try
     {
         // Llamas al servicio pasando únicamente el objeto request (o sus propiedades)
-        _plantillaService.AgregarJugadorAPlantilla(request.IdPlantilla, request.IdJugador, request.EsTitular);
+        _plantillaService.AgregarJugadorAPlantilla(idPlantilla, idjugador, request.EsTitular);
         
-        return CreatedAtAction(nameof(ObtenerPlantillaPorId), new { id = request.IdPlantilla }, null);
+        return CreatedAtAction(nameof(ObtenerPlantillaPorId), new { id = idPlantilla }, null);
     }
     catch (ArgumentException ex)
     {
@@ -144,16 +164,20 @@ public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaR
     }
     catch (InvalidOperationException ex)
     {
-        return BadRequest(ex.Message);
+        return Conflict(ex.Message);
+    }
+    catch (KeyNotFoundException ex)
+    {
+            return NotFound(ex.Message);
     }
 }
 
-    [HttpPut("actualizar-jugador")]
-    public ActionResult ActualizarJugadorEnPlantilla([FromBody] AgregarJugadorPlantillaRequest request)
+    [HttpPut("{IdPlantilla}/actualizar-jugador/{idfutbolista}" )]
+    public ActionResult ActualizarJugadorEnPlantilla(int IdPlantilla, short idfutbolista ,[FromBody] ActualizarJugadorPlantillaRequest request)
     {
         try
         {
-            _plantillaService.ActualizarJugadorEnPlantilla(request.IdPlantilla, request.IdJugador, request.EsTitular);
+            _plantillaService.ActualizarJugadorEnPlantilla( IdPlantilla, idfutbolista, request.EsTitular);
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -171,7 +195,7 @@ public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaR
         }
     }
 
-    [HttpDelete("{idJugador}/{idPlantilla}")]
+    [HttpDelete("{idPlantilla}/jugadores/{idJugador}")]
     public ActionResult EliminarJugadorDePlantilla(short idJugador, int idPlantilla)
     {
         try
@@ -183,41 +207,69 @@ public ActionResult AgregarJugadorAPlantilla([FromBody] AgregarJugadorPlantillaR
         {
             return BadRequest(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpGet("plantilla/{idPlantilla}")]
     public ActionResult<Plantilla> ObtenerJugadoresDeLaPlantilla(int idPlantilla)
     {
-        var plantilla = _plantillaService.ObtenerJugadoresDeLaPlantilla(idPlantilla);
-        return plantilla is not null ? Ok(plantilla) : NotFound();
+        try
+        {
+            var plantilla = _plantillaService.ObtenerJugadoresDeLaPlantilla(idPlantilla);
+            return plantilla is not null ? Ok(plantilla) : NotFound();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     [HttpGet("{idPlantilla}/{fecha}")]
     public ActionResult<decimal> ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(int idPlantilla, byte fecha)
     {
-        var suma = _plantillaService.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(idPlantilla, fecha);
-        return Ok(suma);
+        try
+        {
+            var suma = _plantillaService.ObtenersumaDeLasPuntuacionesDeLosTitularesDeLaPlantilla(idPlantilla, fecha);
+            return Ok(suma);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     [HttpGet("valorTotal/{idPlantilla}")]
     public ActionResult<decimal> ObtenerElValorTotalDeLaPlantilla(int idPlantilla)
     {
-        var valorTotal = _plantillaService.ObtenerElValorTotalDeLaPlantilla(idPlantilla);
-        return Ok(valorTotal);
+        try
+        {
+            var valorTotal = _plantillaService.ObtenerElValorTotalDeLaPlantilla(idPlantilla);
+            return Ok(valorTotal);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     
 }
 
-public class RegistroPlantillaRequest
-{
-    public required string Nombre { get; set; }
-    
-}
-
-public class AgregarJugadorPlantillaRequest
-{
-    public int IdPlantilla { get; set; }
-    public short IdJugador { get; set; }
-    public bool EsTitular { get; set; }
-}

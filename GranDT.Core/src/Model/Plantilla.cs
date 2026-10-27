@@ -19,3 +19,22 @@ public class Plantilla
 
     
 }
+
+
+public class RegistroPlantillaRequest
+{
+    public required string Nombre { get; set; }
+    
+}
+
+public class AgregarJugadorPlantillaRequest
+{
+    
+    public bool EsTitular { get; set; }
+}
+
+public class ActualizarJugadorPlantillaRequest
+{
+    
+    public bool EsTitular { get; set; }
+}

@@ -214,7 +214,7 @@ public class PlantillaService
 
         
 
-        //la cague en algo
+        //la cague en algo. areglado
         
         if (esTitular)
         {
@@ -222,7 +222,7 @@ public class PlantillaService
                             ?? throw new ArgumentException("La plantilla no existe.");
             ValidarCupoTitular(idJugador, idPlantilla);
 
-            if (!plantilla.JugadoresTitulares.Any(j => j.IdJugador == idJugador) ||
+            if (!plantilla.JugadoresTitulares.Any(j => j.IdJugador == idJugador) &&
                 !plantilla.JugadoresSuplentes.Any(j => j.IdJugador == idJugador))
             {
                 throw new KeyNotFoundException("El jugador no pertenece a esta plantilla.");

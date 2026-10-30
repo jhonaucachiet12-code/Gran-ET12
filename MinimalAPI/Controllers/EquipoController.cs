@@ -26,12 +26,20 @@ public class EquipoController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<Equipo> ObtenerPorId(byte id)
     {
-        var equipo = _equipoService.ObtenerEquipoPorId(id);
-        if(equipo == null)
+        try
         {
-            return NotFound();
+            var equipo = _equipoService.ObtenerEquipoPorId(id);
+             return  Ok(equipo);
         }
-        return  Ok(equipo);
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     [HttpPost]
@@ -50,6 +58,14 @@ public class EquipoController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 
     [HttpPut]
@@ -60,9 +76,17 @@ public class EquipoController : ControllerBase
             _equipoService.ActualizarEquipo(equipo);
             return NoContent();
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
     }
 
@@ -77,6 +101,10 @@ public class EquipoController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 }

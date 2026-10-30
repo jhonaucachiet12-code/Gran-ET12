@@ -21,15 +21,30 @@ public class PosicionController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Posicion>> ObtenerPosiciones()
     {
+        
         var posiciones = _posicionService.ObtenerPosiciones();
         return Ok(posiciones);
+        
+        
     }
 
     [HttpGet("{id}")]
     public ActionResult<Posicion> ObtenerPorId(byte id)
     {
-        var posicion = _posicionService.ObtenerPosicionPorId(id);
-        return posicion is not null ? Ok(posicion) : NotFound();
+        try
+        {
+            var posicion = _posicionService.ObtenerPosicionPorId(id);
+            return posicion is not null ? Ok(posicion) : NotFound();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     [HttpPost]
@@ -48,6 +63,14 @@ public class PosicionController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 
     [HttpPut]
@@ -61,9 +84,17 @@ public class PosicionController : ControllerBase
             _posicionService.ActualizarPosicion(posicion);
             return NoContent();
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
     }
 
@@ -78,6 +109,10 @@ public class PosicionController : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 }

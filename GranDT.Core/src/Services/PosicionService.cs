@@ -21,6 +21,11 @@ public class PosicionService
     {
         ValidarId(IdPosicion);
 
+        if(repoPosicion.ObtenerPosicionPorId(IdPosicion) is null)
+        {
+            throw new KeyNotFoundException("No existe la posicion con ese identificador.");
+        }
+
         return repoPosicion.ObtenerPosicionPorId(IdPosicion);
     }
 
@@ -31,7 +36,7 @@ public class PosicionService
         var posicionExistentes = repoPosicion.ObtenerPosiciones();
         if(posicionExistentes.Any(P => P.Nombre == posicion.Nombre))
 		{
-			throw new ArgumentException("la posicion ya exite", nameof(posicion));
+			throw new InvalidOperationException("la posicion ya exite");
 		}
         repoPosicion.AgregarPosicion(posicion);
     }
@@ -40,6 +45,15 @@ public class PosicionService
     {
         ValidarPosicion(posicion);
         ValidarId(posicion.IdPosicion);
+        var posicionExistentes = repoPosicion.ObtenerPosiciones();
+        if(posicionExistentes.Any(P => P.Nombre == posicion.Nombre))
+		{
+			throw new InvalidOperationException("la posicion ya exite");
+		}
+        if(repoPosicion.ObtenerPosicionPorId(posicion.IdPosicion) is null)
+        {
+            throw new KeyNotFoundException("No existe la posicion con ese identificador.");
+        }
         repoPosicion.ActualizarPosicion(posicion);
         
     }
@@ -47,6 +61,10 @@ public class PosicionService
     public void EliminarPosicion(byte id)
     {
         ValidarId(id);
+        if(repoPosicion.ObtenerPosicionPorId(id) is null)
+        {
+            throw new KeyNotFoundException("No existe la posicion con ese identificador.");
+        }
         repoPosicion.EliminarPosicion(id);
     }
     private static void ValidarPosicion(Posicion posicion)

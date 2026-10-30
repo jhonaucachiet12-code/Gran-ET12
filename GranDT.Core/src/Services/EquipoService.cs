@@ -21,6 +21,11 @@ public sealed class EquipoService
 	public Equipo? ObtenerEquipoPorId(byte idEquipo)
 	{
 		ValidarId(idEquipo);
+
+		if(_repoEquipo.ObtenerEquipoPorId(idEquipo) is null)
+		{
+			throw new KeyNotFoundException("No existe el equipo con ese identificador.");
+		}
 		
 		return _repoEquipo.ObtenerEquipoPorId(idEquipo);
 	}
@@ -32,7 +37,7 @@ public sealed class EquipoService
 
 		if(equiposExistente.Any(E => E.Nombre == equipo.Nombre))
 		{
-			throw new ArgumentException("El equipo ya exite", nameof(equipo));
+			throw new InvalidOperationException("El equipo ya exite");
 		}
 		_repoEquipo.AgregarEquipo(equipo);
 	}
@@ -41,12 +46,27 @@ public sealed class EquipoService
 	{
 		ValidarEquipo(equipo);
 		ValidarId(equipo.IdEquipo);
+		var equiposExistente = _repoEquipo.ObtenerEquipos();
+
+		if(equiposExistente.Any(E => E.Nombre == equipo.Nombre))
+		{
+			throw new InvalidOperationException("El equipo ya exite");
+		}
+		
+		if(_repoEquipo.ObtenerEquipoPorId(equipo.IdEquipo) is null)
+		{
+			throw new KeyNotFoundException("No existe el equipo con ese identificador.");
+		}
 		_repoEquipo.ActualizarEquipo(equipo);
 	}
 
 	public void EliminarEquipo(byte idEquipo)
 	{
 		ValidarId(idEquipo);
+		if(_repoEquipo.ObtenerEquipoPorId(idEquipo) is null)
+		{
+			throw new KeyNotFoundException("No existe el equipo con ese identificador.");
+		}
 		_repoEquipo.EliminarEquipo(idEquipo);
 	}
 

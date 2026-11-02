@@ -82,7 +82,7 @@ public class PosicionService
     {
         if (id <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(id), "El identificador debe ser mayor que cero.");
+            throw new ArgumentException( "El identificador debe ser mayor que cero.", nameof(id));
         }
     }
 }

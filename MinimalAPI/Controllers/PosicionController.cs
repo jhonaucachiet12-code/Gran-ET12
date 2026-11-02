@@ -73,13 +73,18 @@ public class PosicionController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public ActionResult ActualizarPosicion( Posicion posicion)
+    [HttpPut("{id}")]
+    public ActionResult ActualizarPosicion( byte id, RegistroPosicionRequest request)
     {
 
 
         try
         {
+            var posicion = new Posicion
+            {
+                IdPosicion = id,
+                Nombre = request.Nombre
+            };
            
             _posicionService.ActualizarPosicion(posicion);
             return NoContent();
@@ -119,7 +124,4 @@ public class PosicionController : ControllerBase
 
 
 
-public class RegistroPosicionRequest()
-{
-    public required string Nombre{get;set;}
-}
+

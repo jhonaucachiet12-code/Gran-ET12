@@ -6,3 +6,10 @@ public class Posicion
     public required string Nombre {get;set;}
     
 }
+
+
+//DTO
+public class RegistroPosicionRequest()
+{
+    public required string Nombre{get;set;}
+}

@@ -84,7 +84,7 @@ public sealed class EquipoService
 	{
 		if (idEquipo <= 0)
 		{
-			throw new ArgumentOutOfRangeException(nameof(idEquipo), "El identificador debe ser mayor que cero.");
+			throw new ArgumentException("El identificador debe ser mayor que cero.", nameof(idEquipo));
 		}
 	}
 }

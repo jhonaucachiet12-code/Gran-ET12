@@ -68,11 +68,16 @@ public class EquipoController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public ActionResult ActualizarEquipo( Equipo equipo)
+    [HttpPut("{id}")]
+    public ActionResult ActualizarEquipo( byte id,RegistroEquipoRequest request)
     {
         try
         {
+            var equipo = new Equipo
+            {
+                IdEquipo= id,
+                Nombre = request.Nombre
+            };
             _equipoService.ActualizarEquipo(equipo);
             return NoContent();
         }
@@ -111,7 +116,4 @@ public class EquipoController : ControllerBase
 
 
 
-public class RegistroEquipoRequest()
-{
-    public required string Nombre {get;set;}
-}
+

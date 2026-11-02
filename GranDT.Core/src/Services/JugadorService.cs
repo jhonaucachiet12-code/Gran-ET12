@@ -43,6 +43,7 @@ public class JugadorService
         ValidarId(id);
         repoJugador.EliminarJugador(id);
     }
+    
     private static void ValidarJugador(Jugador jugador)
     {
         ArgumentNullException.ThrowIfNull(jugador);

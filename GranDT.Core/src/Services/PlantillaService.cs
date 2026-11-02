@@ -309,6 +309,7 @@ public class PlantillaService
                 throw new InvalidOperationException($"La plantilla ya tiene el máximo de titulares para la posición {posicion}.");
             }
         }
+    
   
 }
 

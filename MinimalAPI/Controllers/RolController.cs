@@ -30,12 +30,19 @@ public class RolController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<Rol> ObtenerRolPorId(byte id)
     {
-        var rol = _RepoService.ObtenerRolPorId(id);
-        if (rol == null)
+        try
         {
-            return NotFound();
+            var equipo = _RepoService.ObtenerRolPorId(id);
+             return  Ok(equipo);
         }
-        return rol is not null ? Ok(rol) : NotFound();
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpPost]
@@ -54,22 +61,42 @@ public class RolController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-        
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
         
     }
 
-    [HttpPut]
-    public ActionResult ActualizarRol( Rol rol)
+    [HttpPut("{id}")]
+    public ActionResult ActualizarRol(byte id,  RegistroRolRequest request)
     {
 
         try
         {
+            var rol = new Rol
+            {
+                IdRol = id,
+                Nombre = request.Nombre
+            };
             _RepoService.ActualizarRol(rol);
             return NoContent();
         }
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
     }
 
@@ -85,12 +112,13 @@ public class RolController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch(KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
 }
 
-public class RegistroRolRequest()
-{
-    public required string Nombre {get;set;}
-}
+
     

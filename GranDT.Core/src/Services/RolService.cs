@@ -19,6 +19,8 @@ public class RolService
     public Rol? ObtenerRolPorId(byte IdRol)
     {
         ValidarId(IdRol);
+        validarExistenciaDelRol(IdRol);
+
 
         return repoRol.ObtenerRolPorId(IdRol);
     }
@@ -27,6 +29,8 @@ public class RolService
     {
         
         ValidarRol(rol);
+        validarSuUnicidad(rol);
+
         repoRol.AgregarRol(rol);
     }
 
@@ -34,16 +38,22 @@ public class RolService
     {
         ValidarRol(rol);
         ValidarId(rol.IdRol);
+        validarExistenciaDelRol(rol.IdRol);
+        validarSuUnicidad(rol);
+
         repoRol.ActualizarRol(rol);
+
     }
 
     public void EliminarRol(byte id)
     {
         ValidarId(id);
+        validarExistenciaDelRol(id);
+
         repoRol.EliminarRol(id);
         
     }
-    private static void ValidarRol(Rol rol)
+    public  void ValidarRol(Rol rol)
     {
         ArgumentNullException.ThrowIfNull(rol);
 
@@ -53,12 +63,31 @@ public class RolService
         }
     }
 
-    private static void ValidarId(byte id)
+    public static void ValidarId(byte id)
     {
         if (id <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(id), "El identificador debe ser mayor que cero.");
         }
     }
-    
+
+    private void validarExistenciaDelRol(Byte IdRol)
+    {
+        
+        if(repoRol.ObtenerRolPorId(IdRol)is null)
+        {
+            throw new KeyNotFoundException("el rol no existe");
+        }
+    } 
+
+    private void validarSuUnicidad(Rol rol)
+    {
+        var rolesExistentes = repoRol.ObtenerRoles();
+
+        if(rolesExistentes.Any(r => r.Nombre == rol.Nombre))
+		{
+			throw new InvalidOperationException("El rol ya exite");
+		}
+
+    }
 }

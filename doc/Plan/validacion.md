@@ -5,3 +5,5 @@ equipo le funconan todos sus empoints y   surgen los errores 400, 404 y 409
 posicion le funconan todos sus empoints y   surgen los errores 400, 404 y 409 
 
 Rol le funconan todos sus empoints y   surgen los errores 400, 404 y 409 
+
+usuario le funconan todos sus empoints y   surgen los errores 400, 404 y 409 

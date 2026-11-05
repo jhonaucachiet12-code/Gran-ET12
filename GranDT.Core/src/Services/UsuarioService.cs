@@ -10,10 +10,12 @@ namespace GranDT.Core.src.Services;
 public class UsuarioService
 {
     private readonly IRepoUsuario repoUsuario;
+    private readonly IRepoRol repoRol;
 
-    public UsuarioService(IRepoUsuario repoUsuario)
+    public UsuarioService(IRepoUsuario repoUsuario, IRepoRol repoRol)
     {
         this.repoUsuario = repoUsuario;
+        this.repoRol = repoRol;
     }
 
     public IEnumerable<Usuario> ObtenerUsuarios()
@@ -24,6 +26,8 @@ public class UsuarioService
     public Usuario? ObtenerPorEmail(short IdUsuario)
     {
         ValidarId(IdUsuario);
+        ValidarExistensiaDeUsuario(IdUsuario);
+
 
         return repoUsuario.ObtenerPorid( IdUsuario);
     }
@@ -33,22 +37,13 @@ public class UsuarioService
 
     public void RegistrarUsario(Usuario usuario , string PasswordHash)
     {
-        if(string.IsNullOrWhiteSpace(PasswordHash))
-        {
-            throw new ArgumentException("La contraseña es obligatoria.", nameof(PasswordHash));
-        }
-
-        if(PasswordHash.Length < 6)
-        {
-            throw new ArgumentException("La contraseña debe tener al menos 6 caracteres.", nameof(PasswordHash));
-        }
-
         ValidarUsuario(usuario);
-
-        // tine que mandar el error 409 si el email ya esta en uso
+        ValidarExistensiaDelRol(usuario.IdRol);
+        validarcontraseña(PasswordHash);
 
         
-       
+
+        // tine que mandar el error 409 si el email ya esta en uso
         var usuarios = repoUsuario.ObtenerUsuarios();
         if (usuarios.Any(u => u.Email == usuario.Email))
         {
@@ -65,39 +60,23 @@ public class UsuarioService
 
     public void EliminarUsuario(short IdUsuario)
     {
-        if(IdUsuario <=0)
-        {
-            throw new ArgumentOutOfRangeException("No puedes eliminar un jugador que no existe");
-        }
+        ValidarId(IdUsuario);
+        ValidarExistensiaDeUsuario(IdUsuario);
+
+        
         repoUsuario.EliminarUsuario(IdUsuario);
     }
 
     public void ActualizarUsuario(Usuario nuevoUsuario)
     {
         ValidarUsuario(nuevoUsuario);
+        ValidarExistensiaDelRol(nuevoUsuario.IdRol);
+        ValidarExistensiaDeUsuario(nuevoUsuario.IdUsuario);
+        validarcontraseña(nuevoUsuario.PasswordHash);
+        verificarcontraseña(nuevoUsuario);
 
-        var viejoUsuario = repoUsuario.ObtenerPorid(nuevoUsuario.IdUsuario);
         
-        if (viejoUsuario == null)
-        {
-            //por que?
-            throw new Exception("El usuario no exite.");
-        }
-
-        // nuevoUsuario.PasswordHash llega en texto plano desde el cliente.
-    // Verify(textoPlano, hashGuardado) chequea si es la misma contraseña de antes.
-        bool esLaMismaPassword = BCrypt.Net.BCrypt.Verify(nuevoUsuario.PasswordHash, viejoUsuario.PasswordHash);
-
-        if (esLaMismaPassword)
-        {
-        // No cambió la contraseña: conservamos el hash existente, no lo tocamos.
-            nuevoUsuario.PasswordHash = viejoUsuario.PasswordHash;
-        }
-        else
-        {
-        // Es una contraseña nueva: la hasheamos antes de guardar.
-            nuevoUsuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(nuevoUsuario.PasswordHash);
-        }
+        
         
         repoUsuario.ActualizarUsuario(nuevoUsuario);
 
@@ -142,13 +121,72 @@ public class UsuarioService
 
 	}
 
-    private static void ValidarId(short idEquipo)
+    private static void ValidarId(short IdUsuario)
 	{
-		if (idEquipo <= 0)
+		if (IdUsuario <= 0)
 		{
-			throw new ArgumentOutOfRangeException(nameof(idEquipo), "El identificador debe ser mayor que cero.");
+			throw new ArgumentException( "El identificador debe ser mayor que cero.",nameof(IdUsuario));
 		}
 	}
+
+    private void  ValidarExistensiaDeUsuario(short IdUsuario)
+    {
+        
+        if(repoUsuario.ObtenerPorid(IdUsuario) is null)
+        {
+            throw new KeyNotFoundException("No existe el usuario con ese identificador.");
+        }
+    }
+
+    private void  ValidarExistensiaDelRol(byte IdRol)
+    {
+        
+        if(repoRol.ObtenerRolPorId(IdRol) is null)
+        {
+            throw new KeyNotFoundException("No existe un rol con ese identificador.");
+        }
+    }
+
+    private void verificarcontraseña(Usuario nuevoUsuario)
+    {
+
+        var viejoUsuario = repoUsuario.ObtenerPorid(nuevoUsuario.IdUsuario);
+        
+        if (viejoUsuario == null)
+        {
+            //por que?
+            throw new ArgumentException("El usuario no exite.");
+        }
+        // nuevoUsuario.PasswordHash llega en texto plano desde el cliente.
+        // Verify(textoPlano, hashGuardado) chequea si es la misma contraseña de antes.
+        bool esLaMismaPassword = BCrypt.Net.BCrypt.Verify(nuevoUsuario.PasswordHash, viejoUsuario.PasswordHash);
+
+        if (esLaMismaPassword)
+        {
+        // No cambió la contraseña: conservamos el hash existente, no lo tocamos.
+            nuevoUsuario.PasswordHash = viejoUsuario.PasswordHash;
+        }
+        else
+        {
+        // Es una contraseña nueva: la hasheamos antes de guardar.
+            nuevoUsuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(nuevoUsuario.PasswordHash);
+        }
+
+    }
+
+    private void  validarcontraseña(string PasswordHash)
+    {
+        
+        if(string.IsNullOrWhiteSpace(PasswordHash))
+        {
+            throw new ArgumentException("La contraseña es obligatoria.", nameof(PasswordHash));
+        }
+
+        if(PasswordHash.Length < 6)
+        {
+            throw new ArgumentException("La contraseña debe tener al menos 6 caracteres.", nameof(PasswordHash));
+        }
+    }
 
 
     

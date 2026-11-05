@@ -26,57 +26,115 @@ public class UsuarioController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<Usuario> ObtenerPorEmail(short id)
     {
-        var usuario = _usuarioService.ObtenerPorEmail(id);
-        if (usuario == null)
+        try
         {
-            return NotFound();
+            var usuario = _usuarioService.ObtenerPorEmail(id);
+            return Ok(usuario);
         }
-        return Ok(usuario);
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
+        
     }
 
-    [HttpPost]
-    public ActionResult RegistrarUsuario(RegistroUsuarioRequest request)
+    [HttpPost("{idrol}")]
+    public ActionResult RegistrarUsuario(byte idrol,RegistroUsuarioRequest request)
     {
         try
         {
+            
             var usuario = new Usuario
             {
                 Nombre = request.Nombre,
                 Apellido = request.Apellido,
                 Email = request.Email,
                 FechaNacimiento = request.FechaNacimiento,
-                IdRol = request.IdRol,
+                IdRol = idrol,
                 PasswordHash = "temp",
-                Roles = new Rol { Nombre = "" }
+                
             };
 
             _usuarioService.RegistrarUsario(usuario, request.PasswordHash);
             return CreatedAtAction(nameof(ObtenerPorEmail), new { id = usuario.IdUsuario }, usuario);
         }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(ex.Message);      // 409: el email ya existe
-        }
         catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);    // 400: datos inválidos
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);      // 409: el nombre ya existe
         }
     }
 
-    [HttpPut]
-    public ActionResult ActualizarUsuario( Usuario usuario)
+    [HttpPut("{id}/ {idrol}")]
+    public ActionResult ActualizarUsuario(short id,byte idrol, actualizarUsuarioRequest request)
     {
+        try
+        {
+            var usuario1 =_usuarioService.ObtenerPorEmail(id);
+            if (usuario1 is null)
+            {
+                return NotFound("No se encuentra el usuario");
+            }
+            var usuario = new Usuario
+            {
+                IdUsuario = id,
+                Nombre = request.Nombre,
+                Apellido = request.Apellido,
+                Email = usuario1.Email,
+                IdRol = idrol,
+                FechaNacimiento = request.FechaNacimiento,
+                PasswordHash =request.PasswordHash
+
+            };
+            _usuarioService.ActualizarUsuario(usuario);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);      // 409: el nombre ya existe
+        }
        
 
-        _usuarioService.ActualizarUsuario(usuario);
-        return NoContent();
+        
     }
 
     [HttpDelete("{id}")]
     public ActionResult EliminarUsuario(short id)
     {
-        _usuarioService.EliminarUsuario(id);
-        return NoContent();
+        try
+        {
+            _usuarioService.EliminarUsuario(id);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 }
 
@@ -87,6 +145,13 @@ public class RegistroUsuarioRequest()
     public required string Apellido{get;set;}
     public required string Email{get;set;}
     public DateTime FechaNacimiento{get;set;}
-    public byte IdRol {get;set;}
+    public required string PasswordHash{get;set;}
+}
+
+public class actualizarUsuarioRequest()
+{
+    public required string Nombre{get;set;}
+    public required string Apellido{get;set;}
+    public DateTime FechaNacimiento{get;set;}
     public required string PasswordHash{get;set;}
 }

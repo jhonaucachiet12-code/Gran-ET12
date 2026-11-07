@@ -1,4 +1,5 @@
 
+using GranDT.Core.Gran_DT.ConDapper;
 using GranDT.Core.Model;
 using GranDT.Core.Model.IRepos;
 
@@ -26,31 +27,39 @@ public class PuntuacionService
     public Puntuacion? ObtenerLaPuntucionDelJugador(short idJugador, byte fecha)
     {
         ValidarIdJugador(idJugador);
+        ValidarExistenciaDelJugador(idJugador);
         ValidarFecha(fecha);
+        ValidarPuntuacionExistente(idJugador, fecha);
+
         return repoPuntuacion.ObtenerLaPuntucionDelJugador(idJugador, fecha);
     }
 
     public IEnumerable<Puntuacion> ObtenerTodasLasPuntuasionesDelJugador(short idJugador)
     {
         ValidarIdJugador(idJugador);
+        ValidarExistenciaDelJugador(idJugador);
+
+        if (repoPuntuacion.ObtenerTodasLasPuntuasionesDelJugador(idJugador) is null)
+        {
+            throw new KeyNotFoundException("No existe una puntuación para ese jugador y esa fecha.");
+        }
+
         return repoPuntuacion.ObtenerTodasLasPuntuasionesDelJugador(idJugador);
     }
 
     public void AgregarPuntuacion(Puntuacion puntuacion)
     {
         ValidarPuntuacion(puntuacion);
+        ValidarIdJugador(puntuacion.IdJugador);
+        ValidarExistenciaDelJugador(puntuacion.IdJugador);
+        ValidarFecha(puntuacion.Fecha);
 
         if (repoPuntuacion.ObtenerLaPuntucionDelJugador(puntuacion.IdJugador, puntuacion.Fecha) is not null)
         {
             throw new InvalidOperationException("Ya existe una puntuación para ese jugador y esa fecha.");
         }
 
-        if (repoJugador.ObtenerJugadorPorId(puntuacion.IdJugador) is null)
-        {
-            throw new KeyNotFoundException("No existe un jugador con ese identificador.");
-        }
-
-        ValidarFecha(puntuacion.Fecha);
+        
 
 
         repoPuntuacion.AgregarPuntuacion(puntuacion);
@@ -59,22 +68,23 @@ public class PuntuacionService
     public void ActualizarPuntuacion(Puntuacion puntuacion)
     {
         ValidarPuntuacion(puntuacion);
-
-        if (repoPuntuacion.ObtenerLaPuntucionDelJugador(puntuacion.IdJugador, puntuacion.Fecha) is null)
-        {
-            throw new KeyNotFoundException("No existe una puntuación para ese jugador y esa fecha.");
-        }
+        ValidarExistenciaDelJugador(puntuacion.IdJugador);
+        ValidarPuntuacionExistente(puntuacion.IdJugador, puntuacion.Fecha);
+        ValidarPuntuacionExistente(puntuacion.IdJugador, puntuacion.Fecha);
 
         repoPuntuacion.ActualizarPuntuacion(puntuacion);
     }
 
-    public void EliminarPuntuacion(short idJugador)
+    public void EliminarPuntuacion(short idJugador, byte Fecha)
     {
         ValidarIdJugador(idJugador);
-        repoPuntuacion.EliminarPuntuacion(idJugador);
+        ValidarExistenciaDelJugador(idJugador);
+        ValidarFecha(Fecha);
+        ValidarPuntuacionExistente(idJugador, Fecha);
+        repoPuntuacion.EliminarPuntuacion(idJugador, Fecha);
     }
 
-    private static void ValidarPuntuacion(Puntuacion puntuacion)
+    private  void ValidarPuntuacion(Puntuacion puntuacion)
     {
         ArgumentNullException.ThrowIfNull(puntuacion);
         ValidarIdJugador(puntuacion.IdJugador);
@@ -94,7 +104,7 @@ public class PuntuacionService
         }
     }
 
-    private static void ValidarIdJugador(short idJugador)
+    private void ValidarIdJugador(short idJugador)
     {
         if (idJugador <= 0)
         {
@@ -110,7 +120,24 @@ public class PuntuacionService
         }
     }
 
-    
+    private void ValidarPuntuacionExistente(short idJugador, byte fecha)
+    {
+        if (repoPuntuacion.ObtenerLaPuntucionDelJugador(idJugador, fecha) is null)
+        {
+            throw new KeyNotFoundException("No existe una puntuación para ese jugador y esa fecha.");
+        }
+
+        
+        
+    }
+
+    private void ValidarExistenciaDelJugador(short idJugador)
+    {
+        if (repoJugador.ObtenerJugadorPorId(idJugador) is null)
+        {
+            throw new KeyNotFoundException("no existe un jugador con el identificador proporcionado.");
+        }
+    }
 
 
 

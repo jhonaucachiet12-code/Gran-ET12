@@ -9,7 +9,7 @@ public class Jugador
     public required string Nombre{get;set;}
     public required string Apellido{get;set;}
     public required string Apodo{get;set;}
-    public DateTime Nacimiento{get;set;}
+    public DateTime? Nacimiento{get;set;}
     public decimal Cotización{get;set;}
     
     public Posicion? posicion {get;set;}
@@ -17,3 +17,15 @@ public class Jugador
 
 
 }
+
+// DTO
+public class RegistroJugadorRequest()
+{
+    public required string Nombre {get;set;}
+    public required string Apellido {get;set;}
+    public required string Apodo {get;set;}
+    public DateTime? Nacimiento {get;set;}
+    public decimal Cotización {get;set;}
+
+}
+

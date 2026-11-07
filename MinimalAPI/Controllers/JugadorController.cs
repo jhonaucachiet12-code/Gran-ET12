@@ -26,21 +26,33 @@ public class JugadorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Jugador> ObtenerPorId(byte id)
+    public ActionResult<Jugador> ObtenerPorId(short id)
     {
-        var jugador = _jugadorService.ObtenerJugadorPorId(id);
-        return jugador is not null ? Ok(jugador) : NotFound();
+        try
+        {
+            var jugador = _jugadorService.ObtenerJugadorPorId(id);
+            return Ok(jugador);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
     
-    [HttpPost]
-    public ActionResult AgregarJugador(RegistroJugadorRequest request)
+    [HttpPost("{idEquipo}/{idPosicion}")]
+    public ActionResult AgregarJugador(byte idEquipo ,byte idPosicion, RegistroJugadorRequest request)
     {
         try
         {
             var jugador = new Jugador
             {
-                IdEquipo = request.IdEquipo,
-                IdPosicion = request.IdPosicion,
+                IdEquipo = idEquipo,
+                IdPosicion = idPosicion,
                 Nombre = request.Nombre,
                 Apellido = request.Apellido,
                 Apodo = request.Apodo,
@@ -55,11 +67,19 @@ public class JugadorController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);      // 409: el nombre ya existe
+        }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}/{idEquipo}/{idPosicion}")]
     
-    public ActionResult ActualizarJugador(short id, RegistroJugadorRequest request)
+    public ActionResult ActualizarJugador(short id,byte idEquipo ,byte idPosicion, RegistroJugadorRequest request)
     {
         
 
@@ -68,8 +88,8 @@ public class JugadorController : ControllerBase
             var jugador = new Jugador
             {
                 IdJugador = id,
-                IdEquipo = request.IdEquipo,
-                IdPosicion = request.IdPosicion,
+                IdEquipo = idEquipo,
+                IdPosicion = idPosicion,
                 Nombre = request.Nombre,
                 Apellido = request.Apellido,
                 Apodo = request.Apodo,
@@ -85,9 +105,17 @@ public class JugadorController : ControllerBase
             _jugadorService.ActualizarJugador(jugador);
             return NoContent();
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);      // 409: el nombre ya existe
         }
     }
 
@@ -103,20 +131,13 @@ public class JugadorController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 }
 
-
-public class RegistroJugadorRequest()
-{
-    public byte IdPosicion {get;set;}
-    public byte IdEquipo {get;set;}
-    public required string Nombre {get;set;}
-    public required string Apellido {get;set;}
-    public required string Apodo {get;set;}
-    public DateTime Nacimiento {get;set;}
-    public decimal Cotización {get;set;}
-
-}
 
 

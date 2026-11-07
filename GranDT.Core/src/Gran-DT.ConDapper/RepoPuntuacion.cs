@@ -89,11 +89,14 @@ public class RepoPuntuacion : RepoDapper, IRepoPuntuacion
         _conexion.Execute("actualizarPuntuacion", parametros, commandType: CommandType.StoredProcedure);
     }
 
-    public void EliminarPuntuacion(short IdJugador)
+    public void EliminarPuntuacion(short IdJugador, byte Fecha)
     {
-        _conexion.Execute(
-            "DELETE FROM Puntuacion WHERE idJugador = @IdJugador",
-            new { IdJugador });
+        var parametros = new DynamicParameters();
+        parametros.Add("unIdJugador", IdJugador);
+        parametros.Add("unaFecha", Fecha);
+
+
+        _conexion.Execute("eliminarPuntuacion", parametros, commandType: CommandType.StoredProcedure);
     }
 }
 

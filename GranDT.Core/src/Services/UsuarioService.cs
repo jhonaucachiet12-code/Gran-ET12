@@ -101,9 +101,9 @@ public class UsuarioService
             throw new ArgumentException("El Apellido del usuario es obligatorio.", nameof(usuario));
         }
 
-        if(usuario.FechaNacimiento > DateTime.Now)
+        if(usuario.FechaNacimiento == null || usuario.FechaNacimiento > DateTime.Now || usuario.FechaNacimiento == DateTime.MinValue)
         {
-            throw new ArgumentException("Fecha de nacimiento imposible.", nameof(usuario));
+            throw new ArgumentException("La fecha de nacimiento del jugador no puede ser futura y es obligatoria.", nameof(usuario));
         }
         //Time  que haber  algo ante y des pues de un "@" y un "."
 

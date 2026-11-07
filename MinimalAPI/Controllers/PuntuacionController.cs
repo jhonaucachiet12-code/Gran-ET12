@@ -28,34 +28,52 @@ public class PuntuacionController : ControllerBase
     [HttpGet("{id}/{Fecha}")]
     public ActionResult<Puntuacion> ObtenerLaPuntucionDelJugador(short id, byte Fecha)
     {
-        var puntuacion = _puntuacionService.ObtenerLaPuntucionDelJugador(id, Fecha);
-        if (puntuacion == null)
+        try
         {
-            return NotFound();
+            var puntuacion = _puntuacionService.ObtenerLaPuntucionDelJugador(id, Fecha);
+            return Ok(puntuacion);
         }
-        return Ok(puntuacion);
+        catch (ArgumentException ex  )
+        {
+
+            return BadRequest(ex.Message);
+        }  
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
     [HttpGet("{id}")]
     public ActionResult<IEnumerable<Puntuacion>> ObtenerTodasLasPuntuasionesDelJugador(short id)
     {
-        var puntuaciones = _puntuacionService.ObtenerTodasLasPuntuasionesDelJugador(id);
-        if(puntuaciones == null)
+        try
         {
-            return NotFound();
+            var puntuaciones = _puntuacionService.ObtenerTodasLasPuntuasionesDelJugador(id);
+            return Ok(puntuaciones);
         }
-        return Ok(puntuaciones);
+        catch (ArgumentException ex  )
+        {
+
+            return BadRequest(ex.Message);
+        }  
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        
     }
 
-    [HttpPost("{id}")]
-    public ActionResult AgregarPuntuacion (short id, RegistroPuntuacionesRequest request)
+    [HttpPost("{id}/{Fecha}")]
+    public ActionResult AgregarPuntuacion (short id, byte Fecha, RegistroPuntuacionesRequest request)
     {
         try
         {
             var puntuacion = new Puntuacion
             {
                 IdJugador = id,
-                Fecha = request.Fecha,
+                Fecha = Fecha,
                 Puntuaciones = request.Puntuaciones
             };
             _puntuacionService.AgregarPuntuacion(puntuacion);
@@ -65,10 +83,7 @@ public class PuntuacionController : ControllerBase
         {
 
             return BadRequest(ex.Message);
-        }
-
-
-        
+        }  
         catch (InvalidOperationException ex)
         {
             return Conflict(ex.Message);
@@ -79,31 +94,56 @@ public class PuntuacionController : ControllerBase
         }
     }
 
-    [HttpPut]
-    public ActionResult ActualizarPuntuacion (Puntuacion puntuacion)
+    [HttpPut("{id}/{Fecha}")]
+    public ActionResult ActualizarPuntuacion (short id, byte Fecha, RegistroPuntuacionesRequest request)
     {
         try
         {
+            var puntuacion = new Puntuacion
+            {
+                IdJugador = id,
+                Fecha = Fecha,
+                Puntuaciones = request.Puntuaciones
+            };
             _puntuacionService.ActualizarPuntuacion(puntuacion);
             return NoContent();
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+         catch (ArgumentException ex  )
         {
+
             return BadRequest(ex.Message);
+        }  
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    
     }
 
-    [HttpDelete("{id}")]
-    public ActionResult EliminarPuntuacion(short id)
+    [HttpDelete("{id}/{Fecha}")]
+    public ActionResult EliminarPuntuacion(short id, byte Fecha)
     {
         try
         {
-            _puntuacionService.EliminarPuntuacion(id);
+            _puntuacionService.EliminarPuntuacion(id, Fecha);
             return NoContent();
         }
-        catch (ArgumentException ex)
+         catch (ArgumentException ex  )
         {
+
             return BadRequest(ex.Message);
+        }  
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 
@@ -114,6 +154,6 @@ public class PuntuacionController : ControllerBase
 public class RegistroPuntuacionesRequest()
 {
     
-    public byte Fecha{get;set;}
+    
     public decimal Puntuaciones{get;set;}
 }

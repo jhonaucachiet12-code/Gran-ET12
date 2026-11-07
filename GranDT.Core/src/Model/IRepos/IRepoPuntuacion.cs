@@ -9,6 +9,6 @@ public interface IRepoPuntuacion
     
     void AgregarPuntuacion(Puntuacion puntuacion);
     void ActualizarPuntuacion(Puntuacion puntuacion);
-    void EliminarPuntuacion(short IdJugador);
+    void EliminarPuntuacion(short IdJugador, byte Fecha);
 
 }

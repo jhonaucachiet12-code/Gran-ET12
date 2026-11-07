@@ -113,11 +113,9 @@ public class PlantillaService
     {
     ValidarId(idPlantilla);
     ValidarId(idJugador);
+    ValidarPresupuestoDeLaPlantilla(idJugador, idPlantilla);
 
-    if(repoPlantilla.ObtenerPlantillaPorId(idPlantilla) is null)
-    {
-        throw new KeyNotFoundException("No existe la plantilla con ese identificador.");
-    }
+    
 
     var plantilla = repoPlantilla.ObtenerJugadoresDeLaPlantilla(idPlantilla) 
                     ?? throw new ArgumentException("La plantilla no existe.");
@@ -138,6 +136,8 @@ public class PlantillaService
     {
         throw new ArgumentException("La plantilla ya tiene el máximo de titulares.");
     }
+
+   
 
     ValidarCupoTitular(idJugador, idPlantilla);
 
@@ -213,9 +213,6 @@ public class PlantillaService
         }
 
         
-
-        //la cague en algo. areglado
-        
         if (esTitular)
         {
             var plantilla = repoPlantilla.ObtenerJugadoresDeLaPlantilla(idPlantilla) 
@@ -228,20 +225,13 @@ public class PlantillaService
                 throw new KeyNotFoundException("El jugador no pertenece a esta plantilla.");
             }
             
-            // Si el jugador ya está en la plantilla pero quieres cambiarlo a titular, 
-            // asegúrate de tener la lógica de validación de cupos aquí si la requieres.
             if(plantilla.JugadoresTitulares.Count >= 11 && esTitular == true)
             {
                 throw new ArgumentException("La plantilla ya tiene el máximo de titulares.");
             }
         }
-
-        
-
         repoPlantilla.ActualizarJugadorEnPlantilla(idPlantilla, idJugador, esTitular);
     }
-
-
 
 
         public Plantilla? ObtenerJugadoresDeLaPlantilla(int idPlantilla)
@@ -253,6 +243,7 @@ public class PlantillaService
             }
             return repoPlantilla.ObtenerJugadoresDeLaPlantilla(idPlantilla);
         }
+
     
         private static void ValidarId(int id)
         {
@@ -309,10 +300,26 @@ public class PlantillaService
                 throw new InvalidOperationException($"La plantilla ya tiene el máximo de titulares para la posición {posicion}.");
             }
         }
-    
-  
+
+    private void ValidarPresupuestoDeLaPlantilla(short idJugador, int idPlantilla)
+    {
+        // obterner el preusuesto disponible del usuario para validar si puede agregar el jugador a la plantilla
+        var jugador = repoJugador.ObtenerJugadorPorId(idJugador);
+        if (jugador is null)
+        {
+            throw new KeyNotFoundException("El jugador no existe.");
+        }
+        var plantillaUsuario = repoPlantilla.ObtenerPlantillaPorId(idPlantilla);
+
+        if (plantillaUsuario is null)
+        {
+            throw new KeyNotFoundException("La plantilla no existe.");
+        }
+
+        if (plantillaUsuario.Presupuesto < jugador.Cotización)
+        {
+        throw new InvalidOperationException("El usuario no tiene suficiente presupuesto para agregar este jugador a la plantilla.");
+        }
+    }
 }
 
-
-// NOTA:faltan corregir los services y los controles , 
-// en especifico los lo que valida que existan los objetos a los que dependen (puntiacion y plantilla)

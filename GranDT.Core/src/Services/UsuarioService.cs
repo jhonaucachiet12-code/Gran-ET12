@@ -32,6 +32,29 @@ public class UsuarioService
         return repoUsuario.ObtenerPorid( IdUsuario);
     }
 
+    public bool ValidarCredenciales(string Email, string Password)
+    {
+        validarcontraseña(Password);
+        
+        if (string.IsNullOrWhiteSpace(Email))
+        {
+            throw new ArgumentException("El email es obligatorio.", nameof(Email));
+        }
+        int posicionArroba = Email.IndexOf('@');
+        int posicionPunto = Email.LastIndexOf('.');
+
+        if (!(posicionArroba > 0 && posicionPunto > posicionArroba + 1 && posicionPunto < Email.Length - 1))
+        {
+            // Estructura mínima válida: texto@texto.texto
+
+            throw new ArgumentException("la estructura del email es incorecta.", nameof(Email));
+
+
+        }
+
+        return repoUsuario.ValidarCredenciales(Email, Password);
+    }
+
 
 
 
@@ -57,6 +80,8 @@ public class UsuarioService
         repoUsuario.RegistrarUsario(usuario,PasswordHash);
         
     }
+
+
 
     public void EliminarUsuario(short IdUsuario)
     {

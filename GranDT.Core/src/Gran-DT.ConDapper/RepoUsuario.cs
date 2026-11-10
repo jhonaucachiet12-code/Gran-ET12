@@ -46,6 +46,20 @@ public class RepoUsuario: RepoDapper, IRepoUsuario
         return usuarios.FirstOrDefault();
     }
 
+    public bool ValidarCredenciales(string Email, string Password)
+    {
+        var consulta = @"SELECT * FROM Usuario WHERE email = @email";
+        var usuario = _conexion.QueryFirstOrDefault<Usuario>(consulta, new { email = Email });
+
+        if (usuario == null)
+        {
+            return false; // Usuario no encontrado
+        }
+
+        // Verificar la contraseña usando BCrypt
+        return BCrypt.Net.BCrypt.Verify(Password, usuario.PasswordHash);
+    }
+
 
    public void RegistrarUsario(Usuario usuario, string PasswordHash)
 {

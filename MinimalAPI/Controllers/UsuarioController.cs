@@ -43,6 +43,20 @@ public class UsuarioController : ControllerBase
         
     }
 
+    [HttpGet("credenciales/{email}/{password}")]
+    public ActionResult<bool> ValidarCredenciales(string email, string password)
+    {
+        try
+        {
+            var isValid = _usuarioService.ValidarCredenciales(email, password);
+            return Ok(isValid);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost("{idrol}")]
     public ActionResult RegistrarUsuario(byte idrol,RegistroUsuarioRequest request)
     {

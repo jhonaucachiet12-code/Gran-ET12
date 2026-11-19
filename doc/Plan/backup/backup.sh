@@ -1,29 +1,25 @@
 #!/usr/bin/env bash
 # ============================================================
 #  Backup de la base bd_GranET con mysqldump (Linux)
+#  Pide usuario y contraseña de MySQL al ejecutarse.
 # ============================================================
 #
 #  Uso:
 #    chmod +x backup_granet.sh
 #    ./backup_granet.sh
 #
-#  Credenciales: crear el archivo ~/.granet_backup.cnf (chmod 600) con:
+#  Uso sin preguntas (por ejemplo para pruebas o scripts):
+#    DB_USER=backup_user DB_PASS='mi_password' ./backup_granet.sh
 #
-#    [client]
-#    user=backup_user
-#    password=TU_PASSWORD
-#    host=localhost
-#
-#  Cron (todos los dias a las 3:00 AM):
-#    0 3 * * * /ruta/a/backup_granet.sh >> /var/log/granet_backup_cron.log 2>&1
+#  Nota: como pide datos por teclado, NO sirve tal cual para cron.
 # ============================================================
 
 set -euo pipefail
 
 # ---------- CONFIGURACION ----------
 DB_NAME="bd_GranET"
-CREDENTIALS_FILE="${HOME}/.granet_backup.cnf"
-BACKUP_DIR="/var/backups/mysql/${DB_NAME}"
+DB_HOST="localhost"
+BACKUP_DIR="${HOME}/backups_granet"
 RETENTION_DAYS=7
 # -----------------------------------
 
@@ -40,8 +36,19 @@ log() {
 command -v mysqldump >/dev/null 2>&1 || { echo "ERROR: mysqldump no esta instalado." >&2; exit 1; }
 command -v gzip      >/dev/null 2>&1 || { echo "ERROR: gzip no esta instalado." >&2; exit 1; }
 
-if [[ ! -f "$CREDENTIALS_FILE" ]]; then
-    echo "ERROR: no existe el archivo de credenciales: $CREDENTIALS_FILE" >&2
+# Pedir usuario y contraseña si no vinieron como variables de entorno
+if [[ -z "${DB_USER:-}" ]]; then
+    read -r -p "Usuario de MySQL [backup_user]: " DB_USER
+    DB_USER="${DB_USER:-backup_user}"
+fi
+
+if [[ -z "${DB_PASS:-}" ]]; then
+    read -r -s -p "Contraseña de ${DB_USER}: " DB_PASS
+    echo
+fi
+
+if [[ -z "$DB_PASS" ]]; then
+    echo "ERROR: la contraseña no puede estar vacia." >&2
     exit 1
 fi
 
@@ -51,18 +58,24 @@ chmod 700 "$BACKUP_DIR"
 # Si algo falla, borrar el archivo parcial
 trap 'rm -f "$TMP_FILE"' ERR
 
-log "Iniciando backup de ${DB_NAME}..."
+log "Iniciando backup de ${DB_NAME} (usuario: ${DB_USER})..."
 
+# La contraseña se pasa por variable de entorno solo a mysqldump,
+# asi no queda visible en la lista de procesos ni en el historial.
 # --databases incluye CREATE DATABASE y USE, asi que el restore es directo.
 # --single-transaction: backup consistente sin bloquear tablas InnoDB.
 # utf8mb4: necesario porque hay una columna con tilde (cotización).
-mysqldump \
-    --defaults-extra-file="$CREDENTIALS_FILE" \
+MYSQL_PWD="$DB_PASS" mysqldump \
+    --host="$DB_HOST" \
+    --user="$DB_USER" \
     --single-transaction \
+    --no-tablespaces \
     --routines --triggers --events \
     --default-character-set=utf8mb4 \
     --databases "$DB_NAME" \
     | gzip -9 > "$TMP_FILE"
+
+unset DB_PASS
 
 # Verificar que el gzip sea valido antes de darlo por bueno
 gzip -t "$TMP_FILE"
